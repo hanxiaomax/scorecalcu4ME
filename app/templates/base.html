@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <meta charset="utf-8">
+    <head>
+        <!-- 使用Bootstrap 框架 -->
+        <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
+        <title>机械工程学院素质分管理系统</title>
+    </head>
+    <body>
+
+        {% include "navigator.html" %}
+
+
+
+    {% block content %}{% endblock %}
+    </body>
+    <hr />
+    {% include "footer.html" %}
+</html>

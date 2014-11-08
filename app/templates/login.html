@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <meta charset="utf-8">
+  <head>
+    <!-- 使用Bootstrap 框架 -->
+    <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
+    <title>机械工程学院素质分管理系统</title>
+  </head>
+  <body>
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-6">
+            <h1  align="center">登陆</h1>
+            <form action="" method="post" name="login">
+              {{ form.hidden_tag() }}
+              <p>
+              用户名:<br>
+              {{ form.username(size=80) }}<br>
+              {% for error in form.username.errors %}
+                <span style="color: red;">[{{error}}]</span>
+              {% endfor %}<br>
+              </p>
+              <p>
+              密码:<br>
+              {{ form.password(size=80) }}<br>
+              {% for error in form.password.errors %}
+                <span style="color: red;">[{{error}}]</span>
+              {% endfor %}<br>
+              </p>
+              <p>{{ form.remember_me }} 记住我</p>
+              <p><input type="submit" value="登陆"></p>
+            </form>
+          </div>
+          <div class="col-md-3"></div>
+        </div>
+      </div>
+    </body>
+  <hr />
+  {% include "footer.html" %}
+</html>

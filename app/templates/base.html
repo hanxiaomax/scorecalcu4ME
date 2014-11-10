@@ -1,17 +1,5 @@
 <!DOCTYPE html>
-<style type="text/css">
 
-.footer-wrapper {
-    margin: 2em auto;
-    font-size: 14px;
-    font-size: .875rem;
-    font-style: italic;
-    color: #555;
-    text-align: center;
-    *zoom: 1
-}
-
-</style>
 <html lang="zh-cn">
     <meta charset="utf-8">
     <head>
@@ -21,6 +9,7 @@
     </head>
     <body>
         {% block content %}{% endblock %}
+        {% include "navigator.html" %}
     </body>
     <hr />
     {% include "footer.html" %}

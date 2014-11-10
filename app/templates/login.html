@@ -5,39 +5,107 @@
     <!-- 使用Bootstrap 框架 -->
     <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
     <title>机械工程学院素质分管理系统</title>
+    <style type="text/css">
+    /*必须的*/
+
+    html, body {
+    margin:0;
+    height: 100%;
+    }
+    .container{
+    min-height: 100%;
+    height: auto !important;/*!important 不能删除*/
+    height: 100%;
+    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+    }
+    .push{
+    height: 155px;
+    }
+    .footer-wrapper {
+    height: 155px;/*尺寸要和push配合*/
+    margin: 2em auto;
+    font-size: 14px;
+    font-size: .875rem;
+    font-style: italic;
+    color: #555;
+    text-align: center;
+    *zoom: 1
+    }
+    body {
+    padding-top: 150px;
+    padding-bottom: 10px;
+    background-color: #eee;
+    }
+    .form-signin {
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+    }
+    .form-signin .form-signin-heading,
+    .form-signin .checkbox {
+    margin-bottom: 10px;
+    }
+    .form-signin .checkbox {
+    font-weight: normal;
+    }
+    .form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+    }
+    .form-signin .form-control:focus {
+    z-index: 2;
+    }
+    .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    }
+    .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    }
+    </style>
   </head>
   <body>
-
-      <div class="container">
-
-        <div class="row">
-          <div class="col-md-3"></div>
-          <div class="col-md-6">
-            <h1  align="center">登陆</h1>
-            <form action="" method="post" name="login">
-              {{ form.hidden_tag() }}
-              <p>
-              用户名:<br>
-              {{ form.username(size=80) }}<br>
-              {% for error in form.username.errors %}
-                <span style="color: red;">[{{error}}]</span>
-              {% endfor %}<br>
-              </p>
-              <p>
-              密码:<br>
-              {{ form.password(size=80) }}<br>
-              {% for error in form.password.errors %}
-                <span style="color: red;">[{{error}}]</span>
-              {% endfor %}<br>
-              </p>
-              <p>{{ form.remember_me }} 记住我</p>
-              <p><input type="submit" value="登陆"></p>
-            </form>
-          </div>
-          <div class="col-md-3"></div>
-        </div>
+    <div class="container">
+      <form action="" method="post" name="login" class="form-signin">
+        <h2 class="form-signin-heading">素质分管理系统</h2>
+        {{ form.hidden_tag() }}
+        <p>
+        {{ form.username(class='form-control login-field',placeholder='学号') }}<br>
+        {% for error in form.username.errors %}
+          <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+        </p>
+        <p>
+        {{ form.password(class='form-control login-field',placeholder='密码') }}<br>
+        {% for error in form.password.errors %}
+          <span style="color: red;">[{{error}}]</span>
+        {% endfor %}<br>
+        </p>
+        <p>{{ form.remember_me }} 记住我</p>
+        <!-- <p><input type="submit" value="登陆"></p> -->
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+      <div class="push"></div>
+    </div>
+    <hr />
+    <footer class="footer-wrapper">
+      <div align="center">
+        <p>Powered by: Flask and Bootstrap</p>
+        <p>Contact information: <a href="mailto:someone@example.com">hanxiaomax@qq.com</a>.</p>
       </div>
-    </body>
-  <hr />
-  {% include "footer.html" %}
+      <script src="/static/js/bootstrap.min.js"></script>
+    </footer>
+
+    <!-- 如果放在body外面，则缩小是会覆盖body的内容 -->
+
+  </body>
+
 </html>

@@ -17,13 +17,10 @@ def load_user(user_id):
 #@login_required
 def index():
     user={'nickname':'Miguel'}
+    form = LoginForm()
+    return render_template('index.html', title=u'HOME', user=user,form=form)
 
-    return render_template('index.html',
-                            title=u'HOME',
-                            user=user,
-                            )
-
-
+@app.route('/',methods=['GET','POST'])
 @app.route('/login/',methods=['GET','POST'])
 #make this view function accepts GET and POST requests
 def login():
@@ -81,7 +78,6 @@ def admins(admin_id):
             user=admin,
             blogs=blogs)
 
-@app.route('/')
 @app.route('/logout/')
 def logout():
     logout_user()

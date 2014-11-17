@@ -1,32 +1,267 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
+  <meta charset="utf-8">
   <head>
-  <style type="text/css">
-  * {
-margin: 0;
+    <!-- 使用Bootstrap 框架 -->
+    <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
+    <title>机械工程学院素质分管理系统</title>
+    <script src="/static/js/jquery-1.7.min.js" type="text/javascript"></script>
+    <script src="/static/js/form.js" type="text/javascript"></script>
+    <script src="/static/js/formData.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    var list=[
+    {
+        "name": "班级工作",
+        "SubCategory": [
+            {
+                "name": "担任班长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任党支部书记职务",
+                "Role": ""
+            },
+            {
+                "name": "担任其他班委(含副班长)、支委委员（含支部副书记、党小组长）职务",
+                "Role": ""
+            }
+        ]
+    },
+    {
+        "name": "院级社团",
+        "SubCategory": [
+            {
+                "name": "担任院研究生会主席团职务",
+                "Role": ""
+            },
+            {
+                "name": "担任院研究生会部长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任院研究生会干事职务",
+                "Role": [
+                    {
+                        "name": "干事"
+                    },
+                    {
+                        "name": "优秀干事"
+                    }
+                ]
+            },
+            {
+                "name": "担任辅导员助理职务",
+                "Role": ""
+            },
+            {
+                "name": "助教助管",
+                "Role": ""
+            }
+        ]
+    },
+    {
+        "name": "校级社团",
+        "SubCategory": [
+            {
+                "name": "担任校研究生会主席团职务",
+                "Role": ""
+            },
+            {
+                "name": "担任校研究生会部长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任校研究生会副部长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任校研究生会干事职务",
+                "Role": [
+                    {
+                        "name": "干事"
+                    },
+                    {
+                        "name": "优秀干事"
+                    },
+                    {
+                        "name": "优秀个人"
+                    }
+                ]
+            },
+            {
+                "name": "担任学校社团社长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任学校社团部长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任学校社团副部长职务",
+                "Role": ""
+            },
+            {
+                "name": "担任学校团委副部长",
+                "Role": ""
+            },
+            {
+                "name": "担任学校团委组长",
+                "Role": ""
+            }
+        ]
+    },
+    {
+        "name": "个人荣誉",
+        "SubCategory": [
+            {
+                "name": "参加国际级活动并获得三等奖以上荣誉",
+                "Role": ""
+            },
+            {
+                "name": "参加国家级活动并获得三等奖以上荣誉",
+                "Role": ""
+            },
+            {
+                "name": "参加省级活动并获得三等奖以上荣誉",
+                "Role": ""
+            },
+            {
+                "name": "参加市级活动并获得三等奖以上荣誉",
+                "Role": ""
+            },
+            {
+                "name": "参加国家级活动并获得三等奖以上荣誉",
+                "Role": ""
+            },
+            {
+                "name": "参加省级活动并获得三等奖以上荣誉",
+                "Role": ""
+            }
+        ]
+    }
+]
+
+function init()
+{
+    var _Category=document.getElementById("Category");
+    for(var e in list)
+    {
+        var opt_1=new Option(list[e].name);
+        _Category.add(opt_1);
+    }
 }
-html, body {
-    height: 100%;
+
+
+
+function toSubCategory(category){
+    var _Category=document.getElementById("Category");
+    var _SubCategory=document.getElementById("SubCategory");
+    var _Role=document.getElementById("Role");
+    _SubCategory.options.length=1;//清空
+    _Role.options.length=1;//清空
+
+    for(var e in list)
+    {
+      if(list[e].name==category)
+        {
+            for( var p in list[e].SubCategory)
+            {
+                var opt_2=new Option(list[e].SubCategory[p].name);
+                _SubCategory.add(opt_2);
+            }
+            break;
+        }
+    }
 }
-.wrapper {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
+
+
+function toRole(subCategory)
+{
+    var _Category=document.getElementById("Category");
+    var _SubCategory=document.getElementById("SubCategory");
+    var _Role=document.getElementById("Role");
+    _Role.options.length=1;
+
+
+    for(var e in list)
+    {
+        if(list[e].name==Category.value)
+        {
+            for( var p in list[e].SubCategory)
+            {
+                if(list[e].SubCategory[p].name==subCategory)
+                {
+                    for(var cc in list[e].SubCategory[p].Role)
+                    {
+                        var opt_3=new Option(list[e].SubCategory[p].Role[cc].name,list[e].SubCategory[p].Role[cc].value);
+                        _Role.add(opt_3);
+                    }
+                    return;
+                }
+            }
+            break;
+        }
+    }
+
+
+
 }
-.footer,.push{
-    background-color:#ccc;
-    height: 155px;
-}</style>
+    </script>
   </head>
-  <body>
-    <div class="wrapper">
-      <p>Your content goes here.</p>
-      <div class="push"></div>
+  <body onload="init();";>
+    <div class="container">
+      <form class="form-horizontal">
+        <fieldset>
+          <div id="legend" class="">
+            <legend class="">表单名</legend>
+          </div>
+          <div class="control-group">
+            <!-- Select Basic -->
+            <label class="control-label">类型</label>
+            <div class="controls">
+              <select id="Category" name="Category" class="input-xlarge" onchange="toSubCategory(this.value);">
+              <option>请选择</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-group">
+            <!-- Select Basic -->
+            <label class="control-label">项目</label>
+            <div class="controls">
+              <select id="SubCategory" name="SubCategory" class="input-xlarge" onchange="toRole(this.value);">
+              <option>请选择</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-group">
+            <!-- Select Basic -->
+            <label class="control-label">获奖身份</label>
+            <div class="controls">
+              <select id="Role" name="Role" class="input-xlarge">
+                <option>请选择</option>
+
+              </select>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">  </label>
+            <!-- File Upload -->
+            <div class="controls">
+              <input class="input-file" id="fileInput" type="file">
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label"></label>
+            <!-- Button -->
+            <div class="controls">
+              <button class="btn btn-success">提交</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
     </div>
-    <div class="footer">
-      <p>Footer content</p>
-    </div>
-    <script src="/static/css/js/bootstrap.min.js"></script>
   </body>
+  <hr />
+  {% include "footer.html" %}
 </html>

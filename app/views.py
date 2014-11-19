@@ -26,15 +26,15 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user=User.login_check(request.form.get('username'))
+        user=User.login_check(request.form.get('username'),request.form.get('password'))
+        #get the username and password form the form
         if user:
             login_user(user)#login
-
-            #go to page accoding to the role
+            #go to page accoding to the role using current user's campID as the user_id
             if user.role==ROLE_USER:
-                return redirect(url_for('users', user_id = current_user.id))
+                return redirect(url_for('users', user_id = current_user.campID))
             elif user.role==ROLE_ADMIN:
-                return redirect(url_for('admins', admin_id = current_user.id))
+                return redirect(url_for('admins_review', admin_id = current_user.campID))
             else:
                 return redirect("/login/")
 
@@ -45,51 +45,73 @@ def login():
 
 
 
-@appME.route('/apply/user_<int:user_id>', methods=["POST", "GET"])
+@appME.route('/student_<int:user_id>', methods=["POST", "GET"])
 @login_required
 def users(user_id):
-    user = User.query.filter(User.id == user_id).first()
+    user = User.query.filter(User.campID == user_id).first()
     if not user:
         redirect("/login/")
-    blogs = user.posts.all()
 
     return render_template(
             "user.html",
             user=user,
-            blogs=blogs,
             user_id=user_id)
 
 
-@appME.route('/profile/user_<int:user_id>', methods=["POST", "GET"])
+# @appME.route('/profile/student_<int:user_id>', methods=["POST", "GET"])
+# @login_required
+# def users_profile(user_id):
+#     user = current_user
+#     if not user:
+#         redirect("/login/")
+#     return render_template(
+#             "user_profile.html",
+#             user=user,
+#             user_id=user_id)
+
+
+
+
+@appME.route('/review/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
-def users_profile(user_id):
-    user = current_user
-    if not user:
-        redirect("/login/")
-    blogs = user.posts.all()
-    return render_template(
-            "user_profile.html",
-            user=user,
-            blogs=blogs,
-            user_id=user_id)
-
-
-
-
-@appME.route('/admin_<int:admin_id>', methods=["POST", "GET"])
-@login_required
-def admins(admin_id):
-    admin = User.query.filter(User.id == admin_id).first()
+def admins_review(admin_id):
+    admin = User.query.filter(User.campID == admin_id).first()
     if not admin:
         flash("The user is not exist.")
         redirect("/login/")
-    blogs = admin.posts.all()
     return render_template(
             "admin.html",
             user=admin,
-            blogs=blogs)
+            admin_id=admin_id)
 
 
+@appME.route('/search/admin_<int:admin_id>', methods=["POST", "GET"])
+@login_required
+def admins_search(admin_id):
+    admin = User.query.filter(User.campID == admin_id).first()
+    if not admin:
+        flash("The user is not exist.")
+        redirect("/login/")
+    return render_template(
+            "admin_search.html",
+            user=admin,
+            admin_id=admin_id)
+
+@appME.route('/edit/admin_<int:admin_id>', methods=["POST", "GET"])
+@login_required
+def admins_edit(admin_id):
+    admin = User.query.filter(User.campID == admin_id).first()
+    if not admin:
+        flash("The user is not exist.")
+        redirect("/login/")
+    return render_template(
+            "admin_edit.html",
+            user=admin,
+            admin_id=admin_id)
+
+# @appME.route('/download/', methods=["GET"])
+# def download(admin_id):
+#     return render_template("download.html",admin_id=admin_id)
 
 
 

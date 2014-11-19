@@ -2,4 +2,4 @@
 from migrate.versioning.shell import main
 
 if __name__ == '__main__':
-    main(six='<module 'six' from 'c:\Python27\lib\site-packages\six.pyc'>')
+    main(six='<module 'six' from 'f:\GIThub\scorecalcu4ME\workshop\lib\site-packages\six.pyc'>')

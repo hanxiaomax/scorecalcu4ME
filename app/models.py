@@ -38,6 +38,22 @@ class User(db.Model):
             return None
         return user
 
+    @classmethod
+    def get_user(cls,campID):
+        user = cls.query.filter(db.or_(User.campID==campID)).first()
+        if not user:
+            return None
+        return user
+
+
+    def to_json(self):
+        return {
+            'name':self.name,
+            'campID':self.campID,
+            'Class':self.Class,
+            'grade':self.grade
+        }
+
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key = True)

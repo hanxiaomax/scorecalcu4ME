@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
   <style type="text/css">
   /*
   * Base structure
@@ -109,42 +112,123 @@
     </div>
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-<body>
+    <body>
       <h1 class="page-header">查询结果</h1>
-
-  <form class="form-horizontal">
-    <fieldset>
-      <div id="legend" class="">
-      </div>
-
-
-
-
-    <div class="control-group">
-
-          <!-- Text input-->
-          <label class="control-label" for="input01">学号</label>
-          <div class="controls">
-            <input type="text" placeholder="130200" class="input-xlarge">
+      <form class="form-horizontal">
+        <fieldset>
+          <div id="legend" class="">
           </div>
-        </div>
-
-
-
-    <div class="control-group">
-          <label class="control-label"></label>
-
-          <!-- Button -->
-          <div class="controls">
-            <button class="btn btn-success">查询</button>
+          <div class="control-group">
+            <!-- Text input-->
+            <label class="control-label" for="input01">学号</label>
+            <div class="controls">
+              <input name="campID",type="text" placeholder="130200" class="input-xlarge">
+            </div>
           </div>
-        </div>
-
-    </fieldset>
-  </form>
+          <div class="control-group">
+            <label class="control-label"></label>
+            <!-- Button -->
+            <div class="controls">
+              <button id="OnSearch" class="btn btn-success">查询</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      <table class="flexme3" style="display: none"></table>
+      <ul></ul>
 
     </body>
   </div>
-</div>
+
+
+<script type="text/javascript">
+  $(function () {
+            $("#OnSearch").bind("click", function (){
+               $.getJSON($SCRIPT_ROOT+"/_search",
+                {
+                  campID: $('input[name="campID"]').val(),
+                },
+                function(data){
+                  alert(data)
+                  $.each(data, function(index, database) {
+                      $("ul").append("<li>" + database + "</li>");
+                  });
+                });
+               return false
+            });
+        });
+
+  $(".flexme3").flexigrid({
+                url : 'post-xml.php',
+                dataType : 'xml',
+                colModel : [ {
+                    display : 'ISO',
+                    name : 'iso',
+                    width : 40,
+                    sortable : true,
+                    align : 'center'
+                    }, {
+                        display : 'Name',
+                        name : 'name',
+                        width : 180,
+                        sortable : true,
+                        align : 'left'
+                    }, {
+                        display : 'Printable Name',
+                        name : 'printable_name',
+                        width : 120,
+                        sortable : true,
+                        align : 'left'
+                    }, {
+                        display : 'ISO3',
+                        name : 'iso3',
+                        width : 130,
+                        sortable : true,
+                        align : 'left',
+                        hide : true
+                    }, {
+                        display : 'Number Code',
+                        name : 'numcode',
+                        width : 80,
+                        sortable : true,
+                        align : 'right'
+                } ],
+                buttons : [ {
+                    name : 'Add',
+                    bclass : 'add',
+                    onpress : test
+                    }, {
+                        name : 'Delete',
+                        bclass : 'delete',
+                        onpress : test
+                    }, {
+                        separator : true
+                } ],
+                searchitems : [ {
+                    display : 'ISO',
+                    name : 'iso'
+                    }, {
+                        display : 'Name',
+                        name : 'name',
+                        isdefault : true
+                } ],
+                sortname : "iso",
+                sortorder : "asc",
+                usepager : true,
+                title : '素质分统计',
+                useRp : true,
+                rp : 15,
+                showTableToggleBtn : true,
+                width : 700,
+                height : 200
+            });
+
+            function test(com, grid) {
+                if (com == 'Delete') {
+                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
+                } else if (com == 'Add') {
+                    alert('Add New Item');
+                }
+            }
+</script>
 {% endblock %}

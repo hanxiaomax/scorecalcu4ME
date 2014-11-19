@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import (render_template,flash,redirect,session,url_for,request,g)
+from flask import (render_template,flash,redirect,session,url_for,request,g,request,jsonify)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
@@ -120,3 +120,9 @@ def admins_edit(admin_id):
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+@appME.route('/_search')
+def add_numbers():
+    from app import myget
+    return myget.mysum()

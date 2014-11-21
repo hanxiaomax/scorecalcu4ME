@@ -107,60 +107,112 @@
     </div>
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-  <h1 class="page-header">提交申请</h1>
-    <body onload="init();";>
+    <h1 class="page-header">提交申请</h1>
+    <body>
       <div class="container">
         <form class="form-horizontal">
           <fieldset>
 
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label">类型</label>
-              <div class="controls">
-                <select id="Category" name="Category" class="input-xlarge" onchange="toSubCategory(this.value);">
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label">项目</label>
-              <div class="controls">
-                <select id="SubCategory" name="SubCategory" class="input-xlarge" onchange="toRole(this.value);" >
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label" id="role_label">获奖身份</label>
-              <div class="controls">
-                <select id="Role" name="Role" class="input-xlarge">
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label"> </label>
-              <!-- File Upload -->
-              <div class="controls">
-                <input class="input-file" id="fileInput" type="file">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label"></label>
-              <!-- Button -->
-              <div class="controls">
-                <button class="btn btn-success" type="submit">提交</button>
-              </div>
-            </div>
-          </fieldset>
 
-        </form>
-      </div>
-      <h1 class="page-header">我的素质分</h1>
-    </body>
-  </div>
+            <form class="form-horizontal">
+              <fieldset>
+              <div class="container">
+              <div class="row">
+              <div class="col-md-4">
+              <div class="control-group">
+                  <label class="control-label">素质分类别</label>
+                  <div class="controls">
+                    <!-- Multiple Radios -->
+                    <label class="radio">
+                      <input type="radio" value="班级工作" name="group" checked="checked">班级工作（此类累加不得超过40分）</label>
+                    <label class="radio">
+                      <input type="radio" value="院级社团" name="group">院级社团（此类累加不得超过35分）</label>
+                    <label class="radio">
+                      <input type="radio" value="校级社团" name="group">校级社团（此类累加不得超过35分）</label>
+                    <label class="radio">
+                      <input type="radio" value="个人荣誉" name="group">个人荣誉（此类累加不得超过50分）</label>
+                    <label class="radio">
+                      <input type="radio" value="集体荣誉" name="group">集体荣誉（此类累加不得超过50分）</label>
+                    <label class="radio">
+                      <input type="radio" value="集体活动" name="group">集体活动（此类累加不得超过30分）</label>
+                    <label class="radio">
+                      <input type="radio" value="其他" name="group">其他（累计不得超过15分）</label>
+                    </div>
+                  </div></div>
+              <div class="col-md-2"> </div>
+              <div class="col-md-6">
+              <div class="control-group">
+                  <!-- Select Basic -->
+                  <label class="control-label">加分项目</label>
+                  <div class="controls">
+                    <select id="apply" class="input-xlarge" size="11">
+                      <option>担任班长</option>
+                      <option>担任党支部书记</option>
+                      <option>担任其他班委</option>
+                    </select>
+                  </div>
+                </div>
+                </div>
+
+                </div>
+                </div>
+
+
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-4">
+                        <div class="control-group">
+                          <label class="control-label"> </label>
+                          <div class="controls">
+                            <input class="input-file" id="fileInput" type="file">
+                          </div>
+                        </div>
+                        <div>
+
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"> </label>
+                                <div class="controls">
+                                    <button id="submit" class="btn btn-success">提交</button>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2"> </div>
+                    <div class="col-md-6">
+
+                    </div>
+                  </div>
+                </div>
+            </fieldset>
+          </form>
+        </fieldset>
+      </form>
+    </div>
+    <h1 class="page-header">我的素质分</h1>
+  </body>
 </div>
+</div>
+<div id="111"></div>
+<script type="text/javascript">
+
+$(function(){
+        $("input:radio").change(function(){
+          var selectedvalue = $("input[name='group']:checked").val();
+          $.getJSON("/static/select.json",function(data){
+            $("#apply").empty();
+              $.each(data,function() {
+                if (this.catagory==selectedvalue)
+                {
+                    $.each(this.subcatagory, function() {
+                    $("#apply").append("<option>" +  this.name + "</option>");
+                    });
+                };
+      });
+    });
+  });
+});
+
+
+</script>
 {% endblock %}

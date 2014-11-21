@@ -2,7 +2,9 @@ from app import db
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
-
+STATUS_YES = 1
+STATUS_NO = 0
+STATUS_KNOWN= 2
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
@@ -11,7 +13,10 @@ class User(db.Model):
     Class = db.Column(db.Integer,index = True)
     grade= db.Column(db.String(64),index = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
-    score = db.relationship('Score', backref = 'student', lazy = 'dynamic')
+    score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
+    score=db.Column(db.Integer)
+
+
     def __repr__(self):
         return '<User %r>' % (self.name)
 
@@ -32,7 +37,7 @@ class User(db.Model):
     @classmethod
     def login_check(cls,user_name,password):
         # print user_name
-        user = cls.query.filter(db.or_(User.name==user_name, User.password==password)).first()
+        user = cls.query.filter(db.and_(User.campID==user_name, User.password==password)).first()
         # print user
         if not user:
             return None
@@ -55,11 +60,16 @@ class User(db.Model):
         }
 
 
-class Score(db.Model):
+class Score_items(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    reward = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.campID'))
+    catagory = db.Column(db.String(140))
+    item_name= db.Column(db.String(120))
+    time = db.Column(db.DateTime)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    add=db.Column(db.Integer)
+    standard=db.Column(db.Integer)
+    status= db.Column(db.SmallInteger, default = STATUS_KNOWN)
+
 
     def __repr__(self):
         return '<Score %r>' % (self.body)

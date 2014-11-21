@@ -58,20 +58,6 @@ def users(user_id):
             user_id=user_id)
 
 
-# @appME.route('/profile/student_<int:user_id>', methods=["POST", "GET"])
-# @login_required
-# def users_profile(user_id):
-#     user = current_user
-#     if not user:
-#         redirect("/login/")
-#     return render_template(
-#             "user_profile.html",
-#             user=user,
-#             user_id=user_id)
-
-
-
-
 @appME.route('/review/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
 def admins_review(admin_id):
@@ -126,3 +112,32 @@ def logout():
 def add_numbers():
     from app import myget
     return myget.mysum()
+
+# @appME.route('/_getMyScore',methods=["POST", "GET"])
+# def _getMyScore(user_id):
+#     from app import getmysocre
+#     print " 454"
+#     return getmysocre._getmyscore(user_id)
+
+
+# @appME.route('/_getMyScore',methods=["POST", "GET"])
+# def _getMyScore():
+#     f={
+#     "page": 1,
+#     "total": 239,
+#     "rows": [
+#         {
+#             "id": "ZW",
+#             "cell": {
+#                 "catagory": "班级工作",
+#                 "item_name": "VE",
+#                 "padd": "Venezuela",
+#                 "time": "VEN",
+#                 "standard": "862",
+#                 "status": "VEN"
+#             }
+#         }
+#     ]
+# }
+
+#     return jsonify(f)

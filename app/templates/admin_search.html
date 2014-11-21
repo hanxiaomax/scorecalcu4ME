@@ -114,34 +114,55 @@
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <body>
       <h1 class="page-header">查询结果</h1>
-      <form class="form-horizontal">
-        <fieldset>
-          <div id="legend" class="">
-          </div>
-          <div class="control-group">
-            <!-- Text input-->
-            <label class="control-label" for="input01">学号</label>
-            <div class="controls">
-              <input name="campID",type="text" placeholder="130200" class="input-xlarge">
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label"></label>
-            <!-- Button -->
-            <div class="controls">
-              <button id="OnSearch" class="btn btn-success">查询</button>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-      <table class="flexme3" style="display: none"></table>
-      <ul></ul>
+      <nav>
+        <div class="btn-group btn-group-lg ">
+          <button id="withcampID" type="button" class="btn btn-default">查询个人素质分</button>
+          <button type="button" class="btn btn-default">查询年级素质分</button>
+          <button type="button" class="btn btn-default">全部素质分</button>
+        </div>
+      </nav>
+      <hr>
 
+          <div class="panel panel-info">
+
+              <div class="panel-heading">查询</div>
+              <div class="panel-body">
+              <div class="row">
+
+              <div id="panel" class="container">
+                  <div class="col-md-8">
+                    <table class="flexme3" style="display: none"></table>
+                  </div>
+                  <div class="col-md-4">
+                        <form class="form-horizontal">
+                          <fieldset>
+                          <div class="control-group">
+                                <label class="control-label" for="input01"></label>
+                                <div class="controls">
+                                  <input type="text" placeholder="学号" class="input-xlarge">
+                                  <p class="help-block"></p>
+                                </div>
+                              </div><div class="control-group">
+                                <label class="control-label"></label>
+                                <div class="controls">
+                                  <button class="btn btn-success">查询</button>
+                                </div>
+                              </div>
+                          </fieldset>
+                        </form>
+                  </div>
+                </div>
+              </div>
+              </div>
+          </div>
     </body>
   </div>
 
 
 <script type="text/javascript">
+
+
+
   $(function () {
             $("#OnSearch").bind("click", function (){
                $.getJSON($SCRIPT_ROOT+"/_search",
@@ -158,46 +179,50 @@
             });
         });
 
-  $(".flexme3").flexigrid({
-                url : 'post-xml.php',
+$(".flexme3").flexigrid({
+                url : $SCRIPT_ROOT+"/_getMyScore",
                 dataType : 'xml',
                 colModel : [ {
-                    display : 'ISO',
-                    name : 'iso',
-                    width : 40,
-                    sortable : true,
+                    display : '所属类别',
+                    name : 'catagory',
+                    width : 100,
+                    sortable : false,
                     align : 'center'
                     }, {
-                        display : 'Name',
-                        name : 'name',
-                        width : 180,
+                        display : '加分项目',
+                        name : 'item_name',
+                        width : 300,
                         sortable : true,
                         align : 'left'
                     }, {
-                        display : 'Printable Name',
-                        name : 'printable_name',
-                        width : 120,
+                        display : '分数',
+                        name : 'add',
+                        width : 50,
                         sortable : true,
-                        align : 'left'
+                        align : 'center'
                     }, {
-                        display : 'ISO3',
-                        name : 'iso3',
+                        display : '时间',
+                        name : 'time',
                         width : 130,
                         sortable : true,
                         align : 'left',
                         hide : true
                     }, {
-                        display : 'Number Code',
-                        name : 'numcode',
+                        display : '执行标准',
+                        name : 'standard',
+                        width : 100,
+                        sortable : true,
+                        align : 'right'
+                },
+                {
+                        display : '审核状态',
+                        name : 'status',
                         width : 80,
                         sortable : true,
                         align : 'right'
-                } ],
-                buttons : [ {
-                    name : 'Add',
-                    bclass : 'add',
-                    onpress : test
-                    }, {
+                }  ],
+                buttons : [
+                {
                         name : 'Delete',
                         bclass : 'delete',
                         onpress : test
@@ -214,16 +239,15 @@
                 } ],
                 sortname : "iso",
                 sortorder : "asc",
-                usepager : true,
-                title : '素质分统计',
+                usepager : false,
+                title : '查询结果',
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : true,
                 width : 700,
                 height : 200
             });
-
-            function test(com, grid) {
+function test(com, grid) {
                 if (com == 'Delete') {
                     confirm('Delete ' + $('.trSelected', grid).length + ' items?')
                 } else if (com == 'Add') {

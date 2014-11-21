@@ -112,8 +112,130 @@
 
   <h1 class="page-header">待审核</h1>
     <body >
+            <div class="container">
+                <div class="row">
+                  <div class="col-md-4">
+                    <table class="flexme3" style="display: none"></table>
+                  </div>
+                  <div class="col-md-4">
 
+                  </div>
+                  <div class="col-md-4">
+                  </div>
+                </div>
+              </div>
     </body>
   </div>
 </div>
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+<script type="text/javascript">
+
+  $(function () {
+            $("#OnSearch").bind("click", function (){
+               $.getJSON($SCRIPT_ROOT+"/_search",
+                {
+                  campID: $('input[name="campID"]').val(),
+                },
+                function(data){
+                  alert(data)
+                  $.each(data, function(index, database) {
+                      $("ul").append("<li>" + database + "</li>");
+                  });
+                });
+               return false
+            });
+        });
+
+$(".flexme3").flexigrid({
+                url : $SCRIPT_ROOT+"/_getMyScore",
+                dataType : 'xml',
+                colModel : [
+                {
+                    display : '申请人',
+                    name : 'name',
+                    width : 100,
+                    sortable : false,
+                    align : 'center'
+                    },
+                {
+                    display : '所属类别',
+                    name : 'catagory',
+                    width : 100,
+                    sortable : false,
+                    align : 'center'
+                    }, {
+                        display : '加分项目',
+                        name : 'item_name',
+                        width : 300,
+                        sortable : true,
+                        align : 'left'
+                    }, {
+                        display : '分数',
+                        name : 'add',
+                        width : 50,
+                        sortable : true,
+                        align : 'center'
+                    }, {
+                        display : '时间',
+                        name : 'time',
+                        width : 130,
+                        sortable : true,
+                        align : 'left',
+                        hide : true
+                    }, {
+                        display : '执行标准',
+                        name : 'standard',
+                        width : 100,
+                        sortable : true,
+                        align : 'right'
+                },
+                {
+                        display : '证明',
+                        name : 'status',
+                        width : 80,
+                        sortable : true,
+                        align : 'right'
+                }  ],
+                buttons : [
+                {
+                        name : '通过',
+                        bclass : 'Add',
+                        onpress : test
+                    },
+                {
+                        name : '拒绝',
+                        bclass : 'delete',
+                        onpress : test
+                    }, {
+                        separator : true
+                } ],
+                searchitems : [ {
+                    display : 'ISO',
+                    name : 'iso'
+                    }, {
+                        display : 'Name',
+                        name : 'name',
+                        isdefault : true
+                } ],
+                sortname : "iso",
+                sortorder : "asc",
+                usepager : false,
+                title : '待审核',
+                useRp : true,
+                rp : 15,
+                showTableToggleBtn : false,
+                width : 1000,
+                height : 500
+            });
+function test(com, grid) {
+                if (com == 'Delete') {
+                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
+                } else if (com == 'Add') {
+                    alert('Add New Item');
+                }
+            }
+</script>
 {% endblock %}

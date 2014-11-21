@@ -111,8 +111,79 @@
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 <body>
-      <h1 class="page-header">我的素质分</h1>
-    </body>
+      <h1 class="page-header">添加/删除学院指定集体活动</h1>
+
+
+  <form class="form-horizontal">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">表单名</legend>
+      </div>
+
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">新建加分项</label>
+          <div class="controls">
+            <input type="text" placeholder="学院指定活动1" class="input-xlarge">
+            <p class="help-block">不能为空</p>
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">分值</label>
+          <div class="controls">
+            <input type="text" value="1" class="input-xlarge">
+            <p class="help-block"></p>
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Select Multiple -->
+          <label class="control-label">当前项目</label>
+          <div class="controls">
+            <select id="delete" class="input-xlarge" multiple="multiple" size="5">
+
+            </select>
+          </div>
+        </div>
+
+    <div class="control-group">
+          <label class="control-label"></label>
+
+        </div><div class="control-group">
+          <label class="control-label"></label>
+          <div class="controls">
+            <button class="btn btn-success">添加</button>
+            <button class="btn btn-danger">删除</button>
+          </div>
+        </div>
+
+    </fieldset>
+  </form>
+
+</body>
   </div>
 </div>
+
+<script type="text/javascript">
+$(function(){
+          $.getJSON("/static/select.json",function(data){
+            $("#apply").empty();
+              $.each(data,function() {
+                if (this.catagory=="其他")
+                {
+                    $.each(this.subcatagory, function() {
+                    $("#delete").append("<option>" +  this.name + "</option>");
+                    });
+                };
+      });
+    });
+
+});
+</script>
 {% endblock %}

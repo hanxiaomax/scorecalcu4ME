@@ -109,9 +109,9 @@ def admins_edit(admin_id):
             user=admin,
             admin_id=admin_id)
 
-# @appME.route('/download/', methods=["GET"])
-# def download(admin_id):
-#     return render_template("download.html",admin_id=admin_id)
+@appME.route('/download/', methods=["GET"])
+def download():
+    return render_template("download.html")
 
 
 

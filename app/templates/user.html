@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+
+
   <style type="text/css">
   /*
   * Base structure
@@ -189,12 +191,35 @@
         </fieldset>
       </form>
     </div>
-    <h1 class="page-header">我的素质分</h1>
+    <h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <table class="flexme3" style="display: none"></table>
+        </div>
+        <div class="col-md-4">
+
+        </div>
+        <div class="col-md-4">
+
+        </div>
+      </div>
+    </div>
+
+
+
   </body>
 </div>
 </div>
 <div id="111"></div>
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
 <script type="text/javascript">
+
+$("#totalscore").html("总分：15分");
 
 $(function(){
         $("input:radio").change(function(){
@@ -214,5 +239,80 @@ $(function(){
 });
 
 
+$(".flexme3").flexigrid({
+                url : $SCRIPT_ROOT+"/_getMyScore",
+                dataType : 'xml',
+                colModel : [ {
+                    display : '所属类别',
+                    name : 'catagory',
+                    width : 100,
+                    sortable : false,
+                    align : 'center'
+                    }, {
+                        display : '加分项目',
+                        name : 'item_name',
+                        width : 300,
+                        sortable : true,
+                        align : 'left'
+                    }, {
+                        display : '分数',
+                        name : 'add',
+                        width : 50,
+                        sortable : true,
+                        align : 'center'
+                    }, {
+                        display : '时间',
+                        name : 'time',
+                        width : 130,
+                        sortable : true,
+                        align : 'left',
+                        hide : true
+                    }, {
+                        display : '执行标准',
+                        name : 'standard',
+                        width : 100,
+                        sortable : true,
+                        align : 'right'
+                },
+                {
+                        display : '审核状态',
+                        name : 'status',
+                        width : 80,
+                        sortable : true,
+                        align : 'right'
+                }  ],
+                buttons : [
+                {
+                        name : 'Delete',
+                        bclass : 'delete',
+                        onpress : test
+                    }, {
+                        separator : true
+                } ],
+                searchitems : [ {
+                    display : 'ISO',
+                    name : 'iso'
+                    }, {
+                        display : 'Name',
+                        name : 'name',
+                        isdefault : true
+                } ],
+                sortname : "iso",
+                sortorder : "asc",
+                usepager : false,
+                title : '我的素质分',
+                useRp : true,
+                rp : 15,
+                showTableToggleBtn : true,
+                width : 700,
+                height : 200
+            });
+function test(com, grid) {
+                if (com == 'Delete') {
+                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
+                } else if (com == 'Add') {
+                    alert('Add New Item');
+                }
+            }
 </script>
 {% endblock %}

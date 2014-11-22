@@ -238,15 +238,20 @@ $(function(){
   });
 });
 
-$
-
+// campID={{user.campID}}
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"_getMyScore",
+                method: 'GET',
                 dataType : 'json',
+                params: [{
+                    name: 'campID',
+                    value: {{user.campID}}
+                  },],
                 colModel : [ {
                     display : '所属类别',
                     name : 'catagory',
                     width : 100,
+
                     sortable : false,
                     align : 'center'
                     }, {

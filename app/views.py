@@ -117,7 +117,7 @@ def add_numbers():
 def _getMyScore():
     from app import getmyscore
     print " 777"
-    print getmyscore._getmyscore()
+    #print getmyscore._getmyscore()
     return getmyscore._getmyscore()
 
 

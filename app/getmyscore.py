@@ -5,12 +5,15 @@ from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_K
 def _getmyscore():
     # do not need to get campID from request
     # print request.args.get('query')
-    user=User.get_user("130280")
+    campID = request.args.get('campID', type=str)
+    # print campID
+    user=User.get_user(campID)
     jsondict={}
     _score_items=user.score_items.all()
-    print _score_items
+    #print _score_items
+    print campID
     for s in _score_items:
-        print s
+        # print s
         jsondict={
         "page": 1,
         "total": 10,
@@ -28,7 +31,7 @@ def _getmyscore():
                 }
                 ]
         }
-    print jsondict
+    # print jsondict
     return jsonify(jsondict)
     # return "111"
 

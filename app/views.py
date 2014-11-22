@@ -113,11 +113,12 @@ def add_numbers():
     from app import myget
     return myget.mysum()
 
-# @appME.route('/_getMyScore',methods=["POST", "GET"])
-# def _getMyScore(user_id):
-#     from app import getmysocre
-#     print " 454"
-#     return getmysocre._getmyscore(user_id)
+@appME.route('/_getMyScore',methods=["POST", "GET"])
+def _getMyScore():
+    from app import getmyscore
+    print " 777"
+    print getmyscore._getmyscore()
+    return getmyscore._getmyscore()
 
 
 # @appME.route('/_getMyScore',methods=["POST", "GET"])

@@ -51,6 +51,7 @@ class User(db.Model):
         return user
 
 
+
     def to_json(self):
         return {
             'name':self.name,
@@ -72,4 +73,4 @@ class Score_items(db.Model):
 
 
     def __repr__(self):
-        return '<Score %r>' % (self.body)
+        return '<Score %r>' % (self.time)

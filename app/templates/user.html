@@ -148,18 +148,15 @@
                   <label class="control-label">加分项目</label>
                   <div class="controls">
                     <select id="apply" class="input-xlarge" size="11">
-                      <option>担任班长</option>
-                      <option>担任党支部书记</option>
-                      <option>担任其他班委</option>
+                      <option value="担任班长">担任班长</option>
+                      <option value="担任党支部书记">担任党支部书记</option>
+                      <option value="担任其他班委">担任其他班委</option>
                     </select>
                   </div>
                 </div>
                 </div>
-
                 </div>
                 </div>
-
-
 
                 <div class="container">
                   <div class="row">
@@ -171,12 +168,11 @@
                           </div>
                         </div>
                         <div>
-
                         </div>
                         <div class="control-group">
                             <label class="control-label"> </label>
                                 <div class="controls">
-                                    <button id="submit" class="btn btn-success">提交</button>
+                                    <button id="submitbtn" class="btn btn-success">提交</button>
                                 </div>
                         </div>
                     </div>
@@ -206,20 +202,45 @@
         </div>
       </div>
     </div>
-
-
-
   </body>
 </div>
 </div>
 <div id="111"></div>
+
+
+
 <script type= "text/javascript">
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
 
+
+
+
 <script type="text/javascript">
 
+
+
 $("#totalscore").html("总分：15分");
+
+$(function () {
+
+      // var selectedvalue = $("input[name='group']:checked").val();
+          $('#submitbtn').bind('click', function () {
+            //alert($("#apply option:selected").text())
+            $.post($SCRIPT_ROOT+"_sublimtApply",
+              {
+                catagory:$("input[name='group']:checked").val(),
+                name:$("#apply option:selected").text()
+              },
+              function(){
+                alert("提交成功")
+                $(".flexme3").flexReload();
+              });
+            return false//不跳转
+          });
+
+      });
+
 
 $(function(){
         $("input:radio").change(function(){
@@ -230,7 +251,7 @@ $(function(){
                 if (this.catagory==selectedvalue)
                 {
                     $.each(this.subcatagory, function() {
-                    $("#apply").append("<option>" +  this.name + "</option>");
+                    $("#apply").append("<option value=this.name>" +  this.name + "</option>");
                     });
                 };
       });
@@ -238,10 +259,9 @@ $(function(){
   });
 });
 
-// campID={{user.campID}}
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"_getMyScore",
-                method: 'GET',
+                method: 'GET',//should be GET
                 dataType : 'json',
                 params: [{
                     name: 'campID',

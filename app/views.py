@@ -116,29 +116,9 @@ def add_numbers():
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
     from app import getmyscore
-    print " 777"
-    #print getmyscore._getmyscore()
     return getmyscore._getmyscore()
 
 
-# @appME.route('/_getMyScore',methods=["POST", "GET"])
-# def _getMyScore():
-#     f={
-#     "page": 1,
-#     "total": 239,
-#     "rows": [
-#         {
-#             "id": "ZW",
-#             "cell": {
-#                 "catagory": "班级工作",
-#                 "item_name": "VE",
-#                 "padd": "Venezuela",
-#                 "time": "VEN",
-#                 "standard": "862",
-#                 "status": "VEN"
-#             }
-#         }
-#     ]
-# }
-
-#     return jsonify(f)
+@appME.route('/_sublimtApply',methods=["POST", "GET"])
+def __sublimtApply():
+    return "111"

@@ -6,7 +6,11 @@ from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_U
 def _getmyscore():
     campID = request.args.get('campID', type=str)
     user=User.get_user(campID)
-    jsondict={}
+    jsondict={
+        "page": 1,
+        "total": 100,
+        "rows": []
+        }
     _score_items=user.score_items.all()
     for s in _score_items:
         _status=s.status
@@ -16,12 +20,7 @@ def _getmyscore():
             _status=u"通过"
         else:
             _status=u"未通过"
-
-        jsondict={
-        "page": 1,
-        "total": 10,
-        "rows": [
-                {
+        data={
                 "id": s.item_name,
                 "cell": {
                     "catagory": s.catagory,
@@ -31,9 +30,10 @@ def _getmyscore():
                     "standard": s.standard,
                     "status": _status
                 }
-                }
-                ]
-        }
+            }
+
+        jsondict["rows"].append(data)
+
 
     return jsonify(jsondict)
 

@@ -6,7 +6,7 @@ from flask.ext.login import (
 from models import User, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
 from app import appME, db, lm
-from app import getmyscore,saveapply
+from app import getmyscore,saveapply,getreview
 
 
 
@@ -118,10 +118,14 @@ def logout():
 
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
-
     return getmyscore._getmyscore()
 
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
-def __sublimtApply():
+def _sublimtApply():
     return saveapply._saveapply()
+
+@appME.route('/_getreview',methods=["POST", "GET"])
+def _getreview():
+    return getreview._getreview()
+

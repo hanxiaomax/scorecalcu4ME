@@ -94,6 +94,9 @@
   display: inline-block;
   border-radius: 50%;
   }
+  .flexigrid div.fbutton .delete {
+    background: url(/static/css/images/close.png) no-repeat center left;
+}
   </style>
   <div class="container-fluid">
     <div class="row">
@@ -227,10 +230,11 @@ $(function () {
     $('.error').hide();
     $('#submitbtn').bind('click', function () {
       if ($("#apply option:selected").text()!="") {
-          $.post($SCRIPT_ROOT+"_sublimtApply",
+          $.get($SCRIPT_ROOT+"_sublimtApply",
           {
             catagory:$("input[name='group']:checked").val(),
-            name:$("#apply option:selected").text()
+            name:$("#apply option:selected").text(),
+            campID:{{user.campID}}
           },
           function(){
             alert("提交成功")
@@ -242,7 +246,7 @@ $(function () {
       else
       {
           $('.error').show();
-          return false
+          return false//不跳转
       }
 
     });
@@ -278,14 +282,13 @@ $(".flexme3").flexigrid({
                 colModel : [ {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 100,
-
+                    width : 80,
                     sortable : false,
                     align : 'center'
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 300,
+                        width : 240,
                         sortable : true,
                         align : 'left'
                     }, {
@@ -297,21 +300,20 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '时间',
                         name : 'time',
-                        width : 130,
-                        sortable : true,
+                        width : 190,
+                        sortable : false,
                         align : 'left',
-                        hide : true
                     }, {
                         display : '执行标准',
                         name : 'standard',
                         width : 100,
                         sortable : true,
-                        align : 'right'
+                        align : 'center'
                 },
                 {
                         display : '审核状态',
                         name : 'status',
-                        width : 80,
+                        width : 50,
                         sortable : true,
                         align : 'right'
                 }  ],
@@ -337,8 +339,8 @@ $(".flexme3").flexigrid({
                 title : '我的素质分',
                 useRp : true,
                 rp : 15,
-                showTableToggleBtn : true,
-                width : 700,
+                showTableToggleBtn : false,
+                width : 725,
                 height : 200
             });
 function test(com, grid) {

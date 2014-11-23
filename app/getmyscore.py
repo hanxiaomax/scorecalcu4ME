@@ -1,6 +1,7 @@
+#coding:utf-8
 from flask import Flask,request,jsonify
 from app import db
-from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_KNOWN
+from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 
 def _getmyscore():
     campID = request.args.get('campID', type=str)
@@ -8,7 +9,14 @@ def _getmyscore():
     jsondict={}
     _score_items=user.score_items.all()
     for s in _score_items:
-        # print s
+        _status=s.status
+        if _status==2:
+            _status=u"未审核"
+        elif _status==1:
+            _status=u"通过"
+        else:
+            _status=u"未通过"
+
         jsondict={
         "page": 1,
         "total": 10,
@@ -21,7 +29,7 @@ def _getmyscore():
                     "add": s.add,
                     "time": s.time,
                     "standard": s.standard,
-                    "status": s.status
+                    "status": _status
                 }
                 }
                 ]

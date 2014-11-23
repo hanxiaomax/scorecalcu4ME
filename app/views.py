@@ -6,6 +6,9 @@ from flask.ext.login import (
 from models import User, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
 from app import appME, db, lm
+from app import getmyscore,saveapply
+
+
 
 @lm.user_loader
 def load_user(user_id):
@@ -108,17 +111,17 @@ def logout():
     return redirect(url_for('login'))
 
 
-@appME.route('/_search')
-def add_numbers():
-    from app import myget
-    return myget.mysum()
+# @appME.route('/_search')
+# def add_numbers():
+#     from app import myget
+#     return myget.mysum()
 
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
-    from app import getmyscore
+
     return getmyscore._getmyscore()
 
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def __sublimtApply():
-    return "111"
+    return saveapply._saveapply()

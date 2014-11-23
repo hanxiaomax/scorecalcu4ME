@@ -2,7 +2,7 @@
 /* CSS Document */
 .flexigrid {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 12px;
 	line-height: normal;
 	position: relative;
 	border: 0px solid #eee;
@@ -374,7 +374,7 @@ div.colCopy {
 }
 
 .flexigrid div.hDiv th.thOver {
-	
+
 }
 
 .flexigrid div.hDiv th.thOver div,.flexigrid div.hDiv th.sorted.thOver div
@@ -417,7 +417,7 @@ div.colCopy {
 }
 
 .flexigrid div.hDiv th div {
-	
+
 }
 
 .flexigrid span.cdropleft {
@@ -454,7 +454,7 @@ div.colCopy {
 }
 
 .flexigrid tr td.sorted div {
-	
+
 }
 
 .flexigrid tr.erow td {
@@ -468,7 +468,7 @@ div.colCopy {
 }
 
 .flexigrid tr.erow td.sorted div {
-	
+
 }
 
 .flexigrid div.bDiv tr:hover td,.flexigrid div.bDiv tr:hover td.sorted,.flexigrid div.bDiv tr.trOver td.sorted,.flexigrid div.bDiv tr.trOver td

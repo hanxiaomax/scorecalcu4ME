@@ -4,7 +4,7 @@ ROLE_USER = 0
 ROLE_ADMIN = 1
 STATUS_YES = 1
 STATUS_NO = 0
-STATUS_KNOWN= 2
+STATUS_UNKNOWN= 2
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
@@ -52,13 +52,6 @@ class User(db.Model):
 
 
 
-    def to_json(self):
-        return {
-            'name':self.name,
-            'campID':self.campID,
-            'Class':self.Class,
-            'grade':self.grade
-        }
 
 
 class Score_items(db.Model):
@@ -69,7 +62,7 @@ class Score_items(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     add=db.Column(db.Integer)
     standard=db.Column(db.Integer)
-    status= db.Column(db.SmallInteger, default = STATUS_KNOWN)
+    status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
 
 
     def __repr__(self):

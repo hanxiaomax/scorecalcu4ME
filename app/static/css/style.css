@@ -13,7 +13,7 @@ table {
 }
 
 .flexigrid div.fbutton .delete {
-    background: url(images/close.png) no-repeat center left;
+    background: url(/static/css/images/close.png) no-repeat center left;
 }
 
 .flexigrid div.fbutton .edit {

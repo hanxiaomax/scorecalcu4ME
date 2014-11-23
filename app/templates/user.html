@@ -153,6 +153,8 @@
                       <option value="担任其他班委">担任其他班委</option>
                     </select>
                   </div>
+
+                   <p class="error" style="color:red;font-size:16px;">请至少选中一个加分项目</p>
                 </div>
                 </div>
                 </div>
@@ -219,27 +221,33 @@
 <script type="text/javascript">
 
 
-
 $("#totalscore").html("总分：15分");
 
 $(function () {
-
-      // var selectedvalue = $("input[name='group']:checked").val();
-          $('#submitbtn').bind('click', function () {
-            //alert($("#apply option:selected").text())
-            $.post($SCRIPT_ROOT+"_sublimtApply",
-              {
-                catagory:$("input[name='group']:checked").val(),
-                name:$("#apply option:selected").text()
-              },
-              function(){
-                alert("提交成功")
-                $(".flexme3").flexReload();
-              });
-            return false//不跳转
+    $('.error').hide();
+    $('#submitbtn').bind('click', function () {
+      if ($("#apply option:selected").text()!="") {
+          $.post($SCRIPT_ROOT+"_sublimtApply",
+          {
+            catagory:$("input[name='group']:checked").val(),
+            name:$("#apply option:selected").text()
+          },
+          function(){
+            alert("提交成功")
+            $('.error').hide();
+            $(".flexme3").flexReload();
           });
+        return false//不跳转
+      }
+      else
+      {
+          $('.error').show();
+          return false
+      }
 
-      });
+    });
+
+});
 
 
 $(function(){

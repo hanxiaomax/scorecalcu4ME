@@ -97,7 +97,11 @@
   .flexigrid div.fbutton .delete {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
+
   </style>
+ <link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
+<script type="text/javascript" src="/static/js/datepicker.js"></script>
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
@@ -115,6 +119,10 @@
     <h1 class="page-header">提交申请</h1>
     <body>
       <div class="container">
+        <p>
+          <label class="control-label" for="input01">  获奖时间:  </label>
+          <input class="inputDate" id="inputDate" value="2014/01/01" />
+        </p>
         <form class="form-horizontal">
           <fieldset>
 
@@ -178,6 +186,7 @@
                             <label class="control-label"> </label>
                                 <div class="controls">
                                     <button id="submitbtn" class="btn btn-success">提交</button>
+
                                 </div>
                         </div>
                     </div>
@@ -190,6 +199,7 @@
             </fieldset>
           </form>
         </fieldset>
+
       </form>
     </div>
     <h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
@@ -210,7 +220,6 @@
   </body>
 </div>
 </div>
-<div id="111"></div>
 
 
 
@@ -234,7 +243,8 @@ $(function () {
           {
             catagory:$("input[name='group']:checked").val(),
             name:$("#apply option:selected").text(),
-            campID:{{user.campID}}
+            campID:{{user.campID}},
+            time:$("#inputDate").val()
           },
           function(){
             alert("提交成功")
@@ -350,5 +360,22 @@ function test(com, grid) {
                     alert('Add New Item');
                 }
             }
+
+
+$('#inputDate').DatePicker({
+  format:'Y/m/d',
+  date: $('#inputDate').val(),
+  current: $('#inputDate').val(),
+  starts: 1,
+  position: 'r',
+  onBeforeShow: function(){
+    $('#inputDate').DatePickerSetDate($('#inputDate').val(), true);
+  },
+  onChange: function(formated, dates){
+    $('#inputDate').val(formated);
+      $('#inputDate').DatePickerHide();
+
+  }
+});
 </script>
 {% endblock %}

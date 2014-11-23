@@ -58,7 +58,7 @@ class Score_items(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
-    time = db.Column(db.DateTime)
+    time = db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     add=db.Column(db.Integer)
     standard=db.Column(db.Integer)

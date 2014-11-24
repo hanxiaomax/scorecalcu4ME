@@ -23,6 +23,7 @@ def _getmyscore():
         data={
                 "id": s.item_name,
                 "cell": {
+                    "id":s.id,
                     "catagory": s.catagory,
                     "item_name": s.item_name,
                     "add": s.add,
@@ -37,7 +38,17 @@ def _getmyscore():
 
     return jsonify(jsondict)
 
-
+def _deleteapply():
+    Delete=request.args.get('Delete',type=int)
+    campID = request.args.get('campID', type=str)
+    user=User.get_user(campID)
+    _score_items=user.score_items.all()
+    for s in _score_items:
+        if s.id==Delete:
+            db.session.delete(s)
+    db.session.commit()
+    print type(Delete)
+    return " "
 
 
 

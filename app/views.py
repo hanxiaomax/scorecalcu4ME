@@ -118,7 +118,16 @@ def logout():
 
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
-    return getmyscore._getmyscore()
+    #0 :delete
+    #1 :getscore
+    opt=request.args.get('opt',type=int)
+
+    if(opt==1) :
+        return getmyscore._getmyscore()
+    elif(opt==0):
+        return getmyscore._deleteapply()
+
+
 
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])

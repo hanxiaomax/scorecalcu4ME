@@ -287,9 +287,20 @@ $(".flexme3").flexigrid({
                 dataType : 'json',
                 params: [{
                     name: 'campID',
-                    value: {{user.campID}}
-                  },],
-                colModel : [ {
+                    value: {{user.campID}},
+                  },{
+                    name: 'opt',
+                    value: 1,
+                  },
+                  ],
+                colModel : [{
+                    display : '申请号',
+                    name : 'id',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center'
+                    }, {
                     display : '所属类别',
                     name : 'catagory',
                     width : 80,
@@ -298,7 +309,7 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 240,
+                        width : 200,
                         sortable : true,
                         align : 'left'
                     }, {
@@ -331,7 +342,7 @@ $(".flexme3").flexigrid({
                 {
                         name : 'Delete',
                         bclass : 'delete',
-                        onpress : test
+                        onpress : Control
                     }, {
                         separator : true
                 } ],
@@ -353,13 +364,28 @@ $(".flexme3").flexigrid({
                 width : 745,
                 height : 200
             });
-function test(com, grid) {
-                if (com == 'Delete') {
-                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
-                } else if (com == 'Add') {
-                    alert('Add New Item');
-                }
-            }
+
+            function Control(com, grid) {
+                var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
+                if (con) {
+                  $.each($('.trSelected', grid),
+                            function(key, value){
+                              //alert(value.firstChild.innerText)
+                                $.get($SCRIPT_ROOT+"_getMyScore",
+                                  {
+                                    Delete: value.firstChild.innerText,
+                                    opt:0,
+                                    campID:{{user.campID}}
+                                  }
+                                    , function(){
+                                        // when ajax returns (callback), update the grid to refresh the data
+                                        $(".flexme3").flexReload();
+                                });
+                        });
+                    }
+                };
+
+
 
 
 $('#inputDate').DatePicker({

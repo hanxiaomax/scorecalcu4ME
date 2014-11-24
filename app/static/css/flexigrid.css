@@ -475,7 +475,7 @@ div.colCopy {
 	{
 	background: #d9ebf5;
 	border-left: 1px solid #eef8ff;
-	border-bottom: 1px dotted #a8d8eb;
+	/*border-bottom: 1px dotted #a8d8eb;*/
 }
 
 .flexigrid div.bDiv tr.trSelected:hover td,.flexigrid div.bDiv tr.trSelected:hover td.sorted,.flexigrid div.bDiv tr.trOver.trSelected td.sorted,.flexigrid div.bDiv tr.trOver.trSelected td,.flexigrid tr.trSelected td.sorted,.flexigrid tr.trSelected td

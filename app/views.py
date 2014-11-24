@@ -134,7 +134,13 @@ def _getMyScore():
 def _sublimtApply():
     return saveapply._saveapply()
 
+
 @appME.route('/_getreview',methods=["POST", "GET"])
 def _getreview():
-    return getreview._getreview()
-
+    opt2=request.args.get('opt2',type=int)
+    if(opt2==0) :#reject
+        return getreview._reject()
+    elif(opt2==1):#accpet
+        return getreview._accpet()
+    else:
+        return getreview._getreview()

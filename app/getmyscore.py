@@ -19,7 +19,7 @@ def _getmyscore():
         elif _status==1:
             _status=u"通过"
         else:
-            _status=u"未通过"
+            _status=u"驳回"
         data={
                 "id": s.item_name,
                 "cell": {
@@ -47,7 +47,7 @@ def _deleteapply():
         if s.id==Delete:
             db.session.delete(s)
     db.session.commit()
-    print type(Delete)
+
     return " "
 
 

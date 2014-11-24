@@ -163,15 +163,27 @@ $(".flexme3").flexigrid({
                 url : $SCRIPT_ROOT+"/_getreview",
                 method: 'GET',
                 dataType : 'json',
-                colModel : [
-                {
+                params: [{
+                    name: 'opt2',
+                    value: 3,
+                  },
+                  ],
+                colModel : [{
+                    display : '申请号',
+                    name : 'id',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center'
+                    },
+                    {
                     display : '申请人',
                     name : 'name',
                     width : 100,
                     sortable : false,
                     align : 'center'
                     },
-                {
+                    {
                     display : '所属类别',
                     name : 'catagory',
                     width : 100,
@@ -214,12 +226,12 @@ $(".flexme3").flexigrid({
                 {
                         name : '通过',
                         bclass : 'accept',
-                        onpress : test
+                        onpress : Control
                     },
                 {
                         name : '拒绝',
                         bclass : 'delete',
-                        onpress : test
+                        onpress : Control
                     }, {
                         separator : true
                 } ],
@@ -241,12 +253,47 @@ $(".flexme3").flexigrid({
                 width : 1000,
                 height : 500
             });
-function test(com, grid) {
-                if (com == 'Delete') {
-                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
-                } else if (com == 'Add') {
-                    alert('Add New Item');
+
+              function Control(com, grid) {
+                      if (com == '拒绝'){
+                          var con=confirm('拒绝选中的 ' + $('.trSelected', grid).length + ' 条申请?')
+                          if (con) {
+                            $.each($('.trSelected', grid),
+                                    function(key, value){
+                                      //alert(value.firstChild.innerText)
+                                        $.get($SCRIPT_ROOT+"/_getreview",
+                                          {
+                                            reject: value.firstChild.innerText,//id
+                                            opt2: 0,//delete
+                                          }
+                                            , function(){
+                                                // when ajax returns (callback), update the grid to refresh the data
+                                                $(".flexme3").flexReload();
+                                        });
+                                });
+                            }
+                        }
+                      else if (com == '通过')
+                      {
+                        var con=confirm('批准选中的 ' + $('.trSelected', grid).length + ' 条申请?')
+                        if (con) {
+                          $.each($('.trSelected', grid),
+                                    function(key, value){
+                                        $.get($SCRIPT_ROOT+"/_getreview",
+                                          {
+                                            accept: value.firstChild.innerText,
+                                            opt2: 1,//accept
+                                          }
+                                            , function(){
+                                                // when ajax returns (callback), update the grid to refresh the data
+                                                $(".flexme3").flexReload();
+                                        });
+                                });
+                            }
+                      }
                 }
-            }
+
+
+
 </script>
 {% endblock %}

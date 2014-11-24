@@ -282,7 +282,7 @@ $(function(){
 });
 
 $(".flexme3").flexigrid({
-                url :$SCRIPT_ROOT+"_getMyScore",
+                url :$SCRIPT_ROOT+"/_getMyScore",
                 method: 'GET',//should be GET
                 dataType : 'json',
                 params: [{
@@ -371,7 +371,7 @@ $(".flexme3").flexigrid({
                   $.each($('.trSelected', grid),
                             function(key, value){
                               //alert(value.firstChild.innerText)
-                                $.get($SCRIPT_ROOT+"_getMyScore",
+                                $.get($SCRIPT_ROOT+"/_getMyScore",
                                   {
                                     Delete: value.firstChild.innerText,
                                     opt:0,

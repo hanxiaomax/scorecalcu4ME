@@ -34,8 +34,6 @@ def _getmyscore():
             }
 
         jsondict["rows"].append(data)
-
-
     return jsonify(jsondict)
 
 def _deleteapply():
@@ -47,7 +45,6 @@ def _deleteapply():
         if s.id==Delete:
             db.session.delete(s)
     db.session.commit()
-
     return " "
 
 

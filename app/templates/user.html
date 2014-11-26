@@ -98,6 +98,15 @@
   .flexigrid div.fbutton .delete {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+    color: #3399FF;
+    font-size: 20px;
+  }
+}
 </style>
 
 
@@ -119,18 +128,14 @@
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h1 class="page-header">提交申请</h1>
 
-      <div class="container">
-        <p>
-          <label class="control-label" for="input01">  获奖时间:  </label>
-          <input class="inputDate" id="inputDate" value="2014/01/01" />
-        </p>
-      </div>
+
       <form class="form-horizontal"  >
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
                   <div class="control-group">
                       <label class="control-label">素质分类别</label>
+                      <hr>
                       <div class="controls">
                         <!-- Multiple Radios -->
                         <label class="radio">
@@ -155,6 +160,7 @@
                     <div class="control-group">
                       <!-- Select Basic -->
                       <label class="control-label">加分项目</label>
+                      <hr>
                       <div class="controls">
                         <select id="apply" class="input-xlarge" size="11">
                           <option value="担任班长">担任班长</option>
@@ -169,32 +175,47 @@
                 </div>
               </div>
               </form>
+              <form class="form-horizontal"  >
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
                       <div class="control-group">
                         <label class="control-label"> </label>
                         <div class="controls">
+                          <label class="control-label">上传证明</label>
+                          <hr>
                           <form action="" method=post enctype=multipart/form-data>
-                              <input class="input-file" id="fileInput" type="file">
+                            <p><input class="input-file" type=file name=file>
+                            <p><input type=submit value="上传">
                           </form>
+
                         </div>
                       </div>
                       <div></div>
                       <div class="control-group">
                           <label class="control-label"> </label>
                               <div class="controls">
-                                  <button id="submitbtn" class="btn btn-success">提交</button>
+                                  <button id="submitbtn" class="btn btn-success btn-lg">提交</button>
                               </div>
                       </div>
                   </div>
-                  <div class="col-md-2"> </div>
-                  <div class="col-md-6"></div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-6">
+                  <div class="control-group">
+                        <label class="control-label"> </label>
+                        <div class="controls">
+                          <label class="control-label" for="input01">获奖时间</label>
+                          <hr>
+                          <input class="inputDate" id="inputDate" value="2014/01/01" />
+                        </div>
+                  </div>
+                  </div>
                 </div>
               </div>
+              </form>
 
-    <h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
 
+<h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
     <div class="container">
       <div class="row">
         <div class="col-md-4">

@@ -48,4 +48,15 @@ def _deleteapply():
     return " "
 
 
+def _getTotal():
+    campID = request.args.get('campID', type=str)
+    user=User.get_user(campID)
+    _score_items=user.score_items.all()
+    total=0
+    for s in _score_items:
+        if (s.status==STATUS_YES):
+            if s.add is not None:
+                total+=int(s.add)
 
+    print total
+    return str(total)

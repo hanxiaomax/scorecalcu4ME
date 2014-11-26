@@ -20,15 +20,18 @@ def getstandard():
     pass
 
 def _saveapply():
+
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
     _time=request.args.get('time',type=str)
     _add=getvalue(_catagory,_name)
+    user=User.get_user(_campID)
+    #FIX:Should not get score added right after applying, move to _getTotal()
+
+
     _standard="2013-9-4"
 
-
-    user=User.get_user(_campID)
     s=Score_items(catagory=_catagory,
         item_name=_name,
         time=_time,

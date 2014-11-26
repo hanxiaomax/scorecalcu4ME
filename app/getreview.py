@@ -31,17 +31,15 @@ def _getreview():
     return jsonify(jsondict)
 
 def _accpet():
-    print "_accpet"
     accept=request.args.get('accept',type=int)
-    print accept
     s=Score_items.query.filter(Score_items.id==accept).first()#should use first()
     s.status=STATUS_YES
+
     db.session.commit()
     return " "
 
 
 def _reject():
-    print "_reject()"
     reject=request.args.get('reject',type=int)
     s=Score_items.query.filter(Score_items.id==reject).first()
     print s

@@ -5,11 +5,10 @@ from flask.ext.login import (
 
 from models import User, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
-from app import appME, db, lm
-from app import getmyscore,saveapply,getreview
-from werkzeug import secure_filename
+from app import appME, db, lm,getmyscore,saveapply,getreview
+from werkzeug import secure_filename,SharedDataMiddleware
 import os
-from werkzeug import SharedDataMiddleware
+
 
 
 
@@ -68,6 +67,13 @@ def users(user_id):
     if not user:
         redirect("/login/")
 
+    if request.method == 'POST':#利用flask框架自身的文件上传功能
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(appME.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
     return render_template(
             "user.html",
             user=user,
@@ -139,29 +145,18 @@ def _getMyScore():
         return getmyscore._getmyscore()
     elif(opt==0):
         return getmyscore._deleteapply()
+    else:
+        print "@@@@@"
+        return getmyscore._getTotal()
 
 
 
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-    #print appME.config['UPLOAD_FOLDER']
-    if request.method == 'POST':
-        file = request.files['file']
-        #print file.filename
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            #print filename
-            file.save(os.path.join(appME.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
     return saveapply._saveapply()
 
 
-
-@appME.route('/test',methods=["POST", "GET"])
-def test():
-    return render_template("test.html")
 
 
 
@@ -175,3 +170,8 @@ def _getreview():
         return getreview._accpet()
     else:
         return getreview._getreview()
+
+@appME.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(appME.config['UPLOAD_FOLDER'],
+                               filename)

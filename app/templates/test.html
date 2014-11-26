@@ -1,7 +1,31 @@
-<!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
+<html>
+  <head>
+    <link href="/static/css/uploadify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/static/js/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/static/js/swfobject.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.uploadify.v2.1.4.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+      $('#file_upload').uploadify({
+        'uploader': '/static/js/uploadify.swf',
+        'script': '/',
+        'cancelImg': '/static/css/images/upload-cancel.png',
+        'auto': false,
+        'multi': true,
+      'queueSizeLimit': 5,
+        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+      'onSelect': function(event, ID, fileObj) {
+            $('#upload_link').show();
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+        }
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <input id="file_upload" name="file_upload" type="file" />
+    <a id="upload_link" href="javascript:$('#file_upload').uploadifyUpload()" style="display:none">Upload Files</a>
+  </body>
+</html>

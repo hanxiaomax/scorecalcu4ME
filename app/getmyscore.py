@@ -42,7 +42,8 @@ def _deleteapply():
     user=User.get_user(campID)
     _score_items=user.score_items.all()
     for s in _score_items:
-        if s.id==Delete:
+        if (s.id==Delete) and (s.status!=STATUS_YES):
+            canDelete="1"
             db.session.delete(s)
     db.session.commit()
     return " "
@@ -57,6 +58,4 @@ def _getTotal():
         if (s.status==STATUS_YES):
             if s.add is not None:
                 total+=int(s.add)
-
-    print total
     return str(total)

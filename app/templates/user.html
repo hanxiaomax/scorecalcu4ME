@@ -240,6 +240,23 @@
 <script type="text/javascript">
 
 $(function(){
+  $("#btnUpload").click(function(event) {
+    alert($(".input-file").val())//获取文件名
+
+  });
+})
+
+
+// $(function() {
+//     $("#file_upload_1").uploadify({
+//         height        : 30,
+//         swf           : '/uploadify/uploadify.swf',
+//         uploader      : '/uploadify/uploadify.php',
+//         width         : 120
+//     });
+// });
+
+$(function(){
   $.get($SCRIPT_ROOT+"/_getMyScore",
     {
       campID:{{user.campID}},
@@ -248,12 +265,6 @@ $(function(){
     })
 
 })
-
-
-
-
-
-
 
 
 
@@ -399,9 +410,15 @@ $(".flexme3").flexigrid({
                                     opt:0,
                                     campID:{{user.campID}}
                                   }
-                                    , function(){
-                                        // when ajax returns (callback), update the grid to refresh the data
-                                        $(".flexme3").flexReload();
+                                    , function(canDelete){
+                                        if (canDelete=="1")
+                                          {
+                                            $(".flexme3").flexReload();
+                                          }
+                                        else
+                                        {
+                                          alert("无法删除已经审核的加分项")
+                                        }
                                 });
                         });
                     }

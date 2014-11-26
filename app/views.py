@@ -146,7 +146,6 @@ def _getMyScore():
     elif(opt==0):
         return getmyscore._deleteapply()
     else:
-        print "@@@@@"
         return getmyscore._getTotal()
 
 
@@ -171,7 +170,23 @@ def _getreview():
     else:
         return getreview._getreview()
 
+
+
+
 @appME.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
+
+
+@appME.route('/test',methods=["POST", "GET"])
+def test():
+    if request.method == 'POST':
+        file = request.files['file']
+        print file.name
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return render_template("test.html")

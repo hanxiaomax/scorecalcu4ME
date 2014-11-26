@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-
+<link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
+<script type="text/javascript" src="/static/js/datepicker.js"></script>
 
   <style type="text/css">
   /*
@@ -97,10 +98,8 @@
   .flexigrid div.fbutton .delete {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
+</style>
 
-  </style>
- <link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
-<script type="text/javascript" src="/static/js/datepicker.js"></script>
 
   <div class="container-fluid">
     <div class="row">
@@ -115,93 +114,85 @@
       </div>
     </div>
   </div>
+
+
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <h1 class="page-header">提交申请</h1>
-    <body>
+
       <div class="container">
         <p>
           <label class="control-label" for="input01">  获奖时间:  </label>
           <input class="inputDate" id="inputDate" value="2014/01/01" />
         </p>
-        <form class="form-horizontal">
-          <fieldset>
-
-
-            <form class="form-horizontal">
-              <fieldset>
+      </div>
+      <form class="form-horizontal"  >
               <div class="container">
-              <div class="row">
-              <div class="col-md-4">
-              <div class="control-group">
-                  <label class="control-label">素质分类别</label>
-                  <div class="controls">
-                    <!-- Multiple Radios -->
-                    <label class="radio">
-                      <input type="radio" value="班级工作" name="group" checked="checked">班级工作（此类累加不得超过40分）</label>
-                    <label class="radio">
-                      <input type="radio" value="院级社团" name="group">院级社团（此类累加不得超过35分）</label>
-                    <label class="radio">
-                      <input type="radio" value="校级社团" name="group">校级社团（此类累加不得超过35分）</label>
-                    <label class="radio">
-                      <input type="radio" value="个人荣誉" name="group">个人荣誉（此类累加不得超过50分）</label>
-                    <label class="radio">
-                      <input type="radio" value="集体荣誉" name="group">集体荣誉（此类累加不得超过50分）</label>
-                    <label class="radio">
-                      <input type="radio" value="集体活动" name="group">集体活动（此类累加不得超过30分）</label>
-                    <label class="radio">
-                      <input type="radio" value="其他" name="group">其他（累计不得超过15分）</label>
+                <div class="row">
+                  <div class="col-md-4">
+                  <div class="control-group">
+                      <label class="control-label">素质分类别</label>
+                      <div class="controls">
+                        <!-- Multiple Radios -->
+                        <label class="radio">
+                          <input type="radio" value="班级工作" name="group" checked="checked">班级工作（此类累加不得超过40分）</label>
+                        <label class="radio">
+                          <input type="radio" value="院级社团" name="group">院级社团（此类累加不得超过35分）</label>
+                        <label class="radio">
+                          <input type="radio" value="校级社团" name="group">校级社团（此类累加不得超过35分）</label>
+                        <label class="radio">
+                          <input type="radio" value="个人荣誉" name="group">个人荣誉（此类累加不得超过50分）</label>
+                        <label class="radio">
+                          <input type="radio" value="集体荣誉" name="group">集体荣誉（此类累加不得超过50分）</label>
+                        <label class="radio">
+                          <input type="radio" value="集体活动" name="group">集体活动（此类累加不得超过30分）</label>
+                        <label class="radio">
+                          <input type="radio" value="其他" name="group">其他（累计不得超过15分）</label>
+                        </div>
+                      </div>
                     </div>
-                  </div></div>
-              <div class="col-md-2"> </div>
-              <div class="col-md-6">
-              <div class="control-group">
-                  <!-- Select Basic -->
-                  <label class="control-label">加分项目</label>
-                  <div class="controls">
-                    <select id="apply" class="input-xlarge" size="11">
-                      <option value="担任班长">担任班长</option>
-                      <option value="担任党支部书记">担任党支部书记</option>
-                      <option value="担任其他班委">担任其他班委</option>
-                    </select>
+                  <div class="col-md-2"> </div>
+                  <div class="col-md-6">
+                    <div class="control-group">
+                      <!-- Select Basic -->
+                      <label class="control-label">加分项目</label>
+                      <div class="controls">
+                        <select id="apply" class="input-xlarge" size="11">
+                          <option value="担任班长">担任班长</option>
+                          <option value="担任党支部书记">担任党支部书记</option>
+                          <option value="担任其他班委">担任其他班委</option>
+                        </select>
+                      </div>
+
+                       <p class="error" style="color:red;font-size:16px;">请至少选中一个加分项目</p>
+                    </div>
                   </div>
-
-                   <p class="error" style="color:red;font-size:16px;">请至少选中一个加分项目</p>
                 </div>
-                </div>
-                </div>
-                </div>
-
-                <div class="container">
-                  <div class="row">
-                    <div class="col-md-4">
-                        <div class="control-group">
+              </div>
+              </form>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-4">
+                      <div class="control-group">
+                        <label class="control-label"> </label>
+                        <div class="controls">
+                          <form action="" method=post enctype=multipart/form-data>
+                              <input class="input-file" id="fileInput" type="file">
+                          </form>
+                        </div>
+                      </div>
+                      <div></div>
+                      <div class="control-group">
                           <label class="control-label"> </label>
-                          <div class="controls">
-                            <input class="input-file" id="fileInput" type="file">
-                          </div>
-                        </div>
-                        <div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label"> </label>
-                                <div class="controls">
-                                    <button id="submitbtn" class="btn btn-success">提交</button>
-
-                                </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2"> </div>
-                    <div class="col-md-6">
-
-                    </div>
+                              <div class="controls">
+                                  <button id="submitbtn" class="btn btn-success">提交</button>
+                              </div>
+                      </div>
                   </div>
+                  <div class="col-md-2"> </div>
+                  <div class="col-md-6"></div>
                 </div>
-            </fieldset>
-          </form>
-        </fieldset>
+              </div>
 
-      </form>
-    </div>
     <h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
 
     <div class="container">
@@ -209,17 +200,12 @@
         <div class="col-md-4">
           <table class="flexme3" style="display: none"></table>
         </div>
-        <div class="col-md-4">
-
-        </div>
-        <div class="col-md-4">
-
-        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
       </div>
     </div>
-  </body>
-</div>
-</div>
+  </div>
+
 
 
 
@@ -280,7 +266,6 @@ $(function(){
     });
   });
 });
-
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"/_getMyScore",
                 method: 'GET',//should be GET
@@ -384,7 +369,6 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
-
 
 
 

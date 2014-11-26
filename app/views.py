@@ -7,12 +7,25 @@ from models import User, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
 from app import appME, db, lm
 from app import getmyscore,saveapply,getreview
+from werkzeug import secure_filename
+import os
+from werkzeug import SharedDataMiddleware
+
+
+
 
 
 
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in appME.config['ALLOWED_EXTENSIONS']
+
+
 
 #mapping from url / and /index to this function
 
@@ -132,7 +145,25 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
+    #print appME.config['UPLOAD_FOLDER']
+    if request.method == 'POST':
+        file = request.files['file']
+        #print file.filename
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            #print filename
+            file.save(os.path.join(appME.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
     return saveapply._saveapply()
+
+
+
+@appME.route('/test',methods=["POST", "GET"])
+def test():
+    return render_template("test.html")
+
+
 
 
 @appME.route('/_getreview',methods=["POST", "GET"])

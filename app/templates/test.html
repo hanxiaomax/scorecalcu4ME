@@ -1,18 +1,22 @@
 <html>
   <head>
+
     <link href="/static/css/uploadify.css" type="text/css" rel="stylesheet" />
     <script type="text/javascript" src="/static/js/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/static/js/swfobject.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.uploadify.v2.1.4.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.uploadify.v2.1.4.min.js"></script>
+    <script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
     <script type="text/javascript">
     $(document).ready(function() {
       $('#file_upload').uploadify({
         'uploader': '/static/js/uploadify.swf',
-        'script': '/',
+        'script': $SCRIPT_ROOT+'/test',
         'cancelImg': '/static/css/images/upload-cancel.png',
         'auto': false,
         'multi': true,
-      'queueSizeLimit': 5,
+      'queueSizeLimit': 10,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
       'onSelect': function(event, ID, fileObj) {
             $('#upload_link').show();

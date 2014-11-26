@@ -182,11 +182,22 @@ def uploaded_file(filename):
 @appME.route('/test',methods=["POST", "GET"])
 def test():
     if request.method == 'POST':
-        file = request.files['file']
-        print file.name
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+        save_files()
+        return 'Uploaded'
     return render_template("test.html")
+
+def save_file(filestorage):
+    "Save a Werkzeug file storage object to the upload folder."
+#TODO:.jpg
+    filename = secure_filename(filestorage.filename)
+    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)
+    filestorage.save(filepath)
+
+
+def save_files(request=request):
+    "Save all files in a request to the app's upload folder."
+    for _, filestorage in request.files.iteritems():
+        # Workaround: larger uploads cause a dummy file named '<fdopen>'.
+        # See the Flask mailing list for more information.
+        if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
+            save_file(filestorage)

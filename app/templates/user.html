@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
+<link href="/static/css/uploadify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/datepicker.js"></script>
 <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="/static/js/swfobject.js"></script>
+<script type="text/javascript" src="/static/js/jquery.uploadify.v2.1.4.min.js"></script>
   <style type="text/css">
   /*
   * Base structure
@@ -184,10 +187,9 @@
                         <div class="controls">
                           <label class="control-label">上传证明</label>
                           <hr>
-                          <form action="" method=post enctype=multipart/form-data>
-                            <p><input class="input-file" type=file id="file">
-                            <p><input type="button" id="btnUpload" value="上传">
-                          </form>
+                          <input id="file_upload" name="file_upload" type="file" />
+                          <p>请上传小于2M的图片
+    <a id="upload_link" href="javascript:$('#file_upload').uploadifyUpload()" style="display:none">上传</a>
 
                         </div>
                       </div>
@@ -247,14 +249,23 @@ $(function(){
 })
 
 
-// $(function() {
-//     $("#file_upload_1").uploadify({
-//         height        : 30,
-//         swf           : '/uploadify/uploadify.swf',
-//         uploader      : '/uploadify/uploadify.php',
-//         width         : 120
-//     });
-// });
+$(document).ready(function() {
+      $('#file_upload').uploadify({
+        'uploader': '/static/js/uploadify.swf',
+        'script': $SCRIPT_ROOT+'/test',
+        'cancelImg': '/static/css/images/upload-cancel.png',
+        'auto': false,
+        'multi': true,
+      'queueSizeLimit': 10,
+        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+      'onSelect': function(event, ID, fileObj) {
+            $('#upload_link').show();
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+        }
+      });
+    });
 
 $(function(){
   $.get($SCRIPT_ROOT+"/_getMyScore",
@@ -285,7 +296,7 @@ $(function () {
             $('.error').hide();
             $(".flexme3").flexReload();
           });
-        return false//不跳转
+        //return false //Refresh whole page to make upload files disappear
       }
       else
       {
@@ -410,13 +421,11 @@ $(".flexme3").flexigrid({
                                     opt:0,
                                     campID:{{user.campID}}
                                   }
-                                    , function(canDelete){
-                                        if (canDelete=="1")
-                                          {
+                                  , function(canDelete){
+                                        if (canDelete=="Yes"){
                                             $(".flexme3").flexReload();
                                           }
-                                        else
-                                        {
+                                        else{
                                           alert("无法删除已经审核的加分项")
                                         }
                                 });

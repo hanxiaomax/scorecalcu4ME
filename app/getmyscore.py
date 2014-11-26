@@ -43,7 +43,7 @@ def _deleteapply():
     _score_items=user.score_items.all()
     for s in _score_items:
         if (s.id==Delete) and (s.status!=STATUS_YES):
-            canDelete="1"
+            canDelete="Yes"
             db.session.delete(s)
     db.session.commit()
     return " "

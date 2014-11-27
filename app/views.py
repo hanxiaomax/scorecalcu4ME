@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import (render_template,flash,redirect,session,url_for,request,g,request,jsonify)
+from flask import (render_template,flash,redirect,session,url_for,request,session,request,jsonify)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
@@ -8,10 +8,6 @@ from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
-
-
-
-
 
 
 
@@ -149,7 +145,9 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-    return saveapply._saveapply()
+    # print session['filepath']
+    return saveapply._saveapply(session['filepath'])
+    # return saveapply._renamepic(session['filepath'])
 
 
 
@@ -188,6 +186,7 @@ def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
     filename = secure_filename(filestorage.filename)
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
+    session['filepath']=filepath
     filestorage.save(filepath)
 
 

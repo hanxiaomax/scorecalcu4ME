@@ -1,4 +1,4 @@
-from flask import Flask,request
+from flask import Flask,request,g
 from app import db
 from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 import datetime
@@ -19,15 +19,13 @@ def getvalue(cat,name):
 def getstandard():
     pass
 
-def _saveapply():
+def _saveapply(filepath):
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
     _time=request.args.get('time',type=str)
     _add=getvalue(_catagory,_name)
     user=User.get_user(_campID)
-    #FIX:Should not get score added right after applying, move to _getTotal()
-
 
     _standard="2013-9-4"
 
@@ -39,5 +37,14 @@ def _saveapply():
         student=user)
 
     db.session.add(s)
+    db.session.flush()#execute SQL so you can get id
+    new_id=s.id
     db.session.commit()
+    print filepath
+    uploadDir=os.path.dirname(filepath)
+    os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
+    # os.rename(filepath,"ddddd.jpg")
+    #os.rename("QQ20141125090120.jpg","ddddd.jpg")
+
     return ""
+

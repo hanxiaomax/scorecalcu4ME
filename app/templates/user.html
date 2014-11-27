@@ -273,7 +273,7 @@
         //     $('#upload_link').show();
         // },
         'onSelect' : function(file) {
-            alert(file.name);
+            var filename=file.name;
         },
       'onAllComplete': function(event, data) {
             $('#upload_link').hide();
@@ -308,7 +308,8 @@ $(function () {
             catagory:$("input[name='group']:checked").val(),
             name:$("#apply option:selected").text(),
             campID:{{user.campID}},
-            time:$("#inputDate").val()
+            time:$("#inputDate").val(),
+            // filename:filename
             //opt:1
           },
           function(){

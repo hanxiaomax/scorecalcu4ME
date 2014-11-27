@@ -1,7 +1,8 @@
 #coding:utf-8
 from flask import Flask,request,jsonify
-from app import db
+from app import db,appME
 from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
+import os
 
 def _getmyscore():
     campID = request.args.get('campID', type=str)
@@ -45,6 +46,8 @@ def _deleteapply():
     for s in _score_items:
         if (s.id==Delete and s.status!=STATUS_YES):
             canDelete="Yes"
+
+            os.remove(appME.config['UPLOAD_FOLDER']+"certiID"+str(s.id)+".png")
             db.session.delete(s)
     db.session.commit()
     return canDelete

@@ -37,14 +37,14 @@ def _saveapply(filepath):
         student=user)
 
     db.session.add(s)
-    db.session.flush()#execute SQL so you can get id
+    #execute SQL so you can get id
+    db.session.flush()
     new_id=s.id
     db.session.commit()
-    print filepath
     uploadDir=os.path.dirname(filepath)
-    os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
-    # os.rename(filepath,"ddddd.jpg")
-    #os.rename("QQ20141125090120.jpg","ddddd.jpg")
+    #rename the pic ,dont forget the dirpath
+    #os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
+    os.rename(filepath,uploadDir+"/"+"certiID"+str(new_id)+".png")
 
     return ""
 

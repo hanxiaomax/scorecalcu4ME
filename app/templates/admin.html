@@ -102,6 +102,9 @@
 .flexigrid div.fbutton .delete {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
+.flexigrid div.fbutton .check {
+    background: url(/static/css/images/open.png) no-repeat center left;
+}
   </style>
   <div class="container-fluid">
     <div class="row">
@@ -215,24 +218,24 @@ $(".flexme3").flexigrid({
                         sortable : true,
                         align : 'left'
                 },
-                {
-                        display : '证明',
-                        name : 'certification',
-                        width : 80,
-                        sortable : true,
-                        align : 'left'
-                }  ],
+                ],
                 buttons : [
                 {
                         name : '通过',
                         bclass : 'accept',
                         onpress : Control
                     },
-                {
+                    {
                         name : '拒绝',
                         bclass : 'delete',
                         onpress : Control
-                    }, {
+                    },
+                    {
+                        name : '查看证明',
+                        bclass : 'check',
+                        onpress : Control
+                    },
+                    {
                         separator : true
                 } ],
                 searchitems : [ {
@@ -291,9 +294,19 @@ $(".flexme3").flexigrid({
                                 });
                             }
                       }
+                      else if (com == "查看证明"){
+                          if ($('.trSelected', grid).length>1) {
+                            alert("请选择单一条目")
+                          }
+                          else{
+                            $.each($('.trSelected', grid),
+                              function(key, value){
+                                var id=value.firstChild.innerText
+                                window.open("/uploads/"+"certiID"+id+".png")
+                            })
+                          }
+                      }
                 }
-
-
 
 </script>
 {% endblock %}

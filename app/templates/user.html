@@ -259,16 +259,30 @@
         'uploader': $SCRIPT_ROOT+'/_uploader',
         'cancelImg': '/static/uploadify/uploadify-cancel.png',
         'auto': true,
-        'multi': false,
-        'fileDataName':'upfile',
-        'queueSizeLimit': 10,
+        'buttonText' : '浏览...',
+        'fileObjName' : 'the_files',
+        'fileTypeDesc' : 'Image Files',
+        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
+        'fileSizeLimit' : '2048KB',
+        //'formData'      : {'campID' : {{user.campID}}},
+        'multi': true,
+        'queueSizeLimit': 5,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
-      'onSelect': function(event, ID, fileObj) {
-            $('#upload_link').show();
+        // 'onSelect': function(e, ID, fileObj) {
+        //   alert(fileObj.name)
+        //     $('#upload_link').show();
+        // },
+        'onSelect' : function(file) {
+            alert(file.name);
         },
       'onAllComplete': function(event, data) {
             $('#upload_link').hide();
-        }
+
+        },
+      'onUploadStart': function (file) {
+                    $("#file_upload").uploadify("settings", "formData", { 'campID': {{user.campID}} ,'filename':file.name});
+                    //在onUploadStart事件中，也就是上传之前，把参数写好传递到后台。
+                }
       });
     });
 
@@ -302,14 +316,12 @@ $(function () {
             $('.error').hide();
             $(".flexme3").flexReload();
           });
-        return false //Refresh whole page to make upload files disappear
+        //return false //Refresh whole page to make upload files disappear
       }
-      else
-      {
+      else{
           $('.error').show();
           return false//不跳转
       }
-
     });
 
 });
@@ -414,7 +426,6 @@ $(".flexme3").flexigrid({
                 width : 745,
                 height : 200
             });
-
             function Control(com, grid) {
                 var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
                 if (con) {
@@ -442,8 +453,6 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
-
-
 
 $('#inputDate').DatePicker({
   format:'Y/m/d',

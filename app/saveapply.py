@@ -20,8 +20,6 @@ def getstandard():
     pass
 
 def _saveapply():
-    # file=request.files['file']
-    # print file.name
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)

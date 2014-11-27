@@ -178,22 +178,17 @@ def uploaded_file(filename):
 @appME.route('/_uploader',methods=["POST", "GET"])
 def test():
     if request.method == 'POST':
+        #campID=request.form['campID'] #get campID while uploading file
+        #print request.form['filename']
         save_files()
         return 'Uploaded'
 
 
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in appME.config['ALLOWED_EXTENSIONS']
-
-#TODO:tell people that the wrong file hasn't been uploaded
 def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
-    if  allowed_file(filestorage.filename):
-        filename = secure_filename(filestorage.filename)
-        filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)
-        filestorage.save(filepath)
+    filename = secure_filename(filestorage.filename)
+    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
+    filestorage.save(filepath)
 
 
 

@@ -41,12 +41,13 @@ def _deleteapply():
     campID = request.args.get('campID', type=str)
     user=User.get_user(campID)
     _score_items=user.score_items.all()
+    canDelete="No"
     for s in _score_items:
-        if (s.id==Delete) and (s.status!=STATUS_YES):
+        if (s.id==Delete and s.status!=STATUS_YES):
             canDelete="Yes"
             db.session.delete(s)
     db.session.commit()
-    return " "
+    return canDelete
 
 
 def _getTotal():

@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 <link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
-<link href="/static/css/uploadify.css" type="text/css" rel="stylesheet" />
+<link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/datepicker.js"></script>
-<script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
-<script type="text/javascript" src="/static/js/swfobject.js"></script>
-<script type="text/javascript" src="/static/js/jquery.uploadify.v2.1.4.min.js"></script>
+<script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="/static/uploadify/jquery.uploadify.v2.1.4.js"></script>
+
   <style type="text/css">
   /*
   * Base structure
@@ -187,17 +187,18 @@
                         <div class="controls">
                           <label class="control-label">上传证明</label>
                           <hr>
-                          <input id="file_upload" name="file_upload" type="file" />
-                          <p>请上传小于2M的图片
-    <a id="upload_link" href="javascript:$('#file_upload').uploadifyUpload()" style="display:none">上传</a>
 
+
+                          <input id="file_upload" name="file_upload" type="file" />
+                          <p style="font-size:10px;">小于2M且为jpg,jpeg,png格式
+    <a id="upload_link" href="javascript:$('#file_upload').uploadifyUpload()" style="display:none">Upload Files</a>
                         </div>
                       </div>
                       <div></div>
                       <div class="control-group">
                           <label class="control-label"> </label>
                               <div class="controls">
-                                  <button id="submitbtn" class="btn btn-success btn-lg">提交</button>
+                                  <button id="submitbtn" class="btn btn-primary btn-lg">提交</button>
                               </div>
                       </div>
                   </div>
@@ -231,7 +232,6 @@
 
 
 
-
 <script type= "text/javascript">
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
@@ -241,19 +241,17 @@
 
 <script type="text/javascript">
 
-$(function(){
-  $("#btnUpload").click(function(event) {
-    alert($(".input-file").val())//获取文件名
+// $(function(){
+//   $("#submitbtn").click(function(event) {
+//     alert($("#file_upload").val())//获取文件名
+//   });
+// })
 
-  });
-})
-
-
-$(document).ready(function() {
+ $(document).ready(function() {
       $('#file_upload').uploadify({
-        'uploader': '/static/js/uploadify.swf',
-        'script': $SCRIPT_ROOT+'/test',
-        'cancelImg': '/static/css/images/upload-cancel.png',
+        'uploader': '/static/uploadify/uploadify.swf',
+        'script': '/_uploader',
+        'cancelImg': '/static/uploadify/cancel.png',
         'auto': false,
         'multi': true,
       'queueSizeLimit': 10,
@@ -266,6 +264,7 @@ $(document).ready(function() {
         }
       });
     });
+
 
 $(function(){
   $.get($SCRIPT_ROOT+"/_getMyScore",
@@ -296,7 +295,7 @@ $(function () {
             $('.error').hide();
             $(".flexme3").flexReload();
           });
-        //return false //Refresh whole page to make upload files disappear
+        return false //Refresh whole page to make upload files disappear
       }
       else
       {
@@ -422,11 +421,14 @@ $(".flexme3").flexigrid({
                                     campID:{{user.campID}}
                                   }
                                   , function(canDelete){
-                                        if (canDelete=="Yes"){
+                                    alert(canDelete)
+                                        if (canDelete=="No"){
+                                            alert("无法删除已经审核的加分项")
                                             $(".flexme3").flexReload();
                                           }
                                         else{
-                                          alert("无法删除已经审核的加分项")
+
+                                          $(".flexme3").flexReload();
                                         }
                                 });
                         });
@@ -451,4 +453,5 @@ $('#inputDate').DatePicker({
   }
 });
 </script>
+
 {% endblock %}

@@ -34,7 +34,6 @@ def _accpet():
     accept=request.args.get('accept',type=int)
     s=Score_items.query.filter(Score_items.id==accept).first()#should use first()
     s.status=STATUS_YES
-
     db.session.commit()
     return " "
 

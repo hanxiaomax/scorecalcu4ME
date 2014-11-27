@@ -130,10 +130,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-# @appME.route('/_search')
-# def add_numbers():
-#     from app import myget
-#     return myget.mysum()
 
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
@@ -179,19 +175,26 @@ def uploaded_file(filename):
                                filename)
 
 
-@appME.route('/test',methods=["POST", "GET"])
+@appME.route('/_uploader',methods=["POST", "GET"])
 def test():
     if request.method == 'POST':
         save_files()
         return 'Uploaded'
-    return render_template("test.html")
 
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in appME.config['ALLOWED_EXTENSIONS']
+
+#TODO:tell people that the wrong file hasn't been uploaded
 def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
-#TODO:.jpg
-    filename = secure_filename(filestorage.filename)
-    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)
-    filestorage.save(filepath)
+    if  allowed_file(filestorage.filename):
+        filename = secure_filename(filestorage.filename)
+        filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)
+        filestorage.save(filepath)
+
 
 
 def save_files(request=request):
@@ -201,3 +204,4 @@ def save_files(request=request):
         # See the Flask mailing list for more information.
         if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
             save_file(filestorage)
+

@@ -16,16 +16,14 @@ class User(db.Model):
     score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
     score=db.Column(db.Integer)
 
-
     def __repr__(self):
         return '<User %r>' % (self.name)
-
-
 
     def is_authenticated(self):
         return True
 
     def is_active(self):
+        #Returns True if this is an active user
         return True
 
     def is_anonymous(self):

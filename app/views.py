@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import (render_template,flash,redirect,session,url_for,request,session,request,jsonify,send_from_directory)
+from flask import (render_template,flash,redirect,session,url_for,request,session,request,jsonify,send_from_directory,g)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
@@ -16,20 +16,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in appME.config['ALLOWED_EXTENSIONS']
+
+# @appME.route('/index/') #/index will be redirect to /index/
+# #@login_required
+# def index():
+#     user={'nickname':'Miguel'}
+#     form = LoginForm()
+#     return render_template('index.html', title=u'HOME', user=user,form=form)
 
 
-
-#mapping from url / and /index to this function
-
-@appME.route('/index/') #/index will be redirect to /index/
-#@login_required
-def index():
-    user={'nickname':'Miguel'}
-    form = LoginForm()
-    return render_template('index.html', title=u'HOME', user=user,form=form)
 
 @appME.route('/',methods=['GET','POST'])
 @appME.route('/login/',methods=['GET','POST'])
@@ -55,13 +50,24 @@ def login():
 
 
 
-
+#user.html
+#Dashboard for student to apply
 @appME.route('/student_<int:user_id>', methods=["POST", "GET"])
 @login_required
 def users(user_id):
+    #type(user_id):int
+    #type(current_user.campID):unicode
+    #you can only view your page!
+    if user_id!=int(current_user.campID):
+        return redirect("/login/")
+
     user = User.query.filter(User.campID == user_id).first()
+
     if not user:
         redirect("/login/")
+    #everytime this page refresh it means application has been submited ,
+    #So clean the filepath because the next apply may not need to upload a pic.
+    #In that case the filepath wont be update automatically
     if session.has_key('filepath'):
         session.pop('filepath')
     return render_template(
@@ -74,9 +80,6 @@ def users(user_id):
 @login_required
 def admins_review(admin_id):
     admin = User.query.filter(User.campID == admin_id).first()
-    if not admin:
-        flash("The user is not exist.")
-        redirect("/login/")
     return render_template(
             "admin.html",
             user=admin,
@@ -123,6 +126,7 @@ def logout():
 
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
+    "getmyscore.py:scripts used by user.html"
     #0 :delete
     #1 :getscore
     opt=request.args.get('opt',type=int)
@@ -134,6 +138,7 @@ def _getMyScore():
         # if session.has_key('filepath'):
         #     session.pop('filepath')
         #     return getmyscore._deleteapply()
+        #Moved to _deleteapply()
         return getmyscore._deleteapply()
     else:
         return getmyscore._getTotal()
@@ -142,6 +147,7 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
+
     # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
     if session.has_key('filepath'):
         return saveapply._saveapply(session['filepath'])
@@ -167,15 +173,14 @@ def _getreview():
 
 @appME.route('/uploads/<filename>')
 def uploaded_file(filename):
+    "send picture"
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 
 
 @appME.route('/_uploader',methods=["POST", "GET"])
-def test():
+def uploader():
     if request.method == 'POST':
-        #campID=request.form['campID'] #get campID while uploading file
-        #print request.form['filename']
         save_files()
         return 'Uploaded'
 
@@ -184,7 +189,7 @@ def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
     filename = secure_filename(filestorage.filename)
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
-    session['filepath']=filepath
+    session['filepath']=filepath#save current filepath in session
     filestorage.save(filepath)
 
 

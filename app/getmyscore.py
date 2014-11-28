@@ -37,7 +37,7 @@ def _getmyscore():
         jsondict["rows"].append(data)
     return jsonify(jsondict)
 
-def _deleteapply():
+def _deleteapply(has_pic=False):
     Delete=request.args.get('Delete',type=int)
     campID = request.args.get('campID', type=str)
     user=User.get_user(campID)
@@ -46,8 +46,8 @@ def _deleteapply():
     for s in _score_items:
         if (s.id==Delete and s.status!=STATUS_YES):
             canDelete="Yes"
-
-            os.remove(appME.config['UPLOAD_FOLDER']+"certiID"+str(s.id)+".png")
+            if has_pic:
+                os.remove(appME.config['UPLOAD_FOLDER']+"certiID"+str(s.id)+".png")
             db.session.delete(s)
     db.session.commit()
     return canDelete

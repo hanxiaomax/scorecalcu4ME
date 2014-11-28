@@ -281,7 +281,7 @@ $(".flexme3").flexigrid({
                         var con=confirm('批准选中的 ' + $('.trSelected', grid).length + ' 条申请?')
                         if (con) {
                           $.each($('.trSelected', grid),
-                                    function(key, value){
+                                    function(key, value){//value:HTMLTableRowElement
                                         $.get($SCRIPT_ROOT+"/_getreview",
                                           {
                                             accept: value.firstChild.innerText,

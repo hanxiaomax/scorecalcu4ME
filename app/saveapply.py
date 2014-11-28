@@ -19,7 +19,8 @@ def getvalue(cat,name):
 def getstandard():
     pass
 
-def _saveapply(filepath):
+def _saveapply(filepath=False):
+    #by default we think there is no pic being uploaded
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
@@ -37,14 +38,16 @@ def _saveapply(filepath):
         student=user)
 
     db.session.add(s)
-    #execute SQL so you can get id
+    #execute SQL so you can get s.id
     db.session.flush()
     new_id=s.id
     db.session.commit()
-    uploadDir=os.path.dirname(filepath)
+    if filepath:
+        uploadDir=os.path.dirname(filepath)
     #rename the pic ,dont forget the dirpath
     #os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
-    os.rename(filepath,uploadDir+"/"+"certiID"+str(new_id)+".png")
+        os.rename(filepath,uploadDir+"/"+"certiID"+str(new_id)+".png")
+
 
     return ""
 

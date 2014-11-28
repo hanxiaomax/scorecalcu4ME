@@ -136,19 +136,24 @@ def _getMyScore():
     if(opt==1) :
         return getmyscore._getmyscore()
     elif(opt==0):
+        #if we delete an apply we will delete but not delete its 'filepath',here fixed the bug
+        if session.has_key('filepath'):
+            session.pop('filepath')
+            return getmyscore._deleteapply(True)
         return getmyscore._deleteapply()
     else:
         return getmyscore._getTotal()
 
 
 
-
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-    # print session['filepath']
-    return saveapply._saveapply(session['filepath'])
-    # return saveapply._renamepic(session['filepath'])
-
+    # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
+    if session.has_key('filepath'):
+        print session['filepath']
+        return saveapply._saveapply(session['filepath'])
+    else:
+        return saveapply._saveapply()
 
 
 

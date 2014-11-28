@@ -13,6 +13,10 @@ def _getreview():
     _score_items=Score_items.query.filter(Score_items.status==2)
     #TODO:maybe filter when query from the db? ----DOWN
     for s in _score_items:
+        if s.picpath is not None:
+            _picpath="已上传"
+        else:
+            _picpath=" "
         data={
                 "id": s.item_name,
                 "cell": {
@@ -23,7 +27,7 @@ def _getreview():
                     "add": s.add,
                     "time": s.time,
                     "standard": s.standard,
-                    "certification": ""
+                    "certification": _picpath
                 }
             }
         jsondict["rows"].append(data)

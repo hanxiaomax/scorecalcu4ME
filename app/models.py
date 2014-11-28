@@ -43,6 +43,7 @@ class User(db.Model):
 
     @classmethod
     def get_user(cls,campID):
+        "get user by campID"
         user = cls.query.filter(db.or_(User.campID==campID)).first()
         if not user:
             return None

@@ -9,7 +9,7 @@ from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 
-
+#TODO:maybe save user in g? so we dont need to query all the time?
 
 @lm.user_loader
 def load_user(user_id):
@@ -17,12 +17,6 @@ def load_user(user_id):
 
 
 
-# @appME.route('/index/') #/index will be redirect to /index/
-# #@login_required
-# def index():
-#     user={'nickname':'Miguel'}
-#     form = LoginForm()
-#     return render_template('index.html', title=u'HOME', user=user,form=form)
 
 
 
@@ -124,6 +118,12 @@ def logout():
 
 
 
+@appME.route('/changePassword_<int:user_id>/')
+def changePassword(user_id):
+    user = User.query.filter(User.campID == user_id).first()
+    return render_template("changePassword.html",user=user)
+
+
 @appME.route('/_getMyScore',methods=["POST", "GET"])
 def _getMyScore():
     "getmyscore.py:scripts used by user.html"
@@ -201,4 +201,18 @@ def save_files(request=request):
         # See the Flask mailing list for more information.
         if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
             save_file(filestorage)
+
+@appME.route('/_changePW',methods=["POST", "GET"])
+def changePW():
+    campID=request.args.get('campID',type=str)
+    oldpw=request.args.get('oldpw')
+    newpw=request.args.get('newpw')
+    user=User.get_user(campID)
+    if user.password == oldpw:
+        user.password=newpw
+        db.session.commit()
+        return "True"
+    else:
+        return "Flase"
+
 

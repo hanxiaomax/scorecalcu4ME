@@ -62,14 +62,8 @@ def users(user_id):
     user = User.query.filter(User.campID == user_id).first()
     if not user:
         redirect("/login/")
-
-    if request.method == 'POST':#利用flask框架自身的文件上传功能
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(appME.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+    if session.has_key('filepath'):
+        session.pop('filepath')
     return render_template(
             "user.html",
             user=user,
@@ -137,9 +131,9 @@ def _getMyScore():
         return getmyscore._getmyscore()
     elif(opt==0):
         #if we delete an apply we will delete but not delete its 'filepath',here fixed the bug
-        if session.has_key('filepath'):
-            session.pop('filepath')
-            return getmyscore._deleteapply(True)
+        # if session.has_key('filepath'):
+        #     session.pop('filepath')
+        #     return getmyscore._deleteapply()
         return getmyscore._deleteapply()
     else:
         return getmyscore._getTotal()
@@ -150,7 +144,6 @@ def _getMyScore():
 def _sublimtApply():
     # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
     if session.has_key('filepath'):
-        print session['filepath']
         return saveapply._saveapply(session['filepath'])
     else:
         return saveapply._saveapply()

@@ -41,12 +41,17 @@ def _saveapply(filepath=False):
     #execute SQL so you can get s.id
     db.session.flush()
     new_id=s.id
-    db.session.commit()
     if filepath:
         uploadDir=os.path.dirname(filepath)
     #rename the pic ,dont forget the dirpath
     #os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
-        os.rename(filepath,uploadDir+"/"+"certiID"+str(new_id)+".png")
+        newpath=uploadDir+"/"+"certiID"+str(new_id)+".png"
+        os.rename(filepath,newpath)
+        s.picpath=newpath
+    else:
+        s.picpath=None
+    db.session.commit()
+
 
 
     return ""

@@ -63,6 +63,7 @@ class Score_items(db.Model):
     add=db.Column(db.Integer)
     standard=db.Column(db.Integer)
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
+    picpath=db.Column(db.String(140))
 
 
     def __repr__(self):

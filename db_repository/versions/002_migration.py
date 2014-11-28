@@ -14,7 +14,7 @@ score_items = Table('score_items', post_meta,
     Column('add', Integer),
     Column('standard', Integer),
     Column('status', SmallInteger, default=ColumnDefault(2)),
-    Column('picpath', String(length=60)),
+    Column('picpath', String(length=140)),
 )
 
 

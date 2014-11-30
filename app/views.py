@@ -196,8 +196,29 @@ def getStuInfo():
             "campID":user.campID,
             "Class":user.Class,
             "grade":user.grade,
-            "sum":user.score
+            "sum":user.score,
+            "items":[]
             }
+            items=user.score_items.all()
+            for item in items:
+                _status=item.status
+                if _status==2:
+                    _status=u"未审核"
+                elif _status==1:
+                    _status=u"通过"
+                else:
+                    _status=u"驳回"
+                data={
+                        "id":item.id,
+                        "catagory": item.catagory,
+                        "item_name": item.item_name,
+                        "add": item.add,
+                        "time": item.time,
+                        "standard": item.standard,
+                        "status":_status
+                }
+                jsondic["items"].append(data)
+
             return jsonify(jsondic)
         else:
             return "无法找到"
@@ -237,3 +258,6 @@ def changePW():
         return "Flase"
 
 
+@appME.route('/test',methods=["POST", "GET"])
+def test():
+    return render_template("test.html")

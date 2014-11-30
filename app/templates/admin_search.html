@@ -126,7 +126,7 @@
   <div role="tabpanel" class="tab-pane active" id="home">
     <div class="row clearfix">
         <div class="col-md-6 column ">
-          <table class="table">
+          <table class="table" id="student">
             <thead>
               <tr>
                 <th>
@@ -147,7 +147,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="warning">
+              <tr class="info">
                 <td id="name">
 
                 </td>
@@ -167,12 +167,19 @@
               </tr>
             </tbody>
           </table>
+          <table class="table" id="score_items">
+
+
+
+
+          </table>
         </div>
         <div class="col-md-6 column">
         </div>
       </div>
       <div class="row clearfix">
         <div class="col-md-6 column">
+
         <table class="flexme3" style="display: none" id='searchstu'></table>
         </div>
         <div class="col-md-6 column">
@@ -193,7 +200,84 @@
         </div>
       </div>
   </div>
-  <div role="tabpanel" class="tab-pane" id="profile">.2..</div>
+  <div role="tabpanel" class="tab-pane" id="profile">
+<div class="row clearfix">
+        <div class="col-md-6 column ">
+          <table class="table" id="student">
+            <thead>
+              <tr>
+                <th>
+                  姓名
+                </th>
+                <th>
+                  学号
+                </th>
+                <th>
+                  年级
+                </th>
+                <th>
+                  班级
+                </th>
+                <th>
+                  总分
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="info">
+                <td id="name">
+
+                </td>
+                <td id="campID">
+
+                </td>
+                <td id="grade">
+
+                </td>
+                <td id="Class">
+
+                </td>
+                <td id="sum">
+
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+          <table class="table" id="score_items">
+
+
+
+
+          </table>
+        </div>
+        <div class="col-md-6 column">
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+
+        <table class="flexme3" style="display: none" id='searchstu'></table>
+        </div>
+        <div class="col-md-6 column">
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-md-2 column">
+          <br>
+          <input id="searchcampID" name="campID" type="text" placeholder="学号" class="input-xlarge" >
+          <br>
+          <br>
+          <button id="OnSearch" type="button" class="btn btn-primary btn-default">查询</button>
+
+        </div>
+        <div class="col-md-4 column">
+        <br>
+
+        </div>
+      </div>
+  </div>
+  </div>
 
 </div>
 
@@ -224,89 +308,30 @@ $(function () {
                 alert(data)
               }
               else{
-                $("#name").html(data.name)
-                $("#campID").html(data.campID)
-                $("#grade").html(data.grade)
-                $("#Class").html(data.Class)
-                $("#sum").html(data.sum)
+                $("#name").html(data.name);
+                $("#campID").html(data.campID);
+                $("#grade").html(data.grade);
+                $("#Class").html(data.Class);
+                $("#sum").html(data.sum);
+
+                $("#score_items thead").empty()
+                $("#score_items tbody").empty()//获取#score_items下面的tbody
 
 
+                var thead = "<tr> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 时间 </th> <th> 执行标准 </th><th> 审核状态 </th> </tr> "//不能包含<thead>
 
+                  $("#score_items").append(thead)
+                $.each(data.items,function() {
 
-              }
-            });
+                  var tbBody = ""
+                  tbBody += "<tr class='warning'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>"+"<td>" + this.add + "</td>"+"<td>" + this.time + "</td>"+"<td>" + this.standard + "</td>"+"<td>" + this.status + "</td></tr>";
+                  $("#score_items").append(tbBody)
+                });
+                }
+              });
+
           });
       });
-
-
-$("#searchstu").flexigrid({
-                url :$SCRIPT_ROOT+"/_getMyScore",
-                method: 'GET',//should be GET
-                dataType : 'json',
-                params: [{
-                    name: 'campID',
-                    value: $('input[name="campID"]').val(),
-                  },{
-                    name: 'opt',
-                    value: 1,
-                  },
-                  ],
-                colModel : [{
-                    display : '申请号',
-                    name : 'id',
-                    width : 50,
-                    sortable : false,
-                    hide: false,
-                    align : 'center'
-                    }, {
-                    display : '所属类别',
-                    name : 'catagory',
-                    width : 80,
-                    sortable : false,
-                    align : 'center'
-                    }, {
-                        display : '加分项目',
-                        name : 'item_name',
-                        width : 200,
-                        sortable : true,
-                        align : 'left'
-                    }, {
-                        display : '分数',
-                        name : 'add',
-                        width : 50,
-                        sortable : true,
-                        align : 'center'
-                    }, {
-                        display : '时间',
-                        name : 'time',
-                        width : 190,
-                        sortable : false,
-                        align : 'center',
-                    }, {
-                        display : '执行标准',
-                        name : 'standard',
-                        width : 100,
-                        sortable : true,
-                        align : 'center'
-                },
-                {
-                        display : '审核状态',
-                        name : 'status',
-                        width : 50,
-                        sortable : true,
-                        align : 'left'
-                }  ],
-                buttons : [],
-                sortname : "iso",
-                sortorder : "asc",
-                usepager : false,
-                title : '查询结果',
-                useRp : true,
-                rp : 15,
-                showTableToggleBtn : false,
-                width : 745,
-                height : 200
-            });
 
 </script>
 

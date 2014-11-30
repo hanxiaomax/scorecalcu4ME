@@ -6,6 +6,7 @@ import os
 
 def _getmyscore():
     campID = request.args.get('campID', type=str)
+    print campID
     user=User.get_user(campID)
     jsondict={
         "page": 1,
@@ -62,4 +63,6 @@ def _getTotal():
         if (s.status==STATUS_YES):
             if s.add is not None:
                 total+=int(s.add)
+    user.score=total
+    db.session.commit()
     return str(total)

@@ -1,22 +1,16 @@
-{% extends "base.html" %}
-{% block content %}
-<ul class="nav nav-tabs" role="tablist" id="myTab">
-  <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
-  <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
-  <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
-  <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
-</ul>
 
-<div class="tab-content">
-  <div role="tabpanel" class="tab-pane active" id="home">...</div>
-  <div role="tabpanel" class="tab-pane" id="profile">...</div>
-  <div role="tabpanel" class="tab-pane" id="messages">...</div>
-  <div role="tabpanel" class="tab-pane" id="settings">...</div>
-</div>
 
 <script>
-  $(function () {
-    $('#myTab a:last').tab('show')
-  })
+var str = "张山&男&浙江宁波--李四&女&湖南长沙--王五&男&浙江杭州--李六&男&山东青岛";
+var infos = str.split("--");
+var html="";
+for(var i=0;i<infos.length;i++){
+    var info=infos[i].split("&");
+    var num = i+1;
+    html+="<tr><td>"+num+"</td><td>"+info[0]+"</td><td>"+info[1]+"</td><td>"+info[2]+"</td><td><input type='button' value='修改' name='"+info[0]+"'/></td></tr>";
+}
+$("#tab").find("tbody").append($(html).find("input").click(function(){
+    alert($(this).attr("name"));
+}));
 </script>
-{% endblock %}
+

@@ -184,6 +184,27 @@ def uploader():
         save_files()
         return 'Uploaded'
 
+@appME.route('/_getStuInfo',methods=["POST", "GET"])
+def getStuInfo():
+    campID=request.args.get('campID',type=str)
+    try:
+        user=User.get_user(campID)
+        if user and user.role==ROLE_USER:
+            jsondic={}
+            jsondic={
+            "name":user.name,
+            "campID":user.campID,
+            "Class":user.Class,
+            "grade":user.grade,
+            "sum":user.score
+            }
+            return jsonify(jsondic)
+        else:
+            return "无法找到"
+    except:
+         return "错误"
+
+
 
 def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."

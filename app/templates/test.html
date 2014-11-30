@@ -1,34 +1,22 @@
-<html>
-  <head>
-    <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-    <script type="text/javascript" src="/static/uploadify/jquery-1.7.min.js"></script>
-    <!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script> -->
-    <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
-    <script type="text/javascript">
+{% extends "base.html" %}
+{% block content %}
+<ul class="nav nav-tabs" role="tablist" id="myTab">
+  <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">Home</a></li>
+  <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">Profile</a></li>
+  <li role="presentation"><a href="#messages" role="tab" data-toggle="tab">Messages</a></li>
+  <li role="presentation"><a href="#settings" role="tab" data-toggle="tab">Settings</a></li>
+</ul>
 
-    $(document).ready(function() {
-      $('#file_upload').uploadify({
-        'swf': '/static/uploadify/uploadify.swf',
-        'uploader': '/',
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="home">...</div>
+  <div role="tabpanel" class="tab-pane" id="profile">...</div>
+  <div role="tabpanel" class="tab-pane" id="messages">...</div>
+  <div role="tabpanel" class="tab-pane" id="settings">...</div>
+</div>
 
-        'cancelImg': '/static/uploadify/upload-cancel.png',
-        'auto': false,
-        'multi': true,
-      'queueSizeLimit': 10,
-        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
-      'onSelect': function(event, ID, fileObj) {
-            $('#upload_link').show();
-        },
-      'onAllComplete': function(event, data) {
-            $('#upload_link').hide();
-        }
-      });
-    });
-    </script>
-  </head>
-  <body>
-    <input id="file_upload" name="file_upload" type="file" />
-    <a id="upload_link" href="javascript:$('#file_upload').uploadify('upload','*')" style="display:none">Upload Files</a>
-
-  </body>
-</html>
+<script>
+  $(function () {
+    $('#myTab a:last').tab('show')
+  })
+</script>
+{% endblock %}

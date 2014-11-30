@@ -113,87 +113,161 @@
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <body>
-      <h1 class="page-header">查询结果</h1>
-      <nav>
-        <div class="btn-group btn-group-lg ">
-          <button id="withcampID" type="button" class="btn btn-default">查询个人素质分</button>
-          <button type="button" class="btn btn-default">查询年级素质分</button>
-          <button type="button" class="btn btn-default">全部素质分</button>
+      <h1 class="page-header">素质分查询</h1>
+
+  <div class="row clearfix">
+    <div class="col-md-12 column">
+<ul class="nav nav-tabs" role="tablist" id="myTab">
+  <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">按学号查询</a></li>
+  <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">按年级班级查询</a></li>
+
+</ul>
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane active" id="home">
+    <div class="row clearfix">
+        <div class="col-md-6 column ">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>
+                  姓名
+                </th>
+                <th>
+                  学号
+                </th>
+                <th>
+                  年级
+                </th>
+                <th>
+                  班级
+                </th>
+                <th>
+                  总分
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="warning">
+                <td id="name">
+
+                </td>
+                <td id="campID">
+
+                </td>
+                <td id="grade">
+
+                </td>
+                <td id="Class">
+
+                </td>
+                <td id="sum">
+
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </nav>
-      <hr>
+        <div class="col-md-6 column">
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-md-6 column">
+        <table class="flexme3" style="display: none" id='searchstu'></table>
+        </div>
+        <div class="col-md-6 column">
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-md-2 column">
+          <br>
+          <input id="searchcampID" name="campID" type="text" placeholder="学号" class="input-xlarge" >
+          <br>
+          <br>
+          <button id="OnSearch" type="button" class="btn btn-primary btn-default">查询</button>
 
-          <div class="panel panel-info">
+        </div>
+        <div class="col-md-4 column">
+        <br>
 
-              <div class="panel-heading">查询</div>
-              <div class="panel-body">
-              <div class="row">
-
-              <div id="panel" class="container">
-                  <div class="col-md-8">
-                    <table class="flexme3" style="display: none"></table>
-                  </div>
-                  <div class="col-md-4">
-                        <form class="form-horizontal">
-                          <fieldset>
-                          <div class="control-group">
-                                <label class="control-label" for="input01"></label>
-                                <div class="controls">
-                                  <input type="text" placeholder="学号" class="input-xlarge">
-                                  <p class="help-block"></p>
-                                </div>
-                              </div><div class="control-group">
-                                <label class="control-label"></label>
-                                <div class="controls">
-                                  <button class="btn btn-success">查询</button>
-                                </div>
-                              </div>
-                          </fieldset>
-                        </form>
-                  </div>
-                </div>
-              </div>
-              </div>
-          </div>
-    </body>
+        </div>
+      </div>
   </div>
+  <div role="tabpanel" class="tab-pane" id="profile">.2..</div>
+
+</div>
+
+    </div>
+  </div>
+
+  </body>
+</div>
+
 
 
 <script type="text/javascript">
 
+var _value=$("#searchcampID").val()
+
+$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
 
 
-  $(function () {
-            $("#OnSearch").bind("click", function (){
-               $.getJSON($SCRIPT_ROOT+"/_search",
-                {
-                  campID: $('input[name="campID"]').val(),
-                },
-                function(data){
-                  alert(data)
-                  $.each(data, function(index, database) {
-                      $("ul").append("<li>" + database + "</li>");
-                  });
-                });
-               return false
+$(function () {
+          $("#OnSearch").bind("click", function (){
+            $.get($SCRIPT_ROOT+"/_getStuInfo",{
+              campID:$('input[name="campID"]').val()
+            },function(data){
+              if(data=="无法找到"){
+                alert(data)
+              }
+              else{
+                $("#name").html(data.name)
+                $("#campID").html(data.campID)
+                $("#grade").html(data.grade)
+                $("#Class").html(data.Class)
+                $("#sum").html(data.sum)
+
+
+
+
+              }
             });
-        });
+          });
+      });
 
 
-
-$(".flexme3").flexigrid({
-                url : $SCRIPT_ROOT+"/_getMyScore",
+$("#searchstu").flexigrid({
+                url :$SCRIPT_ROOT+"/_getMyScore",
+                method: 'GET',//should be GET
                 dataType : 'json',
-                colModel : [ {
+                params: [{
+                    name: 'campID',
+                    value: $('input[name="campID"]').val(),
+                  },{
+                    name: 'opt',
+                    value: 1,
+                  },
+                  ],
+                colModel : [{
+                    display : '申请号',
+                    name : 'id',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center'
+                    }, {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 100,
+                    width : 80,
                     sortable : false,
                     align : 'center'
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 300,
+                        width : 200,
                         sortable : true,
                         align : 'left'
                     }, {
@@ -205,56 +279,35 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '时间',
                         name : 'time',
-                        width : 130,
-                        sortable : true,
-                        align : 'left',
-                        hide : true
+                        width : 190,
+                        sortable : false,
+                        align : 'center',
                     }, {
                         display : '执行标准',
                         name : 'standard',
                         width : 100,
                         sortable : true,
-                        align : 'right'
+                        align : 'center'
                 },
                 {
                         display : '审核状态',
                         name : 'status',
-                        width : 80,
+                        width : 50,
                         sortable : true,
-                        align : 'right'
+                        align : 'left'
                 }  ],
-                buttons : [
-                {
-                        name : 'Delete',
-                        bclass : 'delete',
-                        onpress : test
-                    }, {
-                        separator : true
-                } ],
-                searchitems : [ {
-                    display : 'ISO',
-                    name : 'iso'
-                    }, {
-                        display : 'Name',
-                        name : 'name',
-                        isdefault : true
-                } ],
+                buttons : [],
                 sortname : "iso",
                 sortorder : "asc",
                 usepager : false,
                 title : '查询结果',
                 useRp : true,
                 rp : 15,
-                showTableToggleBtn : true,
-                width : 700,
+                showTableToggleBtn : false,
+                width : 745,
                 height : 200
             });
-function test(com, grid) {
-                if (com == 'Delete') {
-                    confirm('Delete ' + $('.trSelected', grid).length + ' items?')
-                } else if (com == 'Add') {
-                    alert('Add New Item');
-                }
-            }
+
 </script>
+
 {% endblock %}

@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block content %}
+  <style type="text/css">
+  /*
+  * Base structure
+  */
+  /* Move down content because we have a fixed navbar that is 50px tall */
+  body {
+  padding-top: 50px;
+  }
+  /*
+  * Global add-ons
+  */
+  .sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  }
+  /*
+  * Top navigation
+  * Hide default border to remove 1px line.
+  */
+  .navbar-fixed-top {
+  border: 0;
+  }
+  /*
+  * Sidebar
+  */
+  /* Hide for mobile, show later */
+  .sidebar {
+  display: none;
+  }
+  @media (min-width: 768px) {
+  .sidebar {
+  position: fixed;
+  top: 51px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #f5f5f5;
+  border-right: 1px solid #eee;
+  }
+  }
+  /* Sidebar navigation */
+  .nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+  }
+  .nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+  }
+  .nav-sidebar > .active > a,
+  .nav-sidebar > .active > a:hover,
+  .nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+  }
+  /*
+  * Main content
+  */
+  .main {
+  padding: 20px;
+  }
+  @media (min-width: 768px) {
+  .main {
+  padding-right: 40px;
+  padding-left: 40px;
+  }
+  }
+  .main .page-header {
+  margin-top: 10;
+  }
+  /*
+  * Placeholder dashboard ideas
+  */
+  .placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+  }
+  .placeholders h4 {
+  margin-bottom: 0;
+  }
+  .placeholder {
+  margin-bottom: 20px;
+  }
+  .placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+  }
+  </style>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li><a href={{url_for('admins_review',admin_id=admin_id)}}>素质分审核</a></li>
+          <li><a href={{url_for('admins_search',admin_id=admin_id)}}>素质分查询</a></li>
+          <li class="active"><a href={{url_for('admins_edit',admin_id=admin_id)}}>添加修改规则</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+          <li><a href={{url_for('logout')}}>退出</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+<body>
+      <h1 class="page-header">添加/删除学院指定集体活动</h1>
+
+
+  <form class="form-horizontal">
+    <fieldset>
+      <div id="legend" class="">
+        <legend class="">表单名</legend>
+      </div>
+
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">新建加分项</label>
+          <div class="controls">
+            <input type="text" placeholder="学院指定活动1" class="input-xlarge">
+            <p class="help-block">不能为空</p>
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Text input-->
+          <label class="control-label" for="input01">分值</label>
+          <div class="controls">
+            <input type="text" value="1" class="input-xlarge">
+            <p class="help-block"></p>
+          </div>
+        </div>
+
+    <div class="control-group">
+
+          <!-- Select Multiple -->
+          <label class="control-label">当前项目</label>
+          <div class="controls">
+            <select id="delete" class="input-xlarge" multiple="multiple" size="5">
+
+            </select>
+          </div>
+        </div>
+
+    <div class="control-group">
+          <label class="control-label"></label>
+
+        </div><div class="control-group">
+          <label class="control-label"></label>
+          <div class="controls">
+            <button class="btn btn-success">添加</button>
+            <button class="btn btn-danger">删除</button>
+          </div>
+        </div>
+
+    </fieldset>
+  </form>
+
+</body>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+          $.getJSON("/static/select.json",function(data){
+            $("#apply").empty();
+              $.each(data,function() {
+                if (this.catagory=="其他")
+                {
+                    $.each(this.subcatagory, function() {
+                    $("#delete").append("<option>" +  this.name + "</option>");
+                    });
+                };
+      });
+    });
+});
+</script>
+{% endblock %}

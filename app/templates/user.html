@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
+<link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="/static/js/datepicker.js"></script>
+<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script> -->
+<!-- <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script> -->
+
+<!-- ugly hack to keep chrome form crashing -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
+
+
   <style type="text/css">
   /*
   * Base structure
@@ -92,13 +104,29 @@
   display: inline-block;
   border-radius: 50%;
   }
-  </style>
+  .flexigrid div.fbutton .delete {
+    background: url(/static/css/images/close.png) no-repeat center left;
+}
+@media (min-width: 768px) {
+  .form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+    color: #3399FF;
+    font-size: 20px;
+  }
+}
+</style>
+
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
           <li class="active"><a href="">素质分申请</a></li>
-          <li><a href={{url_for('users_profile',user_id = user_id)}}>下载</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+          <li><a href={{url_for('changePassword',user_id=user_id)}}>修改密码</a></li>
+
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -106,61 +134,344 @@
       </div>
     </div>
   </div>
+
+
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h1 class="page-header">提交申请</h1>
 
-  <h1 class="page-header">申请</h1>
-    <body onload="init();";>
-      <div class="container">
-        <form class="form-horizontal">
-          <fieldset>
 
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label">类型</label>
-              <div class="controls">
-                <select id="Category" name="Category" class="input-xlarge" onchange="toSubCategory(this.value);">
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label">项目</label>
-              <div class="controls">
-                <select id="SubCategory" name="SubCategory" class="input-xlarge" onchange="toRole(this.value);" >
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <!-- Select Basic -->
-              <label class="control-label" id="role_label">获奖身份</label>
-              <div class="controls">
-                <select id="Role" name="Role" class="input-xlarge">
-                  <option>请选择</option>
-                </select>
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label"> </label>
-              <!-- File Upload -->
-              <div class="controls">
-                <input class="input-file" id="fileInput" type="file">
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label"></label>
-              <!-- Button -->
-              <div class="controls">
-                <button class="btn btn-success" type="submit">提交</button>
-              </div>
-            </div>
-          </fieldset>
+      <form class="form-horizontal"  >
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-4">
+                  <div class="control-group">
+                      <label class="control-label">素质分类别</label>
+                      <hr>
+                      <div class="controls">
+                        <!-- Multiple Radios -->
+                        <label class="radio">
+                          <input type="radio" value="班级工作" name="group" checked="checked">班级工作（此类累加不得超过40分）</label>
+                        <label class="radio">
+                          <input type="radio" value="院级社团" name="group">院级社团（此类累加不得超过35分）</label>
+                        <label class="radio">
+                          <input type="radio" value="校级社团" name="group">校级社团（此类累加不得超过35分）</label>
+                        <label class="radio">
+                          <input type="radio" value="个人荣誉" name="group">个人荣誉（此类累加不得超过50分）</label>
+                        <label class="radio">
+                          <input type="radio" value="集体荣誉" name="group">集体荣誉（此类累加不得超过50分）</label>
+                        <label class="radio">
+                          <input type="radio" value="集体活动" name="group">集体活动（此类累加不得超过30分）</label>
+                        <label class="radio">
+                          <input type="radio" value="其他" name="group">其他（累计不得超过15分）</label>
+                        </div>
+                      </div>
+                    </div>
+                  <div class="col-md-2"> </div>
+                  <div class="col-md-6">
+                    <div class="control-group">
+                      <!-- Select Basic -->
+                      <label class="control-label">加分项目</label>
+                      <hr>
+                      <div class="controls">
+                        <select id="apply" class="input-xlarge" size="11">
+                          <option value="担任班长">担任班长</option>
+                          <option value="担任党支部书记">担任党支部书记</option>
+                          <option value="担任其他班委">担任其他班委</option>
+                        </select>
+                      </div>
 
-        </form>
+                       <p class="error" style="color:red;font-size:16px;">请至少选中一个加分项目</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </form>
+              <form class="form-horizontal"  >
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-4">
+                      <div class="control-group">
+                        <label class="control-label"> </label>
+                        <div class="controls">
+                          <label class="control-label">上传证明</label>
+                          <hr>
+
+
+                          <input id="file_upload" name="file_upload" type="file" />
+                          <p style="font-size:10px;">小于2M且为jpg,jpeg,png格式
+    <!-- <a id="upload_link" href="javascript:$('#file_upload').uploadifyUpload()" style="display:none;color:red;font-size:16px;">上传</a> -->
+                        </div>
+                      </div>
+                      <div></div>
+                      <div class="control-group">
+                          <label class="control-label"> </label>
+                              <div class="controls">
+                                  <button id="submitbtn" class="btn btn-primary btn-lg">提交</button>
+                              </div>
+                      </div>
+                  </div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-6">
+                  <div class="control-group">
+                        <label class="control-label"> </label>
+                        <div class="controls">
+                          <label class="control-label" for="input01">获奖时间</label>
+                          <hr>
+                          <input class="inputDate" id="inputDate" value="2014/01/01" />
+                        </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+              </form>
+
+
+<h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+<table class="flexme3" style="display: none"></table>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
       </div>
-      <h2 class="sub-header">查询</h2>
-    </body>
+    </div>
   </div>
-</div>
+
+
+
+<script type= "text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+
+
+
+<script type="text/javascript">
+
+// $(function(){
+//   $("#submitbtn").click(function(event) {
+//     alert($("#file_upload").val())//获取文件名
+//   });
+// })
+
+ $(document).ready(function() {
+      $('#file_upload').uploadify({
+        'swf': '/static/uploadify/uploadify.swf',
+        'uploader': $SCRIPT_ROOT+'/_uploader',
+        'cancelImg': '/static/uploadify/uploadify-cancel.png',
+        'auto': true,
+        'buttonText' : '浏览...',
+        'fileObjName' : 'the_files',
+        'fileTypeDesc' : 'Image Files',
+        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
+        'fileSizeLimit' : '2048KB',
+        //'formData'      : {'campID' : {{user.campID}}},
+        'multi': true,
+        'queueSizeLimit': 5,
+        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+        // 'onSelect': function(e, ID, fileObj) {
+        //   alert(fileObj.name)
+        //     $('#upload_link').show();
+        // },
+        'onSelect' : function(file) {
+            var filename=file.name;
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+
+        },
+      'onUploadStart': function (file) {
+                    $("#file_upload").uploadify("settings", "formData", { 'campID': {{user.campID}} ,'filename':file.name});
+                    //在onUploadStart事件中，也就是上传之前，把参数写好传递到后台。
+                }
+      });
+    });
+
+
+$(function(){
+  $.get($SCRIPT_ROOT+"/_getMyScore",
+    {
+      campID:{{user.campID}},
+    },function(data){
+      $("#totalscore").html("总分："+data+"分");
+    })
+
+})
+
+
+
+$(function () {
+    $('.error').hide();
+    $('#submitbtn').bind('click', function () {
+      if ($("#apply option:selected").text()!="") {
+          $.get($SCRIPT_ROOT+"/_sublimtApply",
+          {
+            catagory:$("input[name='group']:checked").val(),
+            name:$("#apply option:selected").text(),
+            campID:{{user.campID}},
+            time:$("#inputDate").val(),
+            // filename:filename
+            //opt:1
+          },
+          function(){
+            alert("提交成功")
+            $('.error').hide();
+            $(".flexme3").flexReload();
+          });
+        //return false //Refresh whole page to make upload files disappear
+      }
+      else{
+          $('.error').show();
+          return false//不跳转
+      }
+    });
+
+});
+
+
+$(function(){
+        $("input:radio").change(function(){
+          var selectedvalue = $("input[name='group']:checked").val();
+          $.getJSON("/static/select.json",function(data){
+            $("#apply").empty();
+              $.each(data,function() {
+                if (this.catagory==selectedvalue)
+                {
+                    $.each(this.subcatagory, function() {
+                    $("#apply").append("<option value=this.name>" +  this.name + "</option>");
+                    });
+                };
+      });
+    });
+  });
+});
+$(".flexme3").flexigrid({
+                url :$SCRIPT_ROOT+"/_getMyScore",
+                method: 'GET',//should be GET
+                dataType : 'json',
+                params: [{
+                    name: 'campID',
+                    value: {{user.campID}},
+                  },{
+                    name: 'opt',
+                    value: 1,
+                  },
+                  ],
+                colModel : [{
+                    display : '申请号',
+                    name : 'id',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center'
+                    }, {
+                    display : '所属类别',
+                    name : 'catagory',
+                    width : 80,
+                    sortable : false,
+                    align : 'center'
+                    }, {
+                        display : '加分项目',
+                        name : 'item_name',
+                        width : 200,
+                        sortable : true,
+                        align : 'left'
+                    }, {
+                        display : '分数',
+                        name : 'add',
+                        width : 50,
+                        sortable : true,
+                        align : 'center'
+                    }, {
+                        display : '时间',
+                        name : 'time',
+                        width : 190,
+                        sortable : false,
+                        align : 'left',
+                    }, {
+                        display : '执行标准',
+                        name : 'standard',
+                        width : 100,
+                        sortable : true,
+                        align : 'center'
+                },
+                {
+                        display : '审核状态',
+                        name : 'status',
+                        width : 50,
+                        sortable : true,
+                        align : 'left'
+                }  ],
+                buttons : [
+                {
+                        name : '删除',
+                        bclass : 'delete',
+                        onpress : Control
+                    }, {
+                        separator : true
+                } ],
+                searchitems : [ {
+                    display : 'ISO',
+                    name : 'iso'
+                    }, {
+                        display : 'Name',
+                        name : 'name',
+                        isdefault : true
+                } ],
+                sortname : "iso",
+                sortorder : "asc",
+                usepager : false,
+                title : '我的素质分',
+                useRp : true,
+                rp : 15,
+                showTableToggleBtn : false,
+                width : 745,
+                height : 200
+            });
+            function Control(com, grid) {
+                var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
+                if (con) {
+                  $.each($('.trSelected', grid),
+                            function(key, value){
+                              //alert(value.firstChild.innerText)
+                                $.get($SCRIPT_ROOT+"/_getMyScore",
+                                  {
+                                    Delete: value.firstChild.innerText,
+                                    opt:0,
+                                    campID:{{user.campID}}
+                                  }
+                                  , function(canDelete){
+
+
+                                        if (canDelete=="No"){
+                                            alert("无法删除已经审核的加分项")
+                                            $(".flexme3").flexReload();
+                                          }
+                                        else{
+
+                                          $(".flexme3").flexReload();
+                                        }
+                                });
+                        });
+                    }
+                };
+
+$('#inputDate').DatePicker({
+  format:'Y/m/d',
+  date: $('#inputDate').val(),
+  current: $('#inputDate').val(),
+  starts: 1,
+  position: 'r',
+  onBeforeShow: function(){
+    $('#inputDate').DatePickerSetDate($('#inputDate').val(), true);
+  },
+  onChange: function(formated, dates){
+    $('#inputDate').val(formated);
+      $('#inputDate').DatePickerHide();
+
+  }
+});
+</script>
+
 {% endblock %}

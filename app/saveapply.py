@@ -7,18 +7,14 @@ import os
 basedir=os.path.abspath(os.path.dirname(__file__))
 #TODO:should move this to client?
 def getvalue(cat,name):
-    print name
     f=file(basedir+"/static/select.json")
     s=json.load(f)
     f.close()
     for val in s:
         if val["catagory"]==cat:
             for v in val["subcatagory"]:
-                print v["name"]
                 if v["name"]==name:
                     return v["value"]
-                else:
-                    print "###"
 
 
 def _saveapply(filepath=False):
@@ -27,8 +23,10 @@ def _saveapply(filepath=False):
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
     _time=request.args.get('time',type=str)
+    _applytime=datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')#format the timestamp return as a string
     _add=getvalue(_catagory,_name)
     user=User.get_user(_campID)
+
 
     _standard="2013-9-4"
 
@@ -36,7 +34,7 @@ def _saveapply(filepath=False):
         item_name=_name,
         time=_time,
         add=_add,
-        standard=_standard,
+        applytime=_applytime,
         student=user)
 
     db.session.add(s)

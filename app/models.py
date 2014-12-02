@@ -57,12 +57,11 @@ class Score_items(db.Model):
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
     time = db.Column(db.String(140))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     add=db.Column(db.Integer)
-    standard=db.Column(db.Integer)
+    applytime=db.Column(db.String(30))#need to save a formated string
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
     picpath=db.Column(db.String(140))
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
         return '<Score %r>' % (self.time)

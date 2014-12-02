@@ -6,7 +6,6 @@ import os
 
 def _getmyscore():
     campID = request.args.get('campID', type=str)
-    print campID
     user=User.get_user(campID)
     jsondict={
         "page": 1,
@@ -30,7 +29,7 @@ def _getmyscore():
                     "item_name": s.item_name,
                     "add": s.add,
                     "time": s.time,
-                    "standard": s.standard,
+                    "applytime": s.applytime,
                     "status": _status
                 }
             }

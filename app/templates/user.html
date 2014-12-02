@@ -386,9 +386,9 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 200,
+                        width : 190,
                         sortable : true,
-                        align : 'left'
+                        align : 'center'
                     }, {
                         display : '分数',
                         name : 'add',
@@ -396,24 +396,25 @@ $(".flexme3").flexigrid({
                         sortable : true,
                         align : 'center'
                     }, {
-                        display : '时间',
+                        display : '获奖时间',
                         name : 'time',
+                        width : 100,
+                        sortable : false,
+                        align : 'center',
+                    }, {
+                        display : '申请时间',
+                        name : 'applytime',
                         width : 190,
                         sortable : false,
-                        align : 'left',
-                    }, {
-                        display : '执行标准',
-                        name : 'standard',
-                        width : 100,
-                        sortable : true,
-                        align : 'center'
-                },
+                        align : 'center',
+                    },
+
                 {
                         display : '审核状态',
                         name : 'status',
-                        width : 50,
+                        width : 100,
                         sortable : true,
-                        align : 'left'
+                        align : 'center'
                 }  ],
                 buttons : [
                 {
@@ -438,7 +439,7 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 745,
+                width : 755,
                 height : 200
             });
             function Control(com, grid) {

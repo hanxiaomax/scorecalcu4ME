@@ -45,7 +45,6 @@ def _accpet():
 def _reject():
     reject=request.args.get('reject',type=int)
     s=Score_items.query.filter(Score_items.id==reject).first()
-    print s
     s.status=STATUS_NO
     db.session.commit()
     return " "

@@ -62,7 +62,9 @@ def _getTotal():
     for s in _score_items:
         if (s.status==STATUS_YES):
             if s.add is not None:
-                total+=int(s.add)
+                total+=float(s.add)
+    #TODO:should move to another place
+    #this works only when user login again
     user.score=total
     db.session.commit()
     return str(total)

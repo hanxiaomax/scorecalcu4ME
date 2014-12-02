@@ -10,11 +10,10 @@ class User(db.Model):
     name = db.Column(db.String(64), index = True)
     campID = db.Column(db.String(120), index = True, unique = True)
     password= db.Column(db.String(120), index = True)
-    Class = db.Column(db.Integer,index = True)
     grade= db.Column(db.String(64),index = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
     score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
-    score=db.Column(db.Integer)
+    score=db.Column(db.String(10),default="0")
 
     def __repr__(self):
         return '<User %r>' % (self.name)

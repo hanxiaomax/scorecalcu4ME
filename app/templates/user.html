@@ -333,22 +333,31 @@ $(function () {
 });
 
 
+
 $(function(){
         $("input:radio").change(function(){
           var selectedvalue = $("input[name='group']:checked").val();
-          $.getJSON("/static/select.json",function(data){
-            $("#apply").empty();
-              $.each(data,function() {
-                if (this.catagory==selectedvalue)
-                {
-                    $.each(this.subcatagory, function() {
-                    $("#apply").append("<option value=this.name>" +  this.name + "</option>");
-                    });
-                };
-      });
+          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
+          $.ajax({
+                  type: "get",
+                  url:'/static/select.json',
+                  cache: false,//必须为false，否则同样会从缓存中加载
+                  dataType : "json",
+                  success: function(data){
+                    $("#apply").empty();
+                            $.each(data,function() {
+                              if (this.catagory==selectedvalue)
+                              {
+                                  $.each(this.subcatagory, function() {
+                                  $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
+                                  });
+                              };
+                   });
+                 }
     });
   });
 });
+
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"/_getMyScore",
                 method: 'GET',//should be GET
@@ -448,7 +457,7 @@ $(".flexme3").flexigrid({
 
 
                                         if (canDelete=="No"){
-                                            alert("无法删除已经审核的加分项")
+                                            alert("无法删除已经审核的加分项，可联系管理员删除")
                                             $(".flexme3").flexReload();
                                           }
                                         else{

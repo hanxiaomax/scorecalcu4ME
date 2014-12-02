@@ -7,17 +7,19 @@ import os
 basedir=os.path.abspath(os.path.dirname(__file__))
 #TODO:should move this to client?
 def getvalue(cat,name):
+    print name
     f=file(basedir+"/static/select.json")
     s=json.load(f)
     f.close()
     for val in s:
         if val["catagory"]==cat:
             for v in val["subcatagory"]:
+                print v["name"]
                 if v["name"]==name:
                     return v["value"]
+                else:
+                    print "###"
 
-def getstandard():
-    pass
 
 def _saveapply(filepath=False):
     #by default we think there is no pic being uploaded

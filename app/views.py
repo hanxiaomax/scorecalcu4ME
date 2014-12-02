@@ -8,7 +8,8 @@ from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
-
+import json
+basedir=os.path.abspath(os.path.dirname(__file__))
 #TODO:maybe save user in g? so we dont need to query all the time?
 
 @lm.user_loader
@@ -275,3 +276,6 @@ def changePW():
 @appME.route('/test',methods=["POST", "GET"])
 def test():
     return render_template("test.html")
+
+
+

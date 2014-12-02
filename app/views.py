@@ -194,7 +194,6 @@ def getStuInfo():
             jsondic={
             "name":user.name,
             "campID":user.campID,
-            "Class":user.Class,
             "grade":user.grade,
             "sum":user.score,
             "items":[]

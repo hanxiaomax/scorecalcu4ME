@@ -69,6 +69,21 @@ def users(user_id):
             user=user,
             user_id=user_id)
 
+#Dashboard for student to checkout the publicity
+@appME.route('/publicity/student_<int:user_id>', methods=["POST", "GET"])
+@login_required
+def user_publicity(user_id):
+    user = User.query.filter(User.campID == user_id).first()
+    if not user:
+        flash("The user is not exist.")
+        redirect("/login/")
+    return render_template(
+            "user_publicity.html",
+            user=user,
+            user_id=user_id)
+
+
+
 
 @appME.route('/review/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
@@ -92,15 +107,15 @@ def admins_search(admin_id):
             user=admin,
             admin_id=admin_id)
 
-@appME.route('/edit/admin_<int:admin_id>', methods=["POST", "GET"])
+@appME.route('/publicity/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
-def admins_edit(admin_id):
+def admins_publicity(admin_id):
     admin = User.query.filter(User.campID == admin_id).first()
     if not admin:
         flash("The user is not exist.")
         redirect("/login/")
     return render_template(
-            "admin_edit.html",
+            "admin_publicity.html",
             user=admin,
             admin_id=admin_id)
 

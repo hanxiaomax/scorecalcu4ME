@@ -245,8 +245,8 @@ def getStuInfo():
 
 def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
-    filename = secure_filename(filestorage.filename)+str(uuid.uuid1())+".jpg"#use uuid to make unique name
-    print filename
+    filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
+    #get filename without ext and append uuid to it to make unique file name
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
     session['filepath']=filepath#save current filepath in session
     filestorage.save(filepath)

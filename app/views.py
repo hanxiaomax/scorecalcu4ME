@@ -9,6 +9,7 @@ from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
+import uuid
 basedir=os.path.abspath(os.path.dirname(__file__))
 #TODO:maybe save user in g? so we dont need to query all the time?
 
@@ -244,7 +245,8 @@ def getStuInfo():
 
 def save_file(filestorage):
     "Save a Werkzeug file storage object to the upload folder."
-    filename = secure_filename(filestorage.filename)
+    filename = secure_filename(filestorage.filename)+str(uuid.uuid1())+".jpg"#use uuid to make unique name
+    print filename
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
     session['filepath']=filepath#save current filepath in session
     filestorage.save(filepath)

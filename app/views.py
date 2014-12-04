@@ -3,7 +3,7 @@ from flask import (render_template,flash,redirect,session,url_for,request,sessio
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
-from models import User, ROLE_USER, ROLE_ADMIN
+from models import User,Score_items, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
@@ -204,42 +204,8 @@ def uploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     campID=request.args.get('campID',type=str)
-    try:
-        user=User.get_user(campID)
-        if user and user.role==ROLE_USER:
-            jsondic={}
-            jsondic={
-            "name":user.name,
-            "campID":user.campID,
-            "grade":user.grade,
-            "sum":user.score,
-            "items":[]
-            }
-            items=user.score_items.all()
-            for item in items:
-                _status=item.status
-                if _status==2:
-                    _status=u"未审核"
-                elif _status==1:
-                    _status=u"通过"
-                else:
-                    _status=u"驳回"
-                data={
-                        "id":item.id,
-                        "catagory": item.catagory,
-                        "item_name": item.item_name,
-                        "add": item.add,
-                        "time": item.time,
-                        "standard": item.standard,
-                        "status":_status
-                }
-                jsondic["items"].append(data)
 
-            return jsonify(jsondic)
-        else:
-            return "无法找到"
-    except:
-         return "错误"
+    return User.scoreInfo4SomeOne(campID)
 
 
 

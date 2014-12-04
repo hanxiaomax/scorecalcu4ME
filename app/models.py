@@ -1,4 +1,6 @@
+#coding:utf-8
 from app import db
+from flask import jsonify
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -48,8 +50,61 @@ class User(db.Model):
             return None
         return user
 
-
-
+    @classmethod
+    def userInfo(cls,campID):
+        "get all the infomation about user return as a dict"
+        userInfoDict={}
+        user = get_user(campID)
+        print "###"
+        _name = user.name
+        _campID = user._campID
+        _grade = user._grade
+        _score = user._score
+        userInfodict={
+         "name" : user.name,
+        "campID" : user._campID,
+        "grade" : user._grade,
+        "score" : user._score
+        }  
+        return  userInfoDict
+    @classmethod
+    def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
+        print "++++"+str(campID)
+        scoreInfoDict={
+        "campID":campID,
+        "items":[]
+        }
+        user=User.get_user(campID)
+        if user and user.role==ROLE_USER:
+            items=user.score_items.all()
+            for item in items:
+                _status=item.status
+                if _status==2:
+                    _status=u"未审核"
+                elif _status==1:
+                    _status=u"通过"
+                else:
+                    _status=u"驳回"
+                data={
+                        "id":item.id,
+                        "catagory": item.catagory,
+                        "item_name": item.item_name,
+                        "add": item.add,
+                        "time": item.time,
+                        "applytime": item.applytime,
+                        "status":_status
+                }
+                scoreInfoDict["items"].append(data)
+                has_reslut=True
+        else:
+            has_reslut=False
+            
+        if  has_reslut and is_jsonify :
+            return jsonify(scoreInfoDict)
+        elif has_reslut:
+            return scoreInfoDict
+        else:
+            return "No user found"
 
 
 class Score_items(db.Model):
@@ -65,3 +120,5 @@ class Score_items(db.Model):
 
     def __repr__(self):
         return '<Score %r>' % (self.time)
+
+    

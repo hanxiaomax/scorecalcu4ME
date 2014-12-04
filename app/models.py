@@ -51,25 +51,31 @@ class User(db.Model):
         return user
 
     @classmethod
-    def userInfo(cls,campID):
+    def userInfo(cls,campID,is_jsonify=True):
         "get all the infomation about user return as a dict"
         userInfoDict={}
-        user = get_user(campID)
-        print "###"
+        user = cls.get_user(campID)
+
         _name = user.name
-        _campID = user._campID
-        _grade = user._grade
-        _score = user._score
-        userInfodict={
+        _campID = user.campID
+        _grade = user.grade
+        _score = user.score
+        userInfoDict={
          "name" : user.name,
-        "campID" : user._campID,
-        "grade" : user._grade,
-        "score" : user._score
+        "campID" : user.campID,
+        "grade" : user.grade,
+        "sum" : user.score,
+        "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
         }  
-        return  userInfoDict
+        print userInfoDict
+        if is_jsonify:
+            return  jsonify(userInfoDict)
+        else:
+            return userInfoDict
+
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
-        print "++++"+str(campID)
+
         scoreInfoDict={
         "campID":campID,
         "items":[]
@@ -95,13 +101,14 @@ class User(db.Model):
                         "status":_status
                 }
                 scoreInfoDict["items"].append(data)
-                has_reslut=True
+            has_reslut=True
         else:
             has_reslut=False
             
         if  has_reslut and is_jsonify :
             return jsonify(scoreInfoDict)
         elif has_reslut:
+            print scoreInfoDict["items"]
             return scoreInfoDict
         else:
             return "No user found"

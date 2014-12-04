@@ -205,7 +205,7 @@ def uploader():
 def getStuInfo():
     campID=request.args.get('campID',type=str)
 
-    return User.scoreInfo4SomeOne(campID)
+    return User.userInfo(campID)
 
 
 

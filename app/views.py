@@ -155,12 +155,15 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-
     # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
     if session.has_key('filepath'):
+        print session['filepath']
         return saveapply._saveapply(session['filepath'])
     else:
+        print "######"
         return saveapply._saveapply()
+
+
 
 @appME.route('/_getreview',methods=["POST", "GET"])
 def _getreview():
@@ -198,6 +201,7 @@ def save_file(filestorage):
     #get filename without ext and append uuid to it to make unique file name
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
     session['filepath']=filepath#save current filepath in session
+    print "###"+session['filepath']
     filestorage.save(filepath)
 
 

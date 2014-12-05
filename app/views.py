@@ -18,10 +18,6 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-
-
-
-
 @appME.route('/',methods=['GET','POST'])
 @appME.route('/login/',methods=['GET','POST'])
 #make this view function accepts GET and POST requests
@@ -43,8 +39,6 @@ def login():
     return render_template('login.html',
                             title=u'机械工程学院素质分管理系统',
                             form=form)
-
-
 
 #user.html
 #Dashboard for student to apply
@@ -83,9 +77,6 @@ def user_publicity(user_id):
             "user_publicity.html",
             user=user,
             user_id=user_id)
-
-
-
 
 @appME.route('/review/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
@@ -171,10 +162,6 @@ def _sublimtApply():
     else:
         return saveapply._saveapply()
 
-
-
-
-
 @appME.route('/_getreview',methods=["POST", "GET"])
 def _getreview():
     opt2=request.args.get('opt2',type=int)
@@ -184,8 +171,6 @@ def _getreview():
         return getreview._accpet()
     else:
         return getreview._getreview()
-
-
 
 
 @appME.route('/uploads/<filename>')
@@ -204,9 +189,7 @@ def uploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     campID=request.args.get('campID',type=str)
-
     return User.userInfo(campID)
-
 
 
 def save_file(filestorage):
@@ -216,7 +199,6 @@ def save_file(filestorage):
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
     session['filepath']=filepath#save current filepath in session
     filestorage.save(filepath)
-
 
 
 def save_files(request=request):

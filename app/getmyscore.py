@@ -14,24 +14,9 @@ def _getmyscore():
         }
     _score_items=user.score_items.all()
     for s in _score_items:
-        _status=s.status
-        if _status==2:
-            _status=u"未审核"
-        elif _status==1:
-            _status=u"通过"
-        else:
-            _status=u"驳回"
         data={
                 "id": s.item_name,
-                "cell": {
-                    "id":s.id,
-                    "catagory": s.catagory,
-                    "item_name": s.item_name,
-                    "add": s.add,
-                    "time": s.time,
-                    "applytime": s.applytime,
-                    "status": _status
-                }
+                "cell": User.getItemInfo(s)
             }
 
         jsondict["rows"].append(data)

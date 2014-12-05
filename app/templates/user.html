@@ -380,7 +380,7 @@ $(".flexme3").flexigrid({
                     }, {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 80,
+                    width : 70,
                     sortable : false,
                     align : 'center'
                     }, {
@@ -392,7 +392,7 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '分数',
                         name : 'add',
-                        width : 50,
+                        width : 40,
                         sortable : true,
                         align : 'center'
                     }, {
@@ -412,10 +412,17 @@ $(".flexme3").flexigrid({
                 {
                         display : '审核状态',
                         name : 'status',
-                        width : 100,
+                        width : 65,
                         sortable : true,
                         align : 'center'
-                }  ],
+                },
+                {
+                        display : '相关证明',
+                        name : 'certification',
+                        width : 65,
+                        sortable : false,
+                        align : 'center'
+                },],
                 buttons : [
                 {
                         name : '删除',
@@ -439,7 +446,7 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 755,
+                width : 785,
                 height : 200
             });
             function Control(com, grid) {

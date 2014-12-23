@@ -4,12 +4,16 @@
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/datepicker.js"></script>
 <!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
- --><script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
+ -->
+ <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+
 
 <!-- ugly hack to keep chrome form crashing when using uploadify -->
 <script type="text/javascript">
         document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
 </script>
+
 
 
   <style type="text/css">
@@ -252,24 +256,30 @@
 
 <script type="text/javascript">
 
-// $(function(){
-//   $("#submitbtn").click(function(event) {
-//     alert($("#file_upload").val())//获取文件名
-//   });
-// })
 
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+var UUID=generateUUID()
+var pic="false"
  $(document).ready(function() {
+
       $('#file_upload').uploadify({
         'swf': '/static/uploadify/uploadify.swf',
         'uploader': $SCRIPT_ROOT+'/_uploader',
-        'cancelImg': '/static/uploadify/uploadify-cancel.png',
         'auto': true,
         'buttonText' : '浏览...',
         'fileObjName' : 'the_files',
         'fileTypeDesc' : 'Image Files',
         'fileTypeExts' : '*.jpeg; *.jpg; *.png',
         'fileSizeLimit' : '2048KB',
-        //'formData'      : {'campID' : {{user.campID}}},
+        'formData'      : {'UUID' : UUID},
         'multi': true,
         'queueSizeLimit': 5,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
@@ -279,15 +289,17 @@
         // },
         'onSelect' : function(file) {
             var filename=file.name;
+
         },
       'onAllComplete': function(event, data) {
             $('#upload_link').hide();
 
         },
       'onUploadStart': function (file) {
-                    $("#file_upload").uploadify("settings", "formData", { 'campID': {{user.campID}} ,'filename':file.name});
-                    //在onUploadStart事件中，也就是上传之前，把参数写好传递到后台。
-                }
+      },
+      'onUploadSuccess' : function(file, data, response) {
+           pic="true"
+        }
       });
     });
 
@@ -314,14 +326,16 @@ $(function () {
             name:$("#apply option:selected").text(),
             campID:{{user.campID}},
             time:$("#inputDate").val(),
-            // filename:filename
-            //opt:1
+            UUID:UUID,
+            pic:pic//是否上传了图片
           },
           function(){
-            alert("提交成功")
+            var success_confirm=confirm("提交成功")
+            location.reload()
             $('.error').hide();
             $(".flexme3").flexReload();
           });
+
         return false //Refresh whole page to make upload files disappear
       }
       else{
@@ -449,12 +463,14 @@ $(".flexme3").flexigrid({
                 width : 785,
                 height : 200
             });
+
             function Control(com, grid) {
+
                 var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
                 if (con) {
                   $.each($('.trSelected', grid),
                             function(key, value){
-                              //alert(value.firstChild.innerText)
+                              //alert(value.firstChild.innerText)//can not use by FF
                                 $.get($SCRIPT_ROOT+"/_getMyScore",
                                   {
                                     Delete: value.firstChild.innerText,
@@ -462,14 +478,12 @@ $(".flexme3").flexigrid({
                                     campID:{{user.campID}}
                                   }
                                   , function(canDelete){
-
-
                                         if (canDelete=="No"){
                                             alert("无法删除已经审核的加分项，可联系管理员删除")
                                             $(".flexme3").flexReload();
+                                             // location.reload();
                                           }
                                         else{
-
                                           $(".flexme3").flexReload();
                                         }
                                 });
@@ -477,21 +491,37 @@ $(".flexme3").flexigrid({
                     }
                 };
 
-$('#inputDate').DatePicker({
-  format:'Y/m/d',
-  date: $('#inputDate').val(),
-  current: $('#inputDate').val(),
-  starts: 1,
-  position: 'r',
-  onBeforeShow: function(){
-    $('#inputDate').DatePickerSetDate($('#inputDate').val(), true);
-  },
-  onChange: function(formated, dates){
-    $('#inputDate').val(formated);
-      $('#inputDate').DatePickerHide();
-
-  }
-});
 </script>
 
+
+<!-- ugly hack to make FF use  -->
+<script language="javascript">
+function isIE(){ //ie?
+   if (window.navigator.userAgent.toLowerCase().indexOf("msie")>=1)
+    return true;
+   else
+    return false;
+}
+
+if(!isIE()){ //firefox innerText define innerText
+   HTMLElement.prototype.__defineGetter__(     "innerText",
+    function(){
+     var anyString = "";
+     var childS = this.childNodes;
+     for(var i=0; i<childS.length; i++) {
+      if(childS[i].nodeType==1)
+       anyString += childS[i].tagName=="BR" ? '\n' : childS[i].textContent;
+      else if(childS[i].nodeType==3)
+       anyString += childS[i].nodeValue;
+     }
+     return anyString;
+    }
+   );
+   HTMLElement.prototype.__defineSetter__(     "innerText",
+    function(sText){
+     this.textContent=sText;
+    }
+   );
+}
+</script>
 {% endblock %}

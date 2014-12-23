@@ -143,6 +143,7 @@ class Score_items(db.Model):
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
     picpath=db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    uuid=db.Column(db.String(64))
 
     def __repr__(self):
         return '<Score %r>' % (self.time)

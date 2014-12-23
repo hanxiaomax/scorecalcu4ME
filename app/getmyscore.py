@@ -25,6 +25,8 @@ def _getmyscore():
 def _deleteapply():
     Delete=request.args.get('Delete',type=int)
     campID = request.args.get('campID', type=str)
+    # print "Delete:"+str(Delete)
+    # print "campID:"+campID
     user=User.get_user(campID)
     _score_items=user.score_items.all()
     canDelete="No"

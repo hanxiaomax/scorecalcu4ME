@@ -1,5 +1,5 @@
 #coding:utf-8
-from flask import (render_template,flash,redirect,session,url_for,request,session,request,jsonify,send_from_directory,g)
+from flask import (render_template,flash,redirect,session,url_for,request,request,jsonify,send_from_directory,g,escape)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
@@ -58,8 +58,11 @@ def users(user_id):
     #everytime this page refresh it means application has been submited ,
     #So clean the filepath because the next apply may not need to upload a pic.
     #In that case the filepath wont be update automatically
-    if session.has_key('filepath'):
-        session.pop('filepath')
+    # if session.has_key('filepath'):
+    #     session.pop('filepath')
+
+    #print "users",session
+
     return render_template(
             "user.html",
             user=user,
@@ -155,12 +158,6 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-    # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
-    if session.has_key('filepath'):
-        print session['filepath']
-        return saveapply._saveapply(session['filepath'])
-    else:
-        print "######"
         return saveapply._saveapply()
 
 
@@ -195,23 +192,22 @@ def getStuInfo():
     return User.userInfo(campID)
 
 
-def save_file(filestorage):
+def save_file(filestorage,uuid):
     "Save a Werkzeug file storage object to the upload folder."
-    filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
-    #get filename without ext and append uuid to it to make unique file name
+    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
+    filename=str(uuid)+".jpg"
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
-    session['filepath']=filepath#save current filepath in session
-    print "###"+session['filepath']
     filestorage.save(filepath)
 
 
 def save_files(request=request):
     "Save all files in a request to the app's upload folder."
+    UUID=request.form.get("UUID")#FORM NOT ARGES
     for _, filestorage in request.files.iteritems():
         # Workaround: larger uploads cause a dummy file named '<fdopen>'.
         # See the Flask mailing list for more information.
         if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
-            save_file(filestorage)
+            save_file(filestorage,UUID)
 
 @appME.route('/_changePW',methods=["POST", "GET"])
 def changePW():

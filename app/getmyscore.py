@@ -18,15 +18,12 @@ def _getmyscore():
                 "id": s.item_name,
                 "cell": User.getItemInfo(s)
             }
-
         jsondict["rows"].append(data)
     return jsonify(jsondict)
 
 def _deleteapply():
     Delete=request.args.get('Delete',type=int)
     campID = request.args.get('campID', type=str)
-    # print "Delete:"+str(Delete)
-    # print "campID:"+campID
     user=User.get_user(campID)
     _score_items=user.score_items.all()
     canDelete="No"
@@ -34,7 +31,7 @@ def _deleteapply():
         if (s.id==Delete and s.status!=STATUS_YES):
             canDelete="Yes"
             if s.picpath is not None :
-                os.remove(appME.config['UPLOAD_FOLDER']+"certiID"+str(s.id)+".png")
+                os.remove(appME.config['UPLOAD_FOLDER']+s.uuid+".jpg")
             db.session.delete(s)
     db.session.commit()
     return canDelete

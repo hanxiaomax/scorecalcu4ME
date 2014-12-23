@@ -43,7 +43,7 @@ def _saveapply(filepath=False):
     db.session.add(s)
     db.session.flush()
     if _pic=="true":
-        s.picpath=basedir+"/uploads/"+_uuid+".png"
+        s.picpath=basedir+"/uploads/"+_uuid+".jpg"
     elif _pic=="flase":
         s.picpath=None
     db.session.commit()

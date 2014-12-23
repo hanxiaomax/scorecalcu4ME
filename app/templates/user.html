@@ -1,18 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="/static/js/datepicker.js"></script>
-<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
- -->
- <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
-<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
 
-
-<!-- ugly hack to keep chrome form crashing when using uploadify -->
-<script type="text/javascript">
-        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
-</script>
 
 
 
@@ -283,10 +272,6 @@ var pic="false"
         'multi': true,
         'queueSizeLimit': 5,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
-        // 'onSelect': function(e, ID, fileObj) {
-        //   alert(fileObj.name)
-        //     $('#upload_link').show();
-        // },
         'onSelect' : function(file) {
             var filename=file.name;
 
@@ -330,12 +315,14 @@ $(function () {
             pic:pic//是否上传了图片
           },
           function(){
-            var success_confirm=confirm("提交成功")
-            location.reload()
+            //var success_confirm=confirm("提交成功")
+            alert("提交成功")
+            //location.reload()
+            window.location.reload()
             $('.error').hide();
-            $(".flexme3").flexReload();
+            //$(".flexme3").flexReload();
+            UUID=generateUUID()//提交成功后生成新的UUID
           });
-
         return false //Refresh whole page to make upload files disappear
       }
       else{
@@ -492,7 +479,16 @@ $(".flexme3").flexigrid({
                 };
 
 </script>
+<script type="text/javascript" src="/static/js/datepicker.js"></script>
+<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
+ -->
+ <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
 
+
+<!-- ugly hack to keep chrome form crashing when using uploadify -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
 
 
 {% endblock %}

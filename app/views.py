@@ -1,23 +1,19 @@
 #coding:utf-8
-from flask import (render_template,flash,redirect,session,url_for,request,session,request,jsonify,send_from_directory,g)
+from flask import (render_template,flash,redirect,session,url_for,request,request,jsonify,send_from_directory,g,escape)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
-from models import User, ROLE_USER, ROLE_ADMIN
+from models import User,Score_items, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,getreview
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
-
-#TODO:maybe save user in g? so we dont need to query all the time?
-
+import json
+import uuid
+basedir=os.path.abspath(os.path.dirname(__file__))
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-
-
-
 
 
 @appME.route('/',methods=['GET','POST'])
@@ -42,8 +38,6 @@ def login():
                             title=u'机械工程学院素质分管理系统',
                             form=form)
 
-
-
 #user.html
 #Dashboard for student to apply
 @appME.route('/student_<int:user_id>', methods=["POST", "GET"])
@@ -59,16 +53,23 @@ def users(user_id):
 
     if not user:
         redirect("/login/")
-    #everytime this page refresh it means application has been submited ,
-    #So clean the filepath because the next apply may not need to upload a pic.
-    #In that case the filepath wont be update automatically
-    if session.has_key('filepath'):
-        session.pop('filepath')
     return render_template(
             "user.html",
             user=user,
             user_id=user_id)
 
+#Dashboard for student to checkout the publicity
+@appME.route('/publicity/student_<int:user_id>', methods=["POST", "GET"])
+@login_required
+def user_publicity(user_id):
+    user = User.query.filter(User.campID == user_id).first()
+    if not user:
+        flash("The user is not exist.")
+        redirect("/login/")
+    return render_template(
+            "user_publicity.html",
+            user=user,
+            user_id=user_id)
 
 @appME.route('/review/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
@@ -92,15 +93,15 @@ def admins_search(admin_id):
             user=admin,
             admin_id=admin_id)
 
-@appME.route('/edit/admin_<int:admin_id>', methods=["POST", "GET"])
+@appME.route('/publicity/admin_<int:admin_id>', methods=["POST", "GET"])
 @login_required
-def admins_edit(admin_id):
+def admins_publicity(admin_id):
     admin = User.query.filter(User.campID == admin_id).first()
     if not admin:
         flash("The user is not exist.")
         redirect("/login/")
     return render_template(
-            "admin_edit.html",
+            "admin_publicity.html",
             user=admin,
             admin_id=admin_id)
 
@@ -134,11 +135,6 @@ def _getMyScore():
     if(opt==1) :
         return getmyscore._getmyscore()
     elif(opt==0):
-        #if we delete an apply we will delete but not delete its 'filepath',here fixed the bug
-        # if session.has_key('filepath'):
-        #     session.pop('filepath')
-        #     return getmyscore._deleteapply()
-        #Moved to _deleteapply()
         return getmyscore._deleteapply()
     else:
         return getmyscore._getTotal()
@@ -147,14 +143,7 @@ def _getMyScore():
 
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
-
-    # in some case the user dont need to upload the pic,so we dont have Key:filepath in session
-    if session.has_key('filepath'):
-        return saveapply._saveapply(session['filepath'])
-    else:
         return saveapply._saveapply()
-
-
 
 
 
@@ -169,11 +158,10 @@ def _getreview():
         return getreview._getreview()
 
 
-
-
 @appME.route('/uploads/<filename>')
 def uploaded_file(filename):
     "send picture"
+
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 
@@ -187,61 +175,25 @@ def uploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     campID=request.args.get('campID',type=str)
-    try:
-        user=User.get_user(campID)
-        if user and user.role==ROLE_USER:
-            jsondic={}
-            jsondic={
-            "name":user.name,
-            "campID":user.campID,
-            "grade":user.grade,
-            "sum":user.score,
-            "items":[]
-            }
-            items=user.score_items.all()
-            for item in items:
-                _status=item.status
-                if _status==2:
-                    _status=u"未审核"
-                elif _status==1:
-                    _status=u"通过"
-                else:
-                    _status=u"驳回"
-                data={
-                        "id":item.id,
-                        "catagory": item.catagory,
-                        "item_name": item.item_name,
-                        "add": item.add,
-                        "time": item.time,
-                        "standard": item.standard,
-                        "status":_status
-                }
-                jsondic["items"].append(data)
-
-            return jsonify(jsondic)
-        else:
-            return "无法找到"
-    except:
-         return "错误"
+    return User.userInfo(campID)
 
 
-
-def save_file(filestorage):
+def save_file(filestorage,uuid):
     "Save a Werkzeug file storage object to the upload folder."
-    filename = secure_filename(filestorage.filename)
+    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
+    filename=str(uuid)+".jpg"
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
-    session['filepath']=filepath#save current filepath in session
     filestorage.save(filepath)
-
 
 
 def save_files(request=request):
     "Save all files in a request to the app's upload folder."
+    UUID=request.form.get("UUID")#FORM NOT ARGES
     for _, filestorage in request.files.iteritems():
         # Workaround: larger uploads cause a dummy file named '<fdopen>'.
         # See the Flask mailing list for more information.
         if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
-            save_file(filestorage)
+            save_file(filestorage,UUID)
 
 @appME.route('/_changePW',methods=["POST", "GET"])
 def changePW():
@@ -260,3 +212,6 @@ def changePW():
 @appME.route('/test',methods=["POST", "GET"])
 def test():
     return render_template("test.html")
+
+
+

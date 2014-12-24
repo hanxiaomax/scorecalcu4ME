@@ -1,18 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-<link rel="stylesheet" media="screen" type="text/css" href="/static/css/datepicker.css" />
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="/static/js/datepicker.js"></script>
-<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script> -->
-<!-- <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script> -->
-
-<!-- ugly hack to keep chrome form crashing -->
-<script type="text/javascript">
-        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
-</script>
-
-
-  <style type="text/css">
+<style type="text/css">
   /*
   * Base structure
   */
@@ -117,16 +106,14 @@
   }
 }
 </style>
-
-
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li class="active"><a href="">素质分申请</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+          <li class="active"><a href={{url_for('users',user_id=user_id)}}>素质分申请</a></li>
+           <li ><a href={{url_for('user_publicity',user_id=user_id)}}>公示系统</a></li>
           <li><a href={{url_for('changePassword',user_id=user_id)}}>修改密码</a></li>
-
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -140,7 +127,7 @@
     <h1 class="page-header">提交申请</h1>
 
 
-      <form class="form-horizontal"  >
+      <form class="form-horizontal" method="POST" enctype="multipart/form-data">
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
@@ -186,7 +173,7 @@
                 </div>
               </div>
               </form>
-              <form class="form-horizontal"  >
+              <form class="form-horizontal" method="POST" enctype="multipart/form-data">
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
@@ -217,7 +204,7 @@
                         <div class="controls">
                           <label class="control-label" for="input01">获奖时间</label>
                           <hr>
-                          <input class="inputDate" id="inputDate" value="2014/01/01" />
+                          <input type="text" id="datepicker"></p>
                         </div>
                   </div>
                   </div>
@@ -248,43 +235,48 @@
 
 
 <script type="text/javascript">
+$( "#datepicker" ).datepicker({
+});
 
-// $(function(){
-//   $("#submitbtn").click(function(event) {
-//     alert($("#file_upload").val())//获取文件名
-//   });
-// })
-
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+var UUID=generateUUID()
+var pic="false"
  $(document).ready(function() {
+
       $('#file_upload').uploadify({
         'swf': '/static/uploadify/uploadify.swf',
         'uploader': $SCRIPT_ROOT+'/_uploader',
-        'cancelImg': '/static/uploadify/uploadify-cancel.png',
         'auto': true,
         'buttonText' : '浏览...',
         'fileObjName' : 'the_files',
         'fileTypeDesc' : 'Image Files',
         'fileTypeExts' : '*.jpeg; *.jpg; *.png',
         'fileSizeLimit' : '2048KB',
-        //'formData'      : {'campID' : {{user.campID}}},
+        'formData'      : {'UUID' : UUID},
         'multi': true,
         'queueSizeLimit': 5,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
-        // 'onSelect': function(e, ID, fileObj) {
-        //   alert(fileObj.name)
-        //     $('#upload_link').show();
-        // },
         'onSelect' : function(file) {
             var filename=file.name;
+
         },
       'onAllComplete': function(event, data) {
             $('#upload_link').hide();
 
         },
       'onUploadStart': function (file) {
-                    $("#file_upload").uploadify("settings", "formData", { 'campID': {{user.campID}} ,'filename':file.name});
-                    //在onUploadStart事件中，也就是上传之前，把参数写好传递到后台。
-                }
+      },
+      'onUploadSuccess' : function(file, data, response) {
+           pic="true"
+        }
       });
     });
 
@@ -311,15 +303,17 @@ $(function () {
             name:$("#apply option:selected").text(),
             campID:{{user.campID}},
             time:$("#inputDate").val(),
-            // filename:filename
-            //opt:1
+            UUID:UUID,
+            pic:pic//是否上传了图片
           },
           function(){
+            //var success_confirm=confirm("提交成功")
             alert("提交成功")
+            window.location.reload()
             $('.error').hide();
-            $(".flexme3").flexReload();
+            UUID=generateUUID()//提交成功后生成新的UUID
           });
-        //return false //Refresh whole page to make upload files disappear
+        return false //Refresh whole page to make upload files disappear
       }
       else{
           $('.error').show();
@@ -330,22 +324,31 @@ $(function () {
 });
 
 
+
 $(function(){
         $("input:radio").change(function(){
           var selectedvalue = $("input[name='group']:checked").val();
-          $.getJSON("/static/select.json",function(data){
-            $("#apply").empty();
-              $.each(data,function() {
-                if (this.catagory==selectedvalue)
-                {
-                    $.each(this.subcatagory, function() {
-                    $("#apply").append("<option value=this.name>" +  this.name + "</option>");
-                    });
-                };
-      });
+          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
+          $.ajax({
+                  type: "get",
+                  url:'/static/select.json',
+                  cache: false,//必须为false，否则同样会从缓存中加载
+                  dataType : "json",
+                  success: function(data){
+                    $("#apply").empty();
+                            $.each(data,function() {
+                              if (this.catagory==selectedvalue)
+                              {
+                                  $.each(this.subcatagory, function() {
+                                  $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
+                                  });
+                              };
+                   });
+                 }
     });
   });
 });
+
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"/_getMyScore",
                 method: 'GET',//should be GET
@@ -368,41 +371,49 @@ $(".flexme3").flexigrid({
                     }, {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 80,
+                    width : 70,
                     sortable : false,
                     align : 'center'
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 200,
-                        sortable : true,
-                        align : 'left'
-                    }, {
-                        display : '分数',
-                        name : 'add',
-                        width : 50,
+                        width : 190,
                         sortable : true,
                         align : 'center'
                     }, {
-                        display : '时间',
+                        display : '分数',
+                        name : 'add',
+                        width : 40,
+                        sortable : true,
+                        align : 'center'
+                    }, {
+                        display : '获奖时间',
                         name : 'time',
+                        width : 100,
+                        sortable : false,
+                        align : 'center',
+                    }, {
+                        display : '申请时间',
+                        name : 'applytime',
                         width : 190,
                         sortable : false,
-                        align : 'left',
-                    }, {
-                        display : '执行标准',
-                        name : 'standard',
-                        width : 100,
+                        align : 'center',
+                    },
+
+                {
+                        display : '审核状态',
+                        name : 'status',
+                        width : 65,
                         sortable : true,
                         align : 'center'
                 },
                 {
-                        display : '审核状态',
-                        name : 'status',
-                        width : 50,
-                        sortable : true,
-                        align : 'left'
-                }  ],
+                        display : '相关证明',
+                        name : 'certification',
+                        width : 65,
+                        sortable : false,
+                        align : 'center'
+                },],
                 buttons : [
                 {
                         name : '删除',
@@ -426,15 +437,17 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 745,
+                width : 785,
                 height : 200
             });
+
             function Control(com, grid) {
+
                 var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
                 if (con) {
                   $.each($('.trSelected', grid),
                             function(key, value){
-                              //alert(value.firstChild.innerText)
+                              //alert(value.firstChild.innerText)//can not use by FF
                                 $.get($SCRIPT_ROOT+"/_getMyScore",
                                   {
                                     Delete: value.firstChild.innerText,
@@ -442,14 +455,12 @@ $(".flexme3").flexigrid({
                                     campID:{{user.campID}}
                                   }
                                   , function(canDelete){
-
-
                                         if (canDelete=="No"){
-                                            alert("无法删除已经审核的加分项")
+                                            alert("无法删除已经审核的加分项，可联系管理员删除")
                                             $(".flexme3").flexReload();
+                                             // location.reload();
                                           }
                                         else{
-
                                           $(".flexme3").flexReload();
                                         }
                                 });
@@ -457,21 +468,17 @@ $(".flexme3").flexigrid({
                     }
                 };
 
-$('#inputDate').DatePicker({
-  format:'Y/m/d',
-  date: $('#inputDate').val(),
-  current: $('#inputDate').val(),
-  starts: 1,
-  position: 'r',
-  onBeforeShow: function(){
-    $('#inputDate').DatePickerSetDate($('#inputDate').val(), true);
-  },
-  onChange: function(formated, dates){
-    $('#inputDate').val(formated);
-      $('#inputDate').DatePickerHide();
-
-  }
-});
 </script>
+<script type="text/javascript" src="/static/js/datepicker.js"></script>
+<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
+ -->
+ <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
+
+
+<!-- ugly hack to keep chrome form crashing when using uploadify -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
+
 
 {% endblock %}

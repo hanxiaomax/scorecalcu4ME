@@ -112,7 +112,7 @@
         <ul class="nav nav-sidebar">
           <li class="active"><a href="">素质分审核</a></li>
           <li><a href={{url_for('admins_search',admin_id=admin_id)}}>素质分查询</a></li>
-          <li><a href={{url_for('admins_edit',admin_id=admin_id)}}>添加修改规则</a></li>
+          <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}>公示系统</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
@@ -171,14 +171,25 @@ $(".flexme3").flexigrid({
                     value: 3,
                   },
                   ],
-                colModel : [{
+                colModel : [
+                {
+                    display : 'uuid',
+                    name : 'uuid',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center',
+                    hide : true
+                    },{
                     display : '申请号',
                     name : 'id',
                     width : 50,
                     sortable : false,
                     hide: false,
-                    align : 'center'
+                    align : 'center',
+                    hide : false
                     },
+
                     {
                     display : '申请人',
                     name : 'name',
@@ -205,15 +216,15 @@ $(".flexme3").flexigrid({
                         sortable : true,
                         align : 'center'
                     }, {
-                        display : '时间',
+                        display : '获奖时间',
                         name : 'time',
                         width : 130,
                         sortable : true,
                         align : 'left',
                         hide : false
                     }, {
-                        display : '执行标准',
-                        name : 'standard',
+                        display : '申请时间',
+                        name : 'applytime',
                         width : 150,
                         sortable : true,
                         align : 'left'
@@ -308,8 +319,8 @@ $(".flexme3").flexigrid({
                           else{
                             $.each($('.trSelected', grid),
                               function(key, value){
-                                var id=value.firstChild.innerText
-                                window.open("/uploads/"+"certiID"+id+".png")
+                                var uuid=value.firstChild.innerText
+                                window.open("/uploads/"+uuid+".jpg")
                             })
                           }
                       }

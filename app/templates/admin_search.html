@@ -102,7 +102,7 @@
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('admins_review',admin_id=admin_id)}}>素质分审核</a></li>
           <li class="active"><a href={{url_for('admins_search',admin_id=admin_id)}}>素质分查询</a></li>
-          <li><a href={{url_for('admins_edit',admin_id=admin_id)}}>添加修改规则</a></li>
+          <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}>公示系统</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
@@ -309,13 +309,13 @@ $(function () {
                 $("#score_items tbody").empty()//获取#score_items下面的tbody
 
 
-                var thead = "<tr> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 时间 </th> <th> 执行标准 </th><th> 审核状态 </th> </tr> "//不能包含<thead>
+                var thead = "<tr> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 获奖时间时间 </th> <th> 申请时间 </th><th> 审核状态 </th> </tr> "//不能包含<thead>
 
                   $("#score_items").append(thead)
                 $.each(data.items,function() {
 
                   var tbBody = ""
-                  tbBody += "<tr class='warning'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>"+"<td>" + this.add + "</td>"+"<td>" + this.time + "</td>"+"<td>" + this.standard + "</td>"+"<td>" + this.status + "</td></tr>";
+                  tbBody += "<tr class='warning'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>"+"<td>" + this.add + "</td>"+"<td>" + this.time + "</td>"+"<td>" + this.applytime + "</td>"+"<td>" + this.status + "</td></tr>";
                   $("#score_items").append(tbBody)
                 });
                 }

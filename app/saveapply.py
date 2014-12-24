@@ -16,8 +16,6 @@ def getvalue(cat,name):
                 if v["name"]==name:
                     return v["value"]
 
-def getstandard():
-    pass
 
 def _saveapply(filepath=False):
     #by default we think there is no pic being uploaded
@@ -25,34 +23,30 @@ def _saveapply(filepath=False):
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
     _time=request.args.get('time',type=str)
+    _applytime=datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')#format the timestamp return as a string
     _add=getvalue(_catagory,_name)
+    _uuid=request.args.get('UUID', type=str)
+    _pic=request.args.get('pic',type=str)#if pic uploaded
     user=User.get_user(_campID)
 
-    _standard="2013-9-4"
+
 
     s=Score_items(catagory=_catagory,
         item_name=_name,
         time=_time,
         add=_add,
-        standard=_standard,
-        student=user)
+        applytime=_applytime,
+        student=user,
+        uuid=_uuid,
+        )
 
     db.session.add(s)
-    #execute SQL so you can get s.id
     db.session.flush()
-    new_id=s.id
-    if filepath:
-        uploadDir=os.path.dirname(filepath)
-    #rename the pic ,dont forget the dirpath
-    #os.rename(filepath,uploadDir+"/"+_campID+"_No"+str(new_id)+".png")
-        newpath=uploadDir+"/"+"certiID"+str(new_id)+".png"
-        os.rename(filepath,newpath)
-        s.picpath=newpath
-    else:
+    if _pic=="true":
+        s.picpath=basedir+"/uploads/"+_uuid+".jpg"
+    elif _pic=="flase":
         s.picpath=None
     db.session.commit()
-
-
 
     return ""
 

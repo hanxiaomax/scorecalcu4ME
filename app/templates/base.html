@@ -4,13 +4,15 @@
     <meta charset="utf-8">
     <head>
         <!-- 使用Bootstrap 框架 -->
-        <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
+    <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}}>
+    <link href={{url_for('static',filename="css/jquery-ui.min.css")}} rel="stylesheet">
 
-        <title>机械工程学院素质分管理系统</title>
-        <script src="/static/js/jquery-1.7.min.js" type="text/javascript"></script>
+    <title>机械工程学院素质分管理系统</title>
+    <script src="/static/js/jquery-1.11.1.min.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/flexigrid.css" />
     <script type="text/javascript" src="/static/js/flexigrid.pack.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-ui.js"></script>
 
 
     </head>
@@ -19,4 +21,35 @@
         {% include "navigator.html" %}
     </body>
     <!-- {% include "footer.html" %} -->
+
+<!-- ugly hack to make FF use  -->
+<script language="javascript">
+function isIE(){ //ie?
+   if (window.navigator.userAgent.toLowerCase().indexOf("msie")>=1)
+    return true;
+   else
+    return false;
+}
+
+if(!isIE()){ //firefox innerText define innerText
+   HTMLElement.prototype.__defineGetter__(     "innerText",
+    function(){
+     var anyString = "";
+     var childS = this.childNodes;
+     for(var i=0; i<childS.length; i++) {
+      if(childS[i].nodeType==1)
+       anyString += childS[i].tagName=="BR" ? '\n' : childS[i].textContent;
+      else if(childS[i].nodeType==3)
+       anyString += childS[i].nodeValue;
+     }
+     return anyString;
+    }
+   );
+   HTMLElement.prototype.__defineSetter__(     "innerText",
+    function(sText){
+     this.textContent=sText;
+    }
+   );
+}
+</script>
 </html>

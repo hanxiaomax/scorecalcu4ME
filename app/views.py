@@ -11,8 +11,6 @@ import os
 import json
 import uuid
 basedir=os.path.abspath(os.path.dirname(__file__))
-#TODO:maybe save user in g? so we dont need to query all the time?
-
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -55,14 +53,6 @@ def users(user_id):
 
     if not user:
         redirect("/login/")
-    #everytime this page refresh it means application has been submited ,
-    #So clean the filepath because the next apply may not need to upload a pic.
-    #In that case the filepath wont be update automatically
-    # if session.has_key('filepath'):
-    #     session.pop('filepath')
-
-    #print "users",session
-
     return render_template(
             "user.html",
             user=user,
@@ -145,11 +135,6 @@ def _getMyScore():
     if(opt==1) :
         return getmyscore._getmyscore()
     elif(opt==0):
-        #if we delete an apply we will delete but not delete its 'filepath',here fixed the bug
-        # if session.has_key('filepath'):
-        #     session.pop('filepath')
-        #     return getmyscore._deleteapply()
-        #Moved to _deleteapply()
         return getmyscore._deleteapply()
     else:
         return getmyscore._getTotal()
@@ -176,6 +161,7 @@ def _getreview():
 @appME.route('/uploads/<filename>')
 def uploaded_file(filename):
     "send picture"
+
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 

@@ -171,7 +171,16 @@ $(".flexme3").flexigrid({
                     value: 3,
                   },
                   ],
-                colModel : [{
+                colModel : [
+                {
+                    display : 'uuid',
+                    name : 'uuid',
+                    width : 50,
+                    sortable : false,
+                    hide: false,
+                    align : 'center',
+                    hide : true
+                    },{
                     display : '申请号',
                     name : 'id',
                     width : 50,
@@ -310,8 +319,8 @@ $(".flexme3").flexigrid({
                           else{
                             $.each($('.trSelected', grid),
                               function(key, value){
-                                var id=value.firstChild.innerText
-                                window.open("/uploads/"+"certiID"+id+".png")
+                                var uuid=value.firstChild.innerText
+                                window.open("/uploads/"+uuid+".jpg")
                             })
                           }
                       }

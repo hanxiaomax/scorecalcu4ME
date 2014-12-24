@@ -1,11 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
-
-
-
-
-  <style type="text/css">
+<style type="text/css">
   /*
   * Base structure
   */
@@ -110,19 +106,14 @@
   }
 }
 </style>
-
-
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-
           <li class="active"><a href={{url_for('users',user_id=user_id)}}>素质分申请</a></li>
            <li ><a href={{url_for('user_publicity',user_id=user_id)}}>公示系统</a></li>
           <li><a href={{url_for('changePassword',user_id=user_id)}}>修改密码</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
-
-
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -317,10 +308,8 @@ $(function () {
           function(){
             //var success_confirm=confirm("提交成功")
             alert("提交成功")
-            //location.reload()
             window.location.reload()
             $('.error').hide();
-            //$(".flexme3").flexReload();
             UUID=generateUUID()//提交成功后生成新的UUID
           });
         return false //Refresh whole page to make upload files disappear

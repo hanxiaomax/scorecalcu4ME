@@ -204,7 +204,7 @@
                         <div class="controls">
                           <label class="control-label" for="input01">获奖时间</label>
                           <hr>
-                          <input class="inputDate" id="inputDate" value="2014/01/01" />
+                          <input type="text" id="datepicker"></p>
                         </div>
                   </div>
                   </div>
@@ -235,7 +235,8 @@
 
 
 <script type="text/javascript">
-
+$( "#datepicker" ).datepicker({
+});
 
 function generateUUID(){
     var d = new Date().getTime();

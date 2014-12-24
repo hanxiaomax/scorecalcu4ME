@@ -201,10 +201,11 @@
                   <div class="col-md-6">
                   <div class="control-group">
                         <label class="control-label"> </label>
-                        <div class="controls">
-                          <label class="control-label" for="input01">获奖时间</label>
+                        <div class="controls" id="timepickerdiv">
+                          <label class="control-label" id='timepicker'>任职时间</label>
                           <hr>
-                          <input type="text" id="datepicker"></p>
+                          <p>开始日期：<input type='text' id='datepicker1'/></p>
+                          <p>结束日期：<input type='text' id='datepicker2'/></p>
                         </div>
                   </div>
                   </div>
@@ -235,8 +236,12 @@
 
 
 <script type="text/javascript">
-$( "#datepicker" ).datepicker({
+
+$( "#datepicker1" ).datepicker({
 });
+$( "#datepicker2" ).datepicker({
+});
+
 
 function generateUUID(){
     var d = new Date().getTime();
@@ -339,8 +344,30 @@ $(function(){
                             $.each(data,function() {
                               if (this.catagory==selectedvalue)
                               {
+                                $("#timepickerdiv").empty();
+                                //根据素质分类别来生成时间栏
+                                if (this.catagory=="个人荣誉"||this.catagory=="集体荣誉"||this.catagory=="集体活动"||this.catagory=="其他")
+                                  {
+                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>获奖时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' id='datepicker'/></p>");
+                                        $( "#datepicker" ).datepicker({
+                                        });
+
+                                  }
+                                  else{
+                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' id='datepicker1'/></p>");
+                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' id='datepicker2'/></p>");
+                                        //放在这里才有效
+                                        $( "#datepicker1" ).datepicker({
+                                        });
+                                        $( "#datepicker2" ).datepicker({
+                                        });
+
+                                  }
                                   $.each(this.subcatagory, function() {
                                   $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
+
                                   });
                               };
                    });
@@ -467,7 +494,11 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
+$( "#datepicker1" ).datepicker({
+});
 
+$( "#datepicker2" ).datepicker({
+});
 </script>
 <script type="text/javascript" src="/static/js/datepicker.js"></script>
 <!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>

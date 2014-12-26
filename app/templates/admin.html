@@ -274,7 +274,6 @@ $(".flexme3").flexigrid({
                 width : 1000,
                 height : 500
             });
-
               function Control(com, grid) {
                       if (com == '拒绝'){
                           var con=confirm('拒绝选中的 ' + $('.trSelected', grid).length + ' 条申请?')
@@ -284,7 +283,7 @@ $(".flexme3").flexigrid({
                                       //alert(value.firstChild.innerText)
                                         $.get($SCRIPT_ROOT+"/_getreview",
                                           {
-                                            reject: value.firstChild.innerText,//id
+                                            reject: value.children[1].innerText,//id
                                             opt2: 0,//delete
                                           }
                                             , function(){
@@ -302,7 +301,7 @@ $(".flexme3").flexigrid({
                                     function(key, value){//value:HTMLTableRowElement
                                         $.get($SCRIPT_ROOT+"/_getreview",
                                           {
-                                            accept: value.firstChild.innerText,
+                                            accept: value.children[1].innerText,//.children得到全部列元素
                                             opt2: 1,//accept
                                           }
                                             , function(){

@@ -3,7 +3,14 @@
   <meta charset="utf-8">
   <head>
     <!-- 使用Bootstrap 框架 -->
-    <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}} rel="stylesheet">
+    <script src="/static/js/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='css/bootstrap.min.css') }}>
+   <!--  <link rel="stylesheet" href="/static/css/bootstrap.css")}} >
+    <link rel="stylesheet" href="/static/js/bootstrap.min.js")}} >
+ -->
+
+<!-- <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+ -->
     <title>机械工程学院素质分管理系统</title>
     <style type="text/css">
     /*必须的*/
@@ -101,7 +108,7 @@
         <p>Powered by: Flask and Bootstrap</p>
         <p>联系方式: <a href="mailto:someone@example.com">hanxiaomax@qq.com</a>.</p>
       </div>
-      <script src="/static/js/bootstrap.min.js"></script>
+
     </footer>
 
     <!-- 如果放在body外面，则缩小是会覆盖body的内容 -->

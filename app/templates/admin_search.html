@@ -293,6 +293,11 @@ $('#myTab a').click(function (e) {
 
 $(function () {
           $("#OnSearch").bind("click", function (){
+
+            $.get($SCRIPT_ROOT+"/_getMyScore",{
+              campID:$('input[name="campID"]').val()
+            });//更新总分
+
             $.get($SCRIPT_ROOT+"/_getStuInfo",{
               campID:$('input[name="campID"]').val()
             },function(data){

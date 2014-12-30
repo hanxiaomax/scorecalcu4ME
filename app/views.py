@@ -5,7 +5,7 @@ from flask.ext.login import (
 
 from models import User,Score_items, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview#,__StaticDir__
+from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json

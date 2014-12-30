@@ -4,7 +4,7 @@ from flask.ext.login import LoginManager
 import os
 
 
-#__StaticDir__=os.path.abspath(os.path.dirname(__file__))+"/static/"
+__StaticDir__=os.path.abspath(os.path.dirname(__file__))+"/static/"
 
 #initiate the app
 appME=Flask(__name__) #__name__=app

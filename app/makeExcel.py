@@ -5,7 +5,6 @@ from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_N
 
 
 class MakeExcel(object):
-    """docstring for MakeExcel"""
     def __init__(self):
         self.workbook = xlwt.Workbook()
         self.sheet = self.workbook.add_sheet(u'公示信息')
@@ -31,21 +30,13 @@ class MakeExcel(object):
 
 
     def saveAs(self,filename):
-        self.workbook.save("F:/GIThub/scorecalcu4ME/app/static/1.xls")
-
-
-# userInfoDict={
-#              "name" : "name",
-#             "campID" : "campID",
-#             "grade" : "grade",
-#             "sum" : "score",
-#             }
+        self.workbook.save(filename)
 
 
 
 maker=MakeExcel()
 maker._writerow(1,maker._getinfobuf("130280"))
-maker.saveAs("F:/GIThub/scorecalcu4ME/app/static/1.xls")
+maker.saveAs(__StaticDir__+"/1.xls")
 print __StaticDir__
 
 

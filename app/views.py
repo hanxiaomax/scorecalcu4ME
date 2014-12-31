@@ -5,7 +5,7 @@ from flask.ext.login import (
 
 from models import User,Score_items, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__
+from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
@@ -103,7 +103,7 @@ def admins_publicity(admin_id):
         redirect("/login/")
     return render_template(
             "admin_publicity.html",
-            user=admin,
+            user=admin,adminname=admin.name,
             admin_id=admin_id)
 
 @appME.route('/download/', methods=["GET"])
@@ -214,5 +214,9 @@ def changePW():
 def test():
     return render_template("test.html")
 
-
+@appME.route('/_makepublic',methods=["POST", "GET"])
+def makePublic():
+    if request.method == 'POST':
+       return makepublic._makepublic()
+        # print admin,name,timestart,timeend,note,bischecked # campID=request.args.get('campID',type=str)
 

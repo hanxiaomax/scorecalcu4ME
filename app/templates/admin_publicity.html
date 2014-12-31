@@ -22,10 +22,7 @@
   .navbar-fixed-top {
   border: 0;
   }
-  /*
-  * Sidebar
-  */
-  /* Hide for mobile, show later */
+
   .sidebar {
   display: none;
   }
@@ -78,29 +75,17 @@
   /*
   * Placeholder dashboard ideas
   */
-  .placeholders {
-  margin-bottom: 30px;
-  text-align: center;
-  }
-  .placeholders h4 {
-  margin-bottom: 0;
-  }
-  .placeholder {
-  margin-bottom: 20px;
-  }
-  .placeholder img {
-  display: inline-block;
-  border-radius: 50%;
-  }
+
+
   </style>
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li><a href={{url_for('admins_review',admin_id=admin_id)}}>素质分审核</a></li>
-          <li><a href={{url_for('admins_search',admin_id=admin_id)}}>素质分查询</a></li>
-          <li class="active"><a href={{url_for('admins_publicity',admin_id=admin_id)}}>公示系统</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+          <li><a href={{url_for('admins_review',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-eye-open"></span> 素质分审核</a></li>
+          <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
+          <li class="active"><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -108,16 +93,225 @@
       </div>
     </div>
   </div>
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <div class="col-md-11 col-md-offset-2 main">
+    <body>
+      <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-8">
+<div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>公示内容</th>
+                  <th>公示时间</th>
+                  <th>创建时间</th>
+                  <th>创建人</th>
+                  <th>操作</th>
 
-<body>
-      <h1 class="page-header">素质分公示系统</h1>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1,001</td>
+                  <td>Lorem</td>
+                  <td>ipsum</td>
+                  <td>dolor</td>
+                  <td>sit</td>
+                </tr>
+                <tr>
+                  <td>1,002</td>
+                  <td>amet</td>
+                  <td>consectetur</td>
+                  <td>adipiscing</td>
+                  <td>elit</td>
+                </tr>
+                <tr>
+                  <td>1,003</td>
+                  <td>Integer</td>
+                  <td>nec</td>
+                  <td>odio</td>
+                  <td>Praesent</td>
+                </tr>
+                <tr>
+                  <td>1,003</td>
+                  <td>libero</td>
+                  <td>Sed</td>
+                  <td>cursus</td>
+                  <td>ante</td>
+                </tr>
+                <tr>
+                  <td>1,004</td>
+                  <td>dapibus</td>
+                  <td>diam</td>
+                  <td>Sed</td>
+                  <td>nisi</td>
+                </tr>
+                <tr>
+                  <td>1,005</td>
+                  <td>Nulla</td>
+                  <td>quis</td>
+                  <td>sem</td>
+                  <td>at</td>
+                </tr>
+                <tr>
+                  <td>1,006</td>
+                  <td>nibh</td>
+                  <td>elementum</td>
+                  <td>imperdiet</td>
+                  <td>Duis</td>
+                </tr>
+                <tr>
+                  <td>1,007</td>
+                  <td>sagittis</td>
+                  <td>ipsum</td>
+                  <td>Praesent</td>
+                  <td>mauris</td>
+                </tr>
+                <tr>
+                  <td>1,008</td>
+                  <td>Fusce</td>
+                  <td>nec</td>
+                  <td>tellus</td>
+                  <td>sed</td>
+                </tr>
+                <tr>
+                  <td>1,009</td>
+                  <td>augue</td>
+                  <td>semper</td>
+                  <td>porta</td>
+                  <td>Mauris</td>
+                </tr>
+                <tr>
+                  <td>1,010</td>
+                  <td>massa</td>
+                  <td>Vestibulum</td>
+                  <td>lacinia</td>
+                  <td>arcu</td>
+                </tr>
+                <tr>
+                  <td>1,011</td>
+                  <td>eget</td>
+                  <td>nulla</td>
+                  <td>Class</td>
+                  <td>aptent</td>
+                </tr>
+                <tr>
+                  <td>1,012</td>
+                  <td>taciti</td>
+                  <td>sociosqu</td>
+                  <td>ad</td>
+                  <td>litora</td>
+                </tr>
+                <tr>
+                  <td>1,013</td>
+                  <td>torquent</td>
+                  <td>per</td>
+                  <td>conubia</td>
+                  <td>nostra</td>
+                </tr>
+                <tr>
+                  <td>1,014</td>
+                  <td>per</td>
+                  <td>inceptos</td>
+                  <td>himenaeos</td>
+                  <td>Curabitur</td>
+                </tr>
+                <tr>
+                  <td>1,015</td>
+                  <td>sodales</td>
+                  <td>ligula</td>
+                  <td>in</td>
+                  <td>libero</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+          <div class="col-md-2">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title"><span class="glyphicon glyphicon glyphicon-plus"></span> 创建新公示</h3>
 
-</body>
+              </div>
+                    <div class="panel-body">
+
+                  <form role="form">
+                      <div class="form-group">
+                        <label for="disabledTextInput">公示标题</label>
+                        <input type="text" id="name" class="form-control" placeholder="奖学金素质分公示">
+                      </div>
+                      <div class="form-group">
+
+                        <label for="disabledTextInput">时间区间</label>
+
+                          <input type="text" id="timestart" class="form-control" placeholder="起">
+
+                          <p  align="center"><span class="glyphicon glyphicon-chevron-down"></span></p>
+                          <input type="text" id="timeend" class="form-control" placeholder="止">
+                      </div>
+<div class="form-group">
+<label for="textarea">公示内容</label>
+         <textarea class="form-control" rows="2" id="textarea" placeholder="关于本次公示的补充说明或备注，可选"></textarea>
+         </div>
+         <div class="form-group">
+                        <label for="disabledTextInput" >创建者</label>
+                        <input type="text" id="adminname" class="form-control" value={{adminname}} readonly>
+                      </div>
+                      <div class="checkbox">
+                        <label>
+                          <input id="checkbox" name="check" type="checkbox" checked="checked"> 立即公示
+                        </label>
+                      </div>
+                      <button id="createbtn" type="submit" class="btn btn-primary btn-block">创建</button>
+                  </form>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
   </div>
 </div>
-
 <script type="text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<script type="text/javascript">
+
+  $(function () {
+    $('#createbtn').bind('click', function () {
+      var name=$("#name").val();
+      var timestart=$("#timestart").val();
+      var timeend=$("#timeend").val();
+      var note=$("#textarea").val();//防止大规模数据？
+      var bischecked=$('#checkbox').is(':checked');
+      // alert(name);
+      // alert(timestart);
+      // alert(timeend);
+      // alert(bischecked);
+      // alert($("#adminname").val())
+
+      $.post($SCRIPT_ROOT+"/_makepublic",
+      {
+          name:name,
+          timestart:timestart,
+          timeend:timeend,
+          note:note,
+          bischecked:bischecked,
+          admin:$("#adminname").val()
+      },
+      function(){
+        alert("提交成功")
+        return false
+      });
+       return false//Refresh whole page to make upload files disappear
+    });
+    return false
+});
 
 </script>
 {% endblock %}

@@ -79,20 +79,6 @@
   /*
   * Placeholder dashboard ideas
   */
-  .placeholders {
-  margin-bottom: 30px;
-  text-align: center;
-  }
-  .placeholders h4 {
-  margin-bottom: 0;
-  }
-  .placeholder {
-  margin-bottom: 20px;
-  }
-  .placeholder img {
-  display: inline-block;
-  border-radius: 50%;
-  }
   .flexigrid div.fbutton .delete {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
@@ -110,10 +96,10 @@
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li class="active"><a href={{url_for('users',user_id=user_id)}}>素质分申请</a></li>
-           <li ><a href={{url_for('user_publicity',user_id=user_id)}}>公示系统</a></li>
-          <li><a href={{url_for('changePassword',user_id=user_id)}}>修改密码</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+          <li class="active"><a href={{url_for('users',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon-user"></span> 素质分申请</a></li>
+           <li ><a href={{url_for('user_publicity',user_id=user_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
+          <li><a href={{url_for('changePassword',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon glyphicon-wrench"></span> 修改密码</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -124,7 +110,7 @@
 
 
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-    <h1 class="page-header">提交申请</h1>
+    <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-heart"></span> 提交申请</h1>
 
 
       <form class="form-horizontal" method="POST" enctype="multipart/form-data">
@@ -197,14 +183,15 @@
                               </div>
                       </div>
                   </div>
-                  <div class="col-md-2"></div>
-                  <div class="col-md-6">
+
+                  <div class="col-md-2 col-md-offset-2">
                   <div class="control-group">
                         <label class="control-label"> </label>
-                        <div class="controls">
-                          <label class="control-label" for="input01">获奖时间</label>
+                        <div class="controls" id="timepickerdiv">
+                          <label class="control-label" id='timepicker'>任职时间</label>
                           <hr>
-                          <input type="text" id="datepicker"></p>
+                          <p>开始日期：<input type='text' class="form-control" id='datepicker1'/></p>
+                          <p>结束日期：<input type='text' class="form-control" id='datepicker2'/></p>
                         </div>
                   </div>
                   </div>
@@ -213,7 +200,7 @@
               </form>
 
 
-<h1 class="page-header">我的素质分<small id = "totalscore"></small></h1>
+<h1 class="page-header"><span class="glyphicon glyphicon glyphicon-user"></span> 我的素质分<small id = "totalscore"></small></h1>
     <div class="container">
       <div class="row">
         <div class="col-md-4">
@@ -235,8 +222,12 @@
 
 
 <script type="text/javascript">
-$( "#datepicker" ).datepicker({
+
+$( "#datepicker1" ).datepicker({
 });
+$( "#datepicker2" ).datepicker({
+});
+
 
 function generateUUID(){
     var d = new Date().getTime();
@@ -339,8 +330,30 @@ $(function(){
                             $.each(data,function() {
                               if (this.catagory==selectedvalue)
                               {
+                                $("#timepickerdiv").empty();
+                                //根据素质分类别来生成时间栏
+                                if (this.catagory=="个人荣誉"||this.catagory=="集体荣誉"||this.catagory=="集体活动"||this.catagory=="其他")
+                                  {
+                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>获奖时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' id='datepicker'/></p>");
+                                        $( "#datepicker" ).datepicker({
+                                        });
+
+                                  }
+                                  else{
+                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' id='datepicker1'/></p>");
+                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' id='datepicker2'/></p>");
+                                        //放在这里才有效
+                                        $( "#datepicker1" ).datepicker({
+                                        });
+                                        $( "#datepicker2" ).datepicker({
+                                        });
+
+                                  }
                                   $.each(this.subcatagory, function() {
                                   $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
+
                                   });
                               };
                    });
@@ -467,7 +480,11 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
+$( "#datepicker1" ).datepicker({
+});
 
+$( "#datepicker2" ).datepicker({
+});
 </script>
 <script type="text/javascript" src="/static/js/datepicker.js"></script>
 <!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>

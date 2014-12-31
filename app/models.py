@@ -51,7 +51,7 @@ class User(db.Model):
         return user
 
     @classmethod
-    def userInfo(cls,campID,is_jsonify=True):
+    def userInfo(cls,campID,is_jsonify=True,brief=False):
         "get all the infomation about user return as a dict"
         userInfoDict={}
         user = cls.get_user(campID)
@@ -60,17 +60,29 @@ class User(db.Model):
         _campID = user.campID
         _grade = user.grade
         _score = user.score
-        userInfoDict={
-         "name" : user.name,
-        "campID" : user.campID,
-        "grade" : user.grade,
-        "sum" : user.score,
-        "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
-        }
-        if is_jsonify:
-            return  jsonify(userInfoDict)
+        if brief:
+            userInfoDict={
+             "name" : user.name,
+            "campID" : user.campID,
+            "grade" : user.grade,
+            "sum" : user.score,
+            }
+            if is_jsonify:
+                return  jsonify(userInfoDict)
+            else:
+                return userInfoDict
         else:
-            return userInfoDict
+            userInfoDict={
+             "name" : user.name,
+            "campID" : user.campID,
+            "grade" : user.grade,
+            "sum" : user.score,
+            "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
+            }
+            if is_jsonify:
+                return  jsonify(userInfoDict)
+            else:
+                return userInfoDict
 
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):

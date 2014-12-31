@@ -5,7 +5,7 @@ from flask.ext.login import (
 
 from models import User,Score_items, ROLE_USER, ROLE_ADMIN
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview
+from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
@@ -20,6 +20,7 @@ def load_user(user_id):
 @appME.route('/login/',methods=['GET','POST'])
 #make this view function accepts GET and POST requests
 def login():
+    #print __StaticDir__
     form = LoginForm()
     if form.validate_on_submit():
         user=User.login_check(request.form.get('username'),request.form.get('password'))
@@ -102,7 +103,7 @@ def admins_publicity(admin_id):
         redirect("/login/")
     return render_template(
             "admin_publicity.html",
-            user=admin,
+            user=admin,adminname=admin.name,
             admin_id=admin_id)
 
 @appME.route('/download/', methods=["GET"])
@@ -137,7 +138,7 @@ def _getMyScore():
     elif(opt==0):
         return getmyscore._deleteapply()
     else:
-        return getmyscore._getTotal()
+        return getmyscore._getTotal()#Update the total score (called when searching or login)
 
 
 
@@ -213,5 +214,9 @@ def changePW():
 def test():
     return render_template("test.html")
 
-
+@appME.route('/_makepublic',methods=["POST", "GET"])
+def makePublic():
+    if request.method == 'POST':
+       return makepublic._makepublic()
+        # print admin,name,timestart,timeend,note,bischecked # campID=request.args.get('campID',type=str)
 

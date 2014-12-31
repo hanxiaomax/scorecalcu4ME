@@ -78,21 +78,8 @@
   /*
   * Placeholder dashboard ideas
   */
-  .placeholders {
-  margin-bottom: 30px;
-  text-align: center;
-  }
-  .placeholders h4 {
-  margin-bottom: 0;
-  }
-  .placeholder {
-  margin-bottom: 20px;
-  }
-  .placeholder img {
-  display: inline-block;
-  border-radius: 50%;
-  }
-    }
+
+
   .flexigrid div.fbutton .reject {
     background: url(/static/css/images/close.png) no-repeat center left;
 }
@@ -110,10 +97,10 @@
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar">
-          <li class="active"><a href="">素质分审核</a></li>
-          <li><a href={{url_for('admins_search',admin_id=admin_id)}}>素质分查询</a></li>
-          <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}>公示系统</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}>下载</a></li>
+          <li class="active"><a href=""><span class="glyphicon glyphicon glyphicon-eye-open"></span> 素质分审核</a></li>
+          <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
+          <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -123,9 +110,9 @@
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-  <h1 class="page-header">待审核</h1>
+  <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-eye-open"></span> 待审核</h1>
     <body >
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                   <div class="col-md-4">
                     <table class="flexme3" style="display: none"></table>
@@ -274,7 +261,6 @@ $(".flexme3").flexigrid({
                 width : 1000,
                 height : 500
             });
-
               function Control(com, grid) {
                       if (com == '拒绝'){
                           var con=confirm('拒绝选中的 ' + $('.trSelected', grid).length + ' 条申请?')
@@ -284,7 +270,7 @@ $(".flexme3").flexigrid({
                                       //alert(value.firstChild.innerText)
                                         $.get($SCRIPT_ROOT+"/_getreview",
                                           {
-                                            reject: value.firstChild.innerText,//id
+                                            reject: value.children[1].innerText,//id
                                             opt2: 0,//delete
                                           }
                                             , function(){
@@ -302,7 +288,7 @@ $(".flexme3").flexigrid({
                                     function(key, value){//value:HTMLTableRowElement
                                         $.get($SCRIPT_ROOT+"/_getreview",
                                           {
-                                            accept: value.firstChild.innerText,
+                                            accept: value.children[1].innerText,//.children得到全部列元素
                                             opt2: 1,//accept
                                           }
                                             , function(){

@@ -1,6 +1,11 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
+import os
+
+
+__StaticDir__=os.path.abspath(os.path.dirname(__file__))+"/static/"
+
 #initiate the app
 appME=Flask(__name__) #__name__=app
 appME.config.from_object('config')

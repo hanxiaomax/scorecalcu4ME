@@ -231,13 +231,41 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
 <script type="text/javascript">
 
-$( "#datepicker1" ).datepicker({
 
+//生成一个或两个datepicker，并且保证结束时间大于开始时间
+function InitTimepicker(double) {
+  if (double) {
+    $("#datepicker1").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
 
-});
-$( "#datepicker2" ).datepicker({
+    });
+    $("#datepicker2").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+  }
+  else{
+      $( "#datepicker" ).datepicker();
+  }
 
-});
+}
+
+InitTimepicker(true)
 
 
 function generateUUID(){
@@ -389,25 +417,14 @@ $(function(){
                                   {
                                         $("#timepickerdiv").append("<label class='control-label'  id='timepicker'>获奖时间</label><hr>");
                                         $("#timepickerdiv").append("<p>获奖日期：<input type='text' class='form-control' name='datepicker'  id='datepicker'/></p>");
-                                        $( "#datepicker" ).datepicker({
-
-                                        });
+                                        InitTimepicker(false)
 
                                   }
                                   else{
                                         $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
                                         $("#timepickerdiv").append("<p>开始日期：<input type='text' class='form-control' name='datepicker1' id='datepicker1'/></p>");
                                         $("#timepickerdiv").append("<p>结束日期：<input type='text' class='form-control' name='datepicker2' id='datepicker2'/></p>");
-                                        //放在这里才有效
-
-                                        $("#datepicker1").datepicker({
-
-
-
-                                        });
-                                        $("#datepicker2").datepicker({
-
-                                        });
+                                       InitTimepicker(true)
 
                                   }
                                   $.each(this.subcatagory, function() {

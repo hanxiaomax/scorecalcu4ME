@@ -122,32 +122,58 @@
         </ul>
         <div class="tab-content">
           <div role="tabpanel" class="tab-pane active" id="home">
+          <div class="row clearfix"><br/></div>
             <div class="row clearfix">
               <div class="col-md-6 column ">
                 <div class="panel panel-primary">
-                  <!-- Default panel contents -->
+
                   <div class="panel-heading">搜索</div>
                   <div class="panel-body">
-
-                    <form class="form-horizontal" role="form">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class=" col-md-8">
+                        <form class="form-horizontal" role="form">
                       <div class="form-group">
-                        <label for="inputcampID" class="col-md-1 control-label">学号</label>
-                        <div class="col-md-4">
+                        <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                        <div class="col-md-6">
                           <input type="text" class="form-control" name="campID" id="inputcampID" placeholder="130280">
                         </div>
                       </div>
+                      <div class="form-group" name="radiobtn">
+                      <div class="col-md-offset-2 col-md-6">
+                        <label class="radio-inline">
+                          <input type="radio"  name="Radio" value="all" checked="checked">全部
+                        </label>
+                        <label class="radio-inline">
+                          <input type="radio"  name="Radio" value="interval">区间
+                        </label>
+                        <p></p>
+                        <div class="controls" id="timepickerdiv">
 
+                      </div>
+                      </div>
+
+                      </div>
                       <div class="form-group">
-                        <div class="col-md-offset-1 col-md-4">
+                        <div class="col-md-offset-2 col-md-6">
                           <button id="OnSearch" type="button" class="btn btn-info btn-block">搜索</button>
                         </div>
                       </div>
                     </form>
+                      </div>
+                      <div class="col-md-3">
+                      <p></p>
+                  <table class="table table-bordered table-hover" id="student">
+                  </table>
+                      </div>
+
+                    </div>
+
+                  </div>
                   </div>
                   <!-- Table -->
-                  <table class="table" id="student">
-                  </table>
-                  <table class="table table-striped" id="score_items">
+
+                  <table class="table table-bordered table-hover " id="score_items">
                   </table>
                 </div>
               </div>
@@ -240,6 +266,26 @@ $('#myTab a').click(function(e) {
   $(this).tab('show')
 })
 
+$(function(){
+        $("input:radio").change(function(){
+          var selectedvalue = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
+          if (selectedvalue=="interval") {
+              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker1' placeholder='起始日期'/>");
+              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker2' placeholder='截止日期'/>");
+              //放在这里才有效
+              $( "#datepicker1" ).datepicker({
+              });
+              $( "#datepicker2" ).datepicker({
+              });
+          }
+          else{
+            $("#timepickerdiv").empty()
+          };
+
+
+        });
+});
+
 //查询按钮
 $(function() {
   $("#OnSearch").bind("click", function() {
@@ -249,7 +295,7 @@ $(function() {
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
       campID: $('input[name="campID"]').val()
     }, function(data) {
-      $("#score_items thead").empty()
+        $("#score_items thead").empty()
         $("#score_items tbody").empty() //获取#score_items下面的tbody
         $("#student thead").empty()
         $("#student tbody").empty()
@@ -258,14 +304,15 @@ $(function() {
         alert(data)
       } else {
 
-        var thead_stu="<tr><th> 姓名 </th> <th> 学号 </th> <th> 年级 </th> <th> 总分 </th> </tr>"
-        $("#student").append(thead_stu)
-        var tbody_stu="<tr class='info'> <td>" +data.name+"</td> <td> " +data.campID+"</td> <td>" +data.grade+" </td> <td> " +data.sum+"</td> </tr>"
+        var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
         $("#student").append(tbody_stu)
 
 
         var thead = "<tr class='info'> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 获奖时间时间 </th> <th> 申请时间 </th><th> 审核状态 </th> </tr> " //不能包含<thead>
+
         $("#score_items").append(thead)
+
+
         $.each(data.items, function() {
           var tbBody = ""
           tbBody += "<tr ><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";

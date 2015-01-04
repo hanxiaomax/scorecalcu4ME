@@ -55,34 +55,39 @@ class User(db.Model):
         "get all the infomation about user return as a dict"
         userInfoDict={}
         user = cls.get_user(campID)
-
-        _name = user.name
-        _campID = user.campID
-        _grade = user.grade
-        _score = user.score
-        if brief:
-            userInfoDict={
-             "name" : user.name,
-            "campID" : user.campID,
-            "grade" : user.grade,
-            "sum" : user.score,
-            }
-            if is_jsonify:
-                return  jsonify(userInfoDict)
+        try:
+            if user:
+                _name = user.name
+                _campID = user.campID
+                _grade = user.grade
+                _score = user.score
+                if brief:
+                    userInfoDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : user.score,
+                    }
+                    if is_jsonify:
+                        return  jsonify(userInfoDict)
+                    else:
+                        return userInfoDict
+                else:
+                    userInfoDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : user.score,
+                    "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
+                    }
+                    if is_jsonify:
+                        return  jsonify(userInfoDict)
+                    else:
+                        return userInfoDict
             else:
-                return userInfoDict
-        else:
-            userInfoDict={
-             "name" : user.name,
-            "campID" : user.campID,
-            "grade" : user.grade,
-            "sum" : user.score,
-            "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
-            }
-            if is_jsonify:
-                return  jsonify(userInfoDict)
-            else:
-                return userInfoDict
+                return "无法找到"
+        except:
+            return "无法找到"
 
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):

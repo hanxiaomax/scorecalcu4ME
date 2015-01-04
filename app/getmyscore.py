@@ -4,9 +4,8 @@ from app import db,appME
 from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 import os
 
-def _getmyscore():
-    campID = request.args.get('campID', type=str)
-    user=User.get_user(campID)
+def _getmyscore(user):
+
     jsondict={
         "page": 1,
         "total": 100,
@@ -21,10 +20,9 @@ def _getmyscore():
         jsondict["rows"].append(data)
     return jsonify(jsondict)
 
-def _deleteapply():
+def _deleteapply(user):
     Delete=request.args.get('Delete',type=int)
-    campID = request.args.get('campID', type=str)
-    user=User.get_user(campID)
+
     _score_items=user.score_items.all()
     canDelete="No"
     for s in _score_items:
@@ -37,9 +35,9 @@ def _deleteapply():
     return canDelete
 
 
-def _getTotal():
-    campID = request.args.get('campID', type=str)
-    user=User.get_user(campID)
+def _getTotal(user):
+
+
     _score_items=user.score_items.all()
     total=0
     for s in _score_items:

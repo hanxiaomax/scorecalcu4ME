@@ -132,13 +132,17 @@ def _getMyScore():
     #0 :delete
     #1 :getscore
     opt=request.args.get('opt',type=int)
-
-    if(opt==1) :
-        return getmyscore._getmyscore()
-    elif(opt==0):
-        return getmyscore._deleteapply()
+    campID = request.args.get('campID', type=str)
+    user=User.get_user(campID)
+    if user:
+        if(opt==1) :
+            return getmyscore._getmyscore(user)
+        elif(opt==0):
+            return getmyscore._deleteapply(user)
+        else:
+            return getmyscore._getTotal(user)#Update the total score (called when searching or login)
     else:
-        return getmyscore._getTotal()#Update the total score (called when searching or login)
+        return "user not found"
 
 
 

@@ -110,17 +110,24 @@
   </div>
   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-  <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-eye-open"></span> 待审核</h1>
+  <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-eye-open"></span> 素质分审核</h1>
     <body >
+
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col-md-4">
-                    <table class="flexme3" style="display: none"></table>
-                  </div>
-                  <div class="col-md-4">
+                  <div class="col-md-8">
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">待审核申请</h3>
+                    </div>
+                    <div class="panel-body">
 
+                      <table class="flexme3" style="display: none"></table>
+
+
+                    </div>
                   </div>
-                  <div class="col-md-4">
+
                   </div>
                 </div>
               </div>
@@ -180,20 +187,20 @@ $(".flexme3").flexigrid({
                     {
                     display : '申请人',
                     name : 'name',
-                    width : 100,
+                    width : 80,
                     sortable : false,
                     align : 'center'
                     },
                     {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 100,
+                    width : 80,
                     sortable : false,
                     align : 'center'
                     }, {
                         display : '加分项目',
                         name : 'item_name',
-                        width : 300,
+                        width : 180,
                         sortable : true,
                         align : 'center'
                     }, {
@@ -207,19 +214,19 @@ $(".flexme3").flexigrid({
                         name : 'time',
                         width : 130,
                         sortable : true,
-                        align : 'left',
+                        align : 'center',
                         hide : false
                     }, {
                         display : '申请时间',
                         name : 'applytime',
-                        width : 150,
+                        width : 100,
                         sortable : true,
-                        align : 'left'
+                        align : 'center'
                 },
                 {
                         display : '相关证明',
                         name : 'certification',
-                        width : 150,
+                        width : 80,
                         sortable : false,
                         align : 'left'
                 },
@@ -258,7 +265,7 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 1000,
+                width : 750,
                 height : 500
             });
               function Control(com, grid) {

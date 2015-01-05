@@ -100,131 +100,8 @@
         <div class="row">
           <div class="col-md-8">
 <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>公示内容</th>
-                  <th>公示时间</th>
-                  <th>创建时间</th>
-                  <th>创建人</th>
-                  <th>操作</th>
+            <table class="table table-hover" id="exceltable">
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
             </table>
           </div>
           </div>
@@ -272,11 +149,15 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </body>
   </div>
 </div>
+
+
+
 <script type="text/javascript">
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
@@ -289,8 +170,6 @@
       var timeend=$("#timeend").val();
       var note=$("#textarea").val();//防止大规模数据？
       var bischecked=$('#checkbox').is(':checked');
-
-
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,
@@ -298,16 +177,102 @@
           timeend:timeend,
           note:note,
           bischecked:bischecked,
-          admin:$("#adminname").val()
+          adminNAME:$("#adminname").val(),
+          admin:{{user.campID}}
       },
       function(){
         alert("提交成功")
-        return false
+        add_excel_list()
+
       });
+
+
        return false//Refresh whole page to make upload files disappear
     });
     return false
 });
 
+
+function add_excel_list() {
+  $("#exceltable thead").empty()
+  $("#exceltable tbody").empty()
+  $.get($SCRIPT_ROOT + "/_makepublic", {
+      pic: "111"
+    },
+    function(data) {
+      var thead = "<tr><th>ID</th><th>标题</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作</th></tr>" //不能包含<thead>
+      $("#exceltable").append(thead)
+      var tbody = ""
+      $.each(data.excellist, function() {
+        var tbBody = ""
+          // tbBody += "<tr ><td>" + this.Excelname + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>"+ "<td>" + "<a href='javascript:;' class='remove'><span id='remove' class='glyphicon glyphicon glyphicon-remove'> </span></a><span>  </span><span class='glyphicon glyphicon glyphicon-cloud-download'></span><span>  </span><span class='glyphicon glyphicon glyphicon glyphicon-eye-open'></span>"+ "</td></tr>";
+
+        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span> <input type='button' value='"+this.status+"' id='ing' class='btn btn-success btn-xs' onclick='status(this)' /><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> " + "</td></tr>";
+
+        $("#exceltable").append(tbBody)
+      });
+
+    });
+  // $("#benefit_add").click(function(){alert("1");});
+
+}
+function del(obj) {
+    con=confirm("删除该条公示，包括其对应的excel文件（如不希望删除excel文件，请点击“停止公示/正在公示”按钮）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_makepublic", {
+      id:tr.children[0].innerText,
+      Delete:'Delete'
+
+    }, function(){
+
+    });
+    };
+
+
+  }
+function view(obj) {
+    var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+     //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_makepublic", {
+      id:tr.children[0].innerText,
+      View:"View"
+    }, function(link){
+
+      window.open(link)
+    });
+
+  }
+function status(obj) {
+    var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    if ($(obj).attr("class")=='btn btn-success btn-xs') {
+      $(obj).attr("class",'btn btn-warning btn-xs')//提示obj.attr不是函数，是因为没加$()
+      // $(obj).value='停止公示'
+      $(obj).attr("value",'停止公示')
+
+
+    }
+    else{
+      $(obj).attr("class",'btn btn-success btn-xs')
+      // $(obj).value='公示中'
+      $(obj).attr("value",'正在公示')
+
+    }
+    alert($(obj).attr("value"))
+
+
+
+  }
+
+
+
+$("#add").bind("click",function(){
+alert('success');
+})
+add_excel_list()
+
+
 </script>
+
 {% endblock %}

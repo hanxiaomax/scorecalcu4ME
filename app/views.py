@@ -3,9 +3,9 @@ from flask import (render_template,flash,redirect,session,url_for,request,reques
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
-from models import User,Score_items, ROLE_USER, ROLE_ADMIN
+from models import User,Score_items, ROLE_USER, ROLE_ADMIN,Excelmap
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic
+from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic,__ExcelDir__
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
@@ -221,6 +221,24 @@ def test():
 @appME.route('/_makepublic',methods=["POST", "GET"])
 def makePublic():
     if request.method == 'POST':
-       return makepublic._makepublic()
-        # print admin,name,timestart,timeend,note,bischecked # campID=request.args.get('campID',type=str)
+        return makepublic._makepublic()
+    elif request.method == 'GET':
+        if request.args.get('Delete',type=str)=='Delete':
+            excelID=request.args.get('id',type=int)
+            Excelmap.deleteExcel(excelID)
+        elif request.args.get('View',type=str)=='View':
+            excelID=request.args.get('id',type=int)
+            e=Excelmap.query.filter(excelID==Excelmap.id).first()
+            filename= os.path.basename(e.filepath)
+            print filename
+            return url_for('download_excel', filename = filename)
 
+        else:
+            return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable
+
+@appME.route('/download_excel/<filename>')
+def download_excel(filename):
+    "download excel"
+
+    return send_from_directory(__ExcelDir__,
+                               filename)

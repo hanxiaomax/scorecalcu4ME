@@ -1,6 +1,7 @@
 #coding:utf-8
 from app import db
 from flask import jsonify
+import os
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -15,10 +16,10 @@ class User(db.Model):
     grade= db.Column(db.String(64),index = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
     score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
+    public_items= db.relationship('Excelmap', backref = 'teacher', lazy = 'dynamic')
     score=db.Column(db.String(10),default="0")
 
-    def __repr__(self):
-        return '<User %r>' % (self.name)
+
 
     def is_authenticated(self):
         return True
@@ -167,3 +168,44 @@ class Score_items(db.Model):
         return '<Score %r>' % (self.time)
 
 
+class Excelmap(db.Model):
+    """docstring for excelmap"""
+    id = db.Column(db.Integer, primary_key = True)
+    Excelname = db.Column(db.String(140))
+    creater=db.Column(db.String(20))
+    creater_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    start_time=db.Column(db.String(20))
+    end_time=db.Column(db.String(20))
+    creater_time=db.Column(db.DateTime)
+    filepath=db.Column(db.String(140))
+    def __repr__(self):
+        return '<Score %r>' % (self.id)
+
+    @classmethod
+    def getExcelLits(cls):
+        items=Excelmap.query.all()
+        excellist={
+        "excellist":[]
+        }
+        for item in items:
+            data={
+                        "id":item.id,
+                        "Excelname": item.Excelname,
+                        "creater":item.creater,
+                        "start_time": item.start_time,
+                        "end_time": item.end_time,
+                        "creater_time": item.creater_time,
+                        "filepath": item.filepath,
+                }
+
+            excellist["excellist"].append(data)
+        # print excellist
+
+        return jsonify(excellist)
+
+    @classmethod
+    def deleteExcel(cls,excelID):
+        e=cls.query.filter(cls.id==excelID).first()
+        os.remove(e.filepath)
+        db.session.delete(e)
+        db.session.commit()

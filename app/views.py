@@ -231,6 +231,14 @@ def makePublic():
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
             filename= os.path.basename(e.filepath)
             return url_for('download_excel', filename = filename)
+        elif request.args.get('Changestatus',type=str)=='Changestatus':
+            excelID=request.args.get('id',type=int)
+            e=Excelmap.query.filter(excelID==Excelmap.id).first()
+            _status=request.args.get('status',type=int)
+            e.status=_status
+            db.session.commit()
+            return str(_status)
+
 
         else:
             return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable

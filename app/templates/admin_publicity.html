@@ -93,7 +93,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-11 col-md-offset-2 main">
+ <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <body>
       <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
       <div class="container-fluid">
@@ -105,7 +105,7 @@
             </table>
           </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon glyphicon-plus"></span> 创建新公示</h3>
@@ -254,27 +254,39 @@ function view(obj) {
   }
 function status(obj) {
     var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    var status
     if ($(obj).attr("class")=='btn btn-success btn-xs') {
+      //修改为停止公示
+      status=0
       $(obj).attr("class",'btn btn-warning btn-xs')//提示obj.attr不是函数，是因为没加$()
       $(obj).attr("value",'停止公示')
 
+
     }
     else{
+      status=1
       $(obj).attr("class",'btn btn-success btn-xs')
       $(obj).attr("value",'正在公示')
 
     }
-    alert($(obj).attr("value"))
+    $.get($SCRIPT_ROOT + "/_makepublic",{
+      id:tr.children[0].innerText,
+      status:status,
+      Changestatus:"Changestatus"
+    },function(result){
 
+      if (result=="1") {//str和json对象是可以回调的
+        alert("修改成功:正在公示此条目")
+      }
+      else{
+        alert("修改成功:停止公示此条目")
+      };
 
-
+    })
   }
 
 
 
-$("#add").bind("click",function(){
-alert('success');
-})
 add_excel_list()
 
 

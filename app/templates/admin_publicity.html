@@ -169,14 +169,14 @@
       var timestart=$("#timestart").val();
       var timeend=$("#timeend").val();
       var note=$("#textarea").val();//防止大规模数据？
-      var bischecked=$('#checkbox').is(':checked');
+      var ischecked=$('#checkbox').is(':checked');
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,
           timestart:timestart,
           timeend:timeend,
           note:note,
-          bischecked:bischecked,
+          ischecked:ischecked,
           adminNAME:$("#adminname").val(),
           admin:{{user.campID}}
       },
@@ -200,14 +200,22 @@ function add_excel_list() {
       pic: "111"
     },
     function(data) {
-      var thead = "<tr><th>ID</th><th>标题</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作</th></tr>" //不能包含<thead>
+      var thead = "<tr><th>ID</th><th>标题</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
       $("#exceltable").append(thead)
       var tbody = ""
       $.each(data.excellist, function() {
         var tbBody = ""
           // tbBody += "<tr ><td>" + this.Excelname + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>"+ "<td>" + "<a href='javascript:;' class='remove'><span id='remove' class='glyphicon glyphicon glyphicon-remove'> </span></a><span>  </span><span class='glyphicon glyphicon glyphicon-cloud-download'></span><span>  </span><span class='glyphicon glyphicon glyphicon glyphicon-eye-open'></span>"+ "</td></tr>";
+          var btnstyle
+          if (this.status=="正在公示") {
+             btnstyle="btn-success"
+          }
+          else
+          {
+             btnstyle="btn-warning"
+          }
 
-        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span> <input type='button' value='"+this.status+"' id='ing' class='btn btn-success btn-xs' onclick='status(this)' /><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> " + "</td></tr>";
+        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
 
         $("#exceltable").append(tbBody)
       });
@@ -248,14 +256,11 @@ function status(obj) {
     var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
     if ($(obj).attr("class")=='btn btn-success btn-xs') {
       $(obj).attr("class",'btn btn-warning btn-xs')//提示obj.attr不是函数，是因为没加$()
-      // $(obj).value='停止公示'
       $(obj).attr("value",'停止公示')
-
 
     }
     else{
       $(obj).attr("class",'btn btn-success btn-xs')
-      // $(obj).value='公示中'
       $(obj).attr("value",'正在公示')
 
     }

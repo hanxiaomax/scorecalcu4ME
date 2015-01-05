@@ -8,6 +8,8 @@ ROLE_ADMIN = 1
 STATUS_YES = 1
 STATUS_NO = 0
 STATUS_UNKNOWN= 2
+OPEN=1
+CLOSE=0
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
@@ -164,6 +166,7 @@ class Score_items(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     uuid=db.Column(db.String(64))
 
+
     def __repr__(self):
         return '<Score %r>' % (self.time)
 
@@ -178,6 +181,8 @@ class Excelmap(db.Model):
     end_time=db.Column(db.String(20))
     creater_time=db.Column(db.DateTime)
     filepath=db.Column(db.String(140))
+    status=db.Column(db.SmallInteger)
+
     def __repr__(self):
         return '<Score %r>' % (self.id)
 
@@ -188,6 +193,10 @@ class Excelmap(db.Model):
         "excellist":[]
         }
         for item in items:
+            if item.status:
+                _status="正在公示"
+            else:
+                _status="停止公示"
             data={
                         "id":item.id,
                         "Excelname": item.Excelname,
@@ -196,6 +205,7 @@ class Excelmap(db.Model):
                         "end_time": item.end_time,
                         "creater_time": item.creater_time,
                         "filepath": item.filepath,
+                        "status":_status
                 }
 
             excellist["excellist"].append(data)

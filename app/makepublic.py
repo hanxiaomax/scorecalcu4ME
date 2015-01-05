@@ -1,7 +1,7 @@
 #coding:utf-8
 from flask import Flask,request,jsonify
 from app import db,__ExcelDir__
-from models import Excelmap,User
+from models import Excelmap,User,OPEN,CLOSE
 from makeExcel import MakeExcel
 import datetime
 # from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
@@ -11,16 +11,23 @@ def _makepublic():
     _timestart=request.form["timestart"]
     _timeend=request.form["timeend"]
     _note=request.form["note"]
-    _bischecked=request.form["bischecked"]
+    _ischecked=request.form["ischecked"]
     _adminID=request.form["admin"]#as campID
     _adminName=request.form["adminNAME"]
     _maketime=datetime.datetime.today()
     _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')
+
+    print _ischecked
+    if _ischecked=="true":
+        _status=OPEN
+    else:
+        _status=CLOSE
+
     admin=User.query.filter(User.campID == _adminID).first()
     excelinfo={
              "filename" : _name,
             "start" : _note,
-            "end" : _bischecked,
+            "end" : _timeend,
             "admin" : _adminName,
             "note":_note,
             "maketime":_maketime
@@ -37,7 +44,8 @@ def _makepublic():
         start_time=_timestart,
         end_time=_timeend,
         filepath=filepath,
-        teacher=admin
+        teacher=admin,
+        status=_status
         )
     db.session.add(exceldb)
     db.session.commit()

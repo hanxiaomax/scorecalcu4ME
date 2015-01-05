@@ -230,7 +230,6 @@ def makePublic():
             excelID=request.args.get('id',type=int)
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
             filename= os.path.basename(e.filepath)
-            print filename
             return url_for('download_excel', filename = filename)
 
         else:

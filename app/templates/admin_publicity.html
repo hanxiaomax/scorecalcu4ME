@@ -124,10 +124,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                         <label for="disabledTextInput">时间区间</label>
 
-                          <input type="text" name='timestart' id="timestart" class="form-control" placeholder="起">
+                          <input type="text" name='datepicker1' id="datepicker1" class="form-control" placeholder="起">
 
                           <p  align="center"><span class="glyphicon glyphicon-chevron-down"></span></p>
-                          <input type="text" name='timeend' id="timeend" class="form-control" placeholder="止">
+                          <input type="text" name='datepicker2' id="datepicker2" class="form-control" placeholder="止">
                       </div>
 <div class="form-group">
 <label for="textarea">公示内容</label>
@@ -169,8 +169,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     $('#createbtn').bind('click', function () {
       if ($("#excelform").valid()) {
         var name=$("#name").val();
-      var timestart=$("#timestart").val();
-      var timeend=$("#timeend").val();
+      var timestart=$("#datepicker1").val();
+      var timeend=$("#datepicker2").val();
       var note=$("#textarea").val();//防止大规模数据？
       var ischecked=$('#checkbox').is(':checked');
       $.post($SCRIPT_ROOT+"/_makepublic",
@@ -289,28 +289,30 @@ function status(obj) {
   }
 
 function InitTimepicker() {
-  $("#timestart").datepicker({
-    onSelect: function(startDate) {
-      var $startDate = $("#timestart");
-      var $endDate = $('#timeend');
-      var endDate = $endDate.datepicker('getDate');
-      if (endDate < startDate) {
-        $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+    $("#datepicker1").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
       }
-      $endDate.datepicker("option", "minDate", startDate);
-    }
-  });
-  $("#timeend").datepicker({
-    onSelect: function(startDate) {
-      var $startDate = $("#timestart");
-      var $endDate = $('#timeend');
-      var endDate = $endDate.datepicker('getDate');
-      if (endDate < startDate) {
-        $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+    });
+    $("#datepicker2").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
       }
-      $endDate.datepicker("option", "minDate", startDate);
-    }
-  });
+    });
 }
 
 $().ready(function() {
@@ -335,6 +337,7 @@ $().ready(function() {
 
   });
 });
+
 InitTimepicker()
 add_excel_list()
 

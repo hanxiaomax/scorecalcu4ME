@@ -231,7 +231,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 <script type="text/javascript">
 
 
-//生成一个或两个datepicker，并且保证结束时间大于开始时间
+// 生成一个或两个datepicker，并且保证结束时间大于开始时间
 function InitTimepicker(double) {
   if (double) {
     $("#datepicker1").datepicker({
@@ -239,6 +239,7 @@ function InitTimepicker(double) {
         var $startDate = $("#datepicker1");
         var $endDate = $('#datepicker2');
         var endDate = $endDate.datepicker('getDate');
+
         if (endDate < startDate) {
           $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
         }

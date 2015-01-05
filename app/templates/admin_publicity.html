@@ -75,7 +75,9 @@
   /*
   * Placeholder dashboard ideas
   */
-
+label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
+}
 
   </style>
   <div class="container-fluid">
@@ -113,19 +115,19 @@
               </div>
                     <div class="panel-body">
 
-                  <form role="form">
+                  <form id="excelform" role="form">
                       <div class="form-group">
                         <label for="disabledTextInput">公示标题</label>
-                        <input type="text" id="name" class="form-control" placeholder="奖学金素质分公示">
+                        <input type="text" name="name" id="name" class="form-control" placeholder="奖学金素质分公示">
                       </div>
                       <div class="form-group">
 
                         <label for="disabledTextInput">时间区间</label>
 
-                          <input type="text" id="timestart" class="form-control" placeholder="起">
+                          <input type="text" name='timestart' id="timestart" class="form-control" placeholder="起">
 
                           <p  align="center"><span class="glyphicon glyphicon-chevron-down"></span></p>
-                          <input type="text" id="timeend" class="form-control" placeholder="止">
+                          <input type="text" name='timeend' id="timeend" class="form-control" placeholder="止">
                       </div>
 <div class="form-group">
 <label for="textarea">公示内容</label>
@@ -165,7 +167,8 @@
 
   $(function () {
     $('#createbtn').bind('click', function () {
-      var name=$("#name").val();
+      if ($("#excelform").valid()) {
+        var name=$("#name").val();
       var timestart=$("#timestart").val();
       var timeend=$("#timeend").val();
       var note=$("#textarea").val();//防止大规模数据？
@@ -185,9 +188,9 @@
         add_excel_list()
 
       });
+      }
 
-
-       return false//Refresh whole page to make upload files disappear
+       return false
     });
     return false
 });
@@ -285,8 +288,54 @@ function status(obj) {
     })
   }
 
+function InitTimepicker() {
+  $("#timestart").datepicker({
+    onSelect: function(startDate) {
+      var $startDate = $("#timestart");
+      var $endDate = $('#timeend');
+      var endDate = $endDate.datepicker('getDate');
+      if (endDate < startDate) {
+        $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+      }
+      $endDate.datepicker("option", "minDate", startDate);
+    }
+  });
+  $("#timeend").datepicker({
+    onSelect: function(startDate) {
+      var $startDate = $("#timestart");
+      var $endDate = $('#timeend');
+      var endDate = $endDate.datepicker('getDate');
+      if (endDate < startDate) {
+        $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+      }
+      $endDate.datepicker("option", "minDate", startDate);
+    }
+  });
+}
 
+$().ready(function() {
+ $("#excelform").validate(
+  {
+    rules: {
+          timestart: {
+            required:true,
+            dateISO:true
+          },
+          timeend:{
+            required:true,
+            dateISO:true
+          },
+          name: {
+            required:true,
 
+          },
+
+        },
+    wrapper: "p"
+
+  });
+});
+InitTimepicker()
 add_excel_list()
 
 

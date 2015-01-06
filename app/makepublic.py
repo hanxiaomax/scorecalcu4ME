@@ -34,7 +34,8 @@ def _makepublic():
             }
     maker=MakeExcel(excelinfo)
     maker._writerow(12,maker._getinfobuf("130280"))
-    filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+".xls"
+    filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
+
 
     maker.saveAs(filepath)
 

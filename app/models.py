@@ -1,12 +1,15 @@
 #coding:utf-8
 from app import db
 from flask import jsonify
+import os
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 STATUS_YES = 1
 STATUS_NO = 0
 STATUS_UNKNOWN= 2
+OPEN=1
+CLOSE=0
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
@@ -15,10 +18,10 @@ class User(db.Model):
     grade= db.Column(db.String(64),index = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
     score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
-    score=db.Column(db.String(10),default="0")
+    public_items= db.relationship('Excelmap', backref = 'teacher', lazy = 'dynamic')
+    score=db.Column(db.Float,default=0.0)
 
-    def __repr__(self):
-        return '<User %r>' % (self.name)
+
 
     def is_authenticated(self):
         return True
@@ -56,33 +59,39 @@ class User(db.Model):
         userInfoDict={}
         user = cls.get_user(campID)
 
-        _name = user.name
-        _campID = user.campID
-        _grade = user.grade
-        _score = user.score
-        if brief:
-            userInfoDict={
-             "name" : user.name,
-            "campID" : user.campID,
-            "grade" : user.grade,
-            "sum" : user.score,
-            }
-            if is_jsonify:
-                return  jsonify(userInfoDict)
+        try:
+            if user:
+                _name = user.name
+                _campID = user.campID
+                _grade = user.grade
+                _score = user.score
+                if brief:
+                    userInfoDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : user.score,
+                    }
+                    if is_jsonify:
+                        return  jsonify(userInfoDict)
+                    else:
+                        return userInfoDict
+                else:
+                    userInfoDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : user.score,
+                    "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
+                    }
+                    if is_jsonify:
+                        return  jsonify(userInfoDict)
+                    else:
+                        return userInfoDict
             else:
-                return userInfoDict
-        else:
-            userInfoDict={
-             "name" : user.name,
-            "campID" : user.campID,
-            "grade" : user.grade,
-            "sum" : user.score,
-            "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
-            }
-            if is_jsonify:
-                return  jsonify(userInfoDict)
-            else:
-                return userInfoDict
+                return "无法找到"
+        except:
+            return "无法找到"
 
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
@@ -151,14 +160,62 @@ class Score_items(db.Model):
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
     time = db.Column(db.String(140))
-    add=db.Column(db.Integer)
+    add=db.Column(db.Float)
     applytime=db.Column(db.String(30))#need to save a formated string
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
     picpath=db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     uuid=db.Column(db.String(64))
 
+
     def __repr__(self):
-        return '<Score %r>' % (self.time)
+        return '<Score %r>' % (self.id)
 
 
+class Excelmap(db.Model):
+    """docstring for excelmap"""
+    id = db.Column(db.Integer, primary_key = True)
+    Excelname = db.Column(db.String(140))
+    creater=db.Column(db.String(20))
+    creater_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    start_time=db.Column(db.String(20))
+    end_time=db.Column(db.String(20))
+    creater_time=db.Column(db.DateTime)
+    filepath=db.Column(db.String(140))
+    status=db.Column(db.SmallInteger)
+
+    def __repr__(self):
+        return '<Excelmap %r>' % (self.id)
+
+    @classmethod
+    def getExcelLits(cls):
+        items=Excelmap.query.all()
+        excellist={
+        "excellist":[]
+        }
+        for item in items:
+            if item.status:
+                _status="正在公示"
+            else:
+                _status="停止公示"
+            data={
+                        "id":item.id,
+                        "Excelname": item.Excelname,
+                        "creater":item.creater,
+                        "start_time": item.start_time,
+                        "end_time": item.end_time,
+                        "creater_time": item.creater_time,
+                        "filepath": item.filepath,
+                        "status":_status
+                }
+
+            excellist["excellist"].append(data)
+
+        return jsonify(excellist)
+
+    @classmethod
+    def deleteExcel(cls,excelID):
+        e=cls.query.filter(cls.id==excelID).first()
+        os.remove(e.filepath)
+        db.session.delete(e)
+        db.session.commit()

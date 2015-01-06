@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+
 <style type="text/css">
   /*
   * Base structure
@@ -90,6 +91,10 @@
     color: #3399FF;
     font-size: 20px;
   }
+
+}
+label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
 }
 </style>
   <div class="container-fluid">
@@ -113,7 +118,7 @@
     <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-heart"></span> 提交申请</h1>
 
 
-      <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+      <form id="mainform"class="form-horizontal" method="POST" enctype="multipart/form-data">
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
@@ -146,23 +151,22 @@
                       <label class="control-label">加分项目</label>
                       <hr>
                       <div class="controls">
-                        <select id="apply" class="input-xlarge" size="11">
+                        <select id="apply" name="apply" class="input-xlarge" size="11">
                           <option value="担任班长">担任班长</option>
                           <option value="担任党支部书记">担任党支部书记</option>
                           <option value="担任其他班委">担任其他班委</option>
                         </select>
                       </div>
 
-                       <p class="error" style="color:red;font-size:16px;">请至少选中一个加分项目</p>
+
                     </div>
                   </div>
                 </div>
               </div>
-              </form>
-              <form class="form-horizontal" method="POST" enctype="multipart/form-data">
+
               <div class="container">
                 <div class="row">
-                  <div class="col-md-4">
+                  <div class="col-md-2">
                       <div class="control-group">
                         <label class="control-label"> </label>
                         <div class="controls">
@@ -179,20 +183,23 @@
                       <div class="control-group">
                           <label class="control-label"> </label>
                               <div class="controls">
-                                  <button id="submitbtn" class="btn btn-primary btn-lg">提交</button>
+                                  <button id="submitbtn" class="btn btn-primary  btn-block">提交</button>
                               </div>
                       </div>
                   </div>
 
-                  <div class="col-md-2 col-md-offset-2">
+                  <div class="col-md-2 col-md-offset-4">
                   <div class="control-group">
                         <label class="control-label"> </label>
                         <div class="controls" id="timepickerdiv">
                           <label class="control-label" id='timepicker'>任职时间</label>
                           <hr>
-                          <p>开始日期：<input type='text' class="form-control" id='datepicker1'/></p>
-                          <p>结束日期：<input type='text' class="form-control" id='datepicker2'/></p>
+                          <p>开始日期：<input type='text' class="form-control" id='datepicker1' name='datepicker1' /></p>
+                          <p>结束日期：<input type='text' class="form-control" id='datepicker2' name='datepicker2'/></p>
+
                         </div>
+
+
                   </div>
                   </div>
                 </div>
@@ -223,10 +230,42 @@
 
 <script type="text/javascript">
 
-$( "#datepicker1" ).datepicker({
-});
-$( "#datepicker2" ).datepicker({
-});
+
+// 生成一个或两个datepicker，并且保证结束时间大于开始时间
+function InitTimepicker(double) {
+  if (double) {
+    $("#datepicker1").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+
+    });
+    $("#datepicker2").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+  }
+  else{
+      $( "#datepicker" ).datepicker();
+  }
+
+}
+
+InitTimepicker(true)
 
 
 function generateUUID(){
@@ -282,18 +321,57 @@ $(function(){
 
 })
 
+var setTime=function(){
+  var start_time=$( "#datepicker1" ).val();
+  var end_time=$( "#datepicker2" ).val();
+  var point_time=$( "#datepicker" ).val();
+    if (point_time!=undefined)
+    {
+      return point_time
+    }
+    else{
+      var timeArray = $( "#datepicker1" ).val()+"至"+$( "#datepicker2" ).val()
+      // alert(timeArray)
+      return timeArray
+    };
+ };
 
+$().ready(function() {
+ $("#mainform").validate(
+  {
+    rules: {
+          apply: "required",
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
+          datepicker: {
+            required:true,
+            dateISO:true
+          },
+
+        },
+    wrapper: "p"
+
+  });
+});
 
 $(function () {
-    $('.error').hide();
+
+
     $('#submitbtn').bind('click', function () {
-      if ($("#apply option:selected").text()!="") {
+      if ($("#mainform").valid()) {//如果全部通过则返回true
+
           $.get($SCRIPT_ROOT+"/_sublimtApply",
           {
             catagory:$("input[name='group']:checked").val(),
             name:$("#apply option:selected").text(),
             campID:{{user.campID}},
-            time:$("#inputDate").val(),
+            time:setTime(),
             UUID:UUID,
             pic:pic//是否上传了图片
           },
@@ -301,15 +379,18 @@ $(function () {
             //var success_confirm=confirm("提交成功")
             alert("提交成功")
             window.location.reload()
-            $('.error').hide();
+            // $('.error').hide();
             UUID=generateUUID()//提交成功后生成新的UUID
           });
         return false //Refresh whole page to make upload files disappear
       }
       else{
-          $('.error').show();
+          // $('.error').show();
           return false//不跳转
       }
+
+
+
     });
 
 });
@@ -334,21 +415,16 @@ $(function(){
                                 //根据素质分类别来生成时间栏
                                 if (this.catagory=="个人荣誉"||this.catagory=="集体荣誉"||this.catagory=="集体活动"||this.catagory=="其他")
                                   {
-                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>获奖时间</label><hr>");
-                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' id='datepicker'/></p>");
-                                        $( "#datepicker" ).datepicker({
-                                        });
+                                        $("#timepickerdiv").append("<label class='control-label'  id='timepicker'>获奖时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' class='form-control' name='datepicker'  id='datepicker'/></p>");
+                                        InitTimepicker(false)
 
                                   }
                                   else{
                                         $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
-                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' id='datepicker1'/></p>");
-                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' id='datepicker2'/></p>");
-                                        //放在这里才有效
-                                        $( "#datepicker1" ).datepicker({
-                                        });
-                                        $( "#datepicker2" ).datepicker({
-                                        });
+                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' class='form-control' name='datepicker1' id='datepicker1'/></p>");
+                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' class='form-control' name='datepicker2' id='datepicker2'/></p>");
+                                       InitTimepicker(true)
 
                                   }
                                   $.each(this.subcatagory, function() {
@@ -480,17 +556,8 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
-$( "#datepicker1" ).datepicker({
-});
 
-$( "#datepicker2" ).datepicker({
-});
 </script>
-<script type="text/javascript" src="/static/js/datepicker.js"></script>
-<!-- <script type="text/javascript" src="/static/uploadify/swfobject.js"></script>
- -->
- <script type="text/javascript" src="/static/uploadify/jquery.uploadify.js"></script>
-
 
 <!-- ugly hack to keep chrome form crashing when using uploadify -->
 <script type="text/javascript">

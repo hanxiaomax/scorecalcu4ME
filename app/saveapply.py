@@ -1,3 +1,4 @@
+#coding:utf-8
 from flask import Flask,request,g
 from app import db
 from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
@@ -22,7 +23,9 @@ def _saveapply(filepath=False):
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
-    _time=request.args.get('time',type=str)
+    _time=request.args.get('time',type=unicode)#should get a unicode
+    # _time=_time.decode('utf-8')
+    # print datetime.datetime.strptime(_time, '%Y-%m-%d')
     _applytime=datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')#format the timestamp return as a string
     _add=getvalue(_catagory,_name)
     _uuid=request.args.get('UUID', type=str)

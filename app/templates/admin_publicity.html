@@ -75,7 +75,9 @@
   /*
   * Placeholder dashboard ideas
   */
-
+label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
+}
 
   </style>
   <div class="container-fluid">
@@ -93,142 +95,19 @@
       </div>
     </div>
   </div>
-  <div class="col-md-11 col-md-offset-2 main">
+ <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <body>
       <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-8">
 <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>公示内容</th>
-                  <th>公示时间</th>
-                  <th>创建时间</th>
-                  <th>创建人</th>
-                  <th>操作</th>
+            <table class="table table-hover" id="exceltable">
 
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
-                </tr>
-                <tr>
-                  <td>1,002</td>
-                  <td>amet</td>
-                  <td>consectetur</td>
-                  <td>adipiscing</td>
-                  <td>elit</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>Integer</td>
-                  <td>nec</td>
-                  <td>odio</td>
-                  <td>Praesent</td>
-                </tr>
-                <tr>
-                  <td>1,003</td>
-                  <td>libero</td>
-                  <td>Sed</td>
-                  <td>cursus</td>
-                  <td>ante</td>
-                </tr>
-                <tr>
-                  <td>1,004</td>
-                  <td>dapibus</td>
-                  <td>diam</td>
-                  <td>Sed</td>
-                  <td>nisi</td>
-                </tr>
-                <tr>
-                  <td>1,005</td>
-                  <td>Nulla</td>
-                  <td>quis</td>
-                  <td>sem</td>
-                  <td>at</td>
-                </tr>
-                <tr>
-                  <td>1,006</td>
-                  <td>nibh</td>
-                  <td>elementum</td>
-                  <td>imperdiet</td>
-                  <td>Duis</td>
-                </tr>
-                <tr>
-                  <td>1,007</td>
-                  <td>sagittis</td>
-                  <td>ipsum</td>
-                  <td>Praesent</td>
-                  <td>mauris</td>
-                </tr>
-                <tr>
-                  <td>1,008</td>
-                  <td>Fusce</td>
-                  <td>nec</td>
-                  <td>tellus</td>
-                  <td>sed</td>
-                </tr>
-                <tr>
-                  <td>1,009</td>
-                  <td>augue</td>
-                  <td>semper</td>
-                  <td>porta</td>
-                  <td>Mauris</td>
-                </tr>
-                <tr>
-                  <td>1,010</td>
-                  <td>massa</td>
-                  <td>Vestibulum</td>
-                  <td>lacinia</td>
-                  <td>arcu</td>
-                </tr>
-                <tr>
-                  <td>1,011</td>
-                  <td>eget</td>
-                  <td>nulla</td>
-                  <td>Class</td>
-                  <td>aptent</td>
-                </tr>
-                <tr>
-                  <td>1,012</td>
-                  <td>taciti</td>
-                  <td>sociosqu</td>
-                  <td>ad</td>
-                  <td>litora</td>
-                </tr>
-                <tr>
-                  <td>1,013</td>
-                  <td>torquent</td>
-                  <td>per</td>
-                  <td>conubia</td>
-                  <td>nostra</td>
-                </tr>
-                <tr>
-                  <td>1,014</td>
-                  <td>per</td>
-                  <td>inceptos</td>
-                  <td>himenaeos</td>
-                  <td>Curabitur</td>
-                </tr>
-                <tr>
-                  <td>1,015</td>
-                  <td>sodales</td>
-                  <td>ligula</td>
-                  <td>in</td>
-                  <td>libero</td>
-                </tr>
-              </tbody>
             </table>
           </div>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon glyphicon-plus"></span> 创建新公示</h3>
@@ -236,26 +115,36 @@
               </div>
                     <div class="panel-body">
 
-                  <form role="form">
+                  <form id="excelform" role="form">
                       <div class="form-group">
-                        <label for="disabledTextInput">公示标题</label>
-                        <input type="text" id="name" class="form-control" placeholder="奖学金素质分公示">
+                        <label for="name">公示标题</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="奖学金素质分公示">
                       </div>
                       <div class="form-group">
+                        <label for="gradelist">年级</label>
+                        <select class="form-control" id="gradelist">
+                          <option value='2013硕'>2013硕</option>
+                          <option value='2012博'>2012博</option>
+                        </select>
+                      </div>
 
-                        <label for="disabledTextInput">时间区间</label>
+                      <div class="form-group">
 
-                          <input type="text" id="timestart" class="form-control" placeholder="起">
+                        <label for="datepicker1">时间区间</label>
+
+                          <input type="text" name='datepicker1' id="datepicker1" class="form-control" placeholder="起">
 
                           <p  align="center"><span class="glyphicon glyphicon-chevron-down"></span></p>
-                          <input type="text" id="timeend" class="form-control" placeholder="止">
+                          <input type="text" name='datepicker2' id="datepicker2" class="form-control" placeholder="止">
                       </div>
-<div class="form-group">
-<label for="textarea">公示内容</label>
-         <textarea class="form-control" rows="2" id="textarea" placeholder="关于本次公示的补充说明或备注，可选"></textarea>
-         </div>
-         <div class="form-group">
-                        <label for="disabledTextInput" >创建者</label>
+
+                      <div class="form-group">
+                          <label for="textarea">公示内容</label>
+                               <textarea class="form-control" rows="2" id="textarea" placeholder="关于本次公示的补充说明或备注，可选"></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="adminname" >创建者</label>
                         <input type="text" id="adminname" class="form-control" value={{adminname}} readonly>
                       </div>
                       <div class="checkbox">
@@ -272,11 +161,15 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </body>
   </div>
 </div>
+
+
+
 <script type="text/javascript">
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
@@ -284,34 +177,182 @@
 
   $(function () {
     $('#createbtn').bind('click', function () {
-      var name=$("#name").val();
-      var timestart=$("#timestart").val();
-      var timeend=$("#timeend").val();
+      if ($("#excelform").valid()) {
+        var name=$("#name").val();
+      var timestart=$("#datepicker1").val();
+      var timeend=$("#datepicker2").val();
       var note=$("#textarea").val();//防止大规模数据？
-      var bischecked=$('#checkbox').is(':checked');
-      // alert(name);
-      // alert(timestart);
-      // alert(timeend);
-      // alert(bischecked);
-      // alert($("#adminname").val())
-
+      var ischecked=$('#checkbox').is(':checked');
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,
           timestart:timestart,
           timeend:timeend,
           note:note,
-          bischecked:bischecked,
-          admin:$("#adminname").val()
+          ischecked:ischecked,
+          adminNAME:$("#adminname").val(),
+          admin:{{user.campID}},
+          grade:$("#gradelist option:selected").text(),
       },
       function(){
         alert("提交成功")
-        return false
+        add_excel_list()
+
       });
-       return false//Refresh whole page to make upload files disappear
+      }
+
+       return false
     });
     return false
 });
 
+
+function add_excel_list() {
+  $("#exceltable thead").empty()
+  $("#exceltable tbody").empty()
+  $.get($SCRIPT_ROOT + "/_makepublic", {
+      pic: "111"
+    },
+    function(data) {
+      var thead = "<tr><th>ID</th><th>标题</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      $("#exceltable").append(thead)
+      var tbody = ""
+      $.each(data.excellist, function() {
+        var tbBody = ""
+          // tbBody += "<tr ><td>" + this.Excelname + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>"+ "<td>" + "<a href='javascript:;' class='remove'><span id='remove' class='glyphicon glyphicon glyphicon-remove'> </span></a><span>  </span><span class='glyphicon glyphicon glyphicon-cloud-download'></span><span>  </span><span class='glyphicon glyphicon glyphicon glyphicon-eye-open'></span>"+ "</td></tr>";
+          var btnstyle
+          if (this.status=="正在公示") {
+             btnstyle="btn-success"
+          }
+          else
+          {
+             btnstyle="btn-warning"
+          }
+
+        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
+
+        $("#exceltable").append(tbBody)
+      });
+
+    });
+  // $("#benefit_add").click(function(){alert("1");});
+
+}
+function del(obj) {
+    con=confirm("删除该条公示，包括其对应的excel文件（如不希望删除excel文件，请点击“停止公示/正在公示”按钮）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_makepublic", {
+      id:tr.children[0].innerText,
+      Delete:'Delete'
+
+    }, function(){
+
+    });
+    };
+
+
+  }
+function view(obj) {
+    var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+     //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_makepublic", {
+      id:tr.children[0].innerText,
+      View:"View"
+    }, function(link){
+
+      window.open(link)
+    });
+
+  }
+function status(obj) {
+    var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    var status
+    if ($(obj).attr("class")=='btn btn-success btn-xs') {
+      //修改为停止公示
+      status=0
+      $(obj).attr("class",'btn btn-warning btn-xs')//提示obj.attr不是函数，是因为没加$()
+      $(obj).attr("value",'停止公示')
+
+
+    }
+    else{
+      status=1
+      $(obj).attr("class",'btn btn-success btn-xs')
+      $(obj).attr("value",'正在公示')
+
+    }
+    $.get($SCRIPT_ROOT + "/_makepublic",{
+      id:tr.children[0].innerText,
+      status:status,
+      Changestatus:"Changestatus"
+    },function(result){
+
+      if (result=="1") {//str和json对象是可以回调的
+        alert("修改成功:正在公示此条目")
+      }
+      else{
+        alert("修改成功:停止公示此条目")
+      };
+
+    })
+  }
+
+function InitTimepicker() {
+    $("#datepicker1").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+    $("#datepicker2").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+}
+
+$().ready(function() {
+ $("#excelform").validate(
+  {
+    rules: {
+          timestart: {
+            required:true,
+            dateISO:true
+          },
+          timeend:{
+            required:true,
+            dateISO:true
+          },
+          name: {
+            required:true,
+
+          },
+
+        },
+    wrapper: "p"
+
+  });
+});
+
+InitTimepicker()
+add_excel_list()
+
+
 </script>
+
 {% endblock %}

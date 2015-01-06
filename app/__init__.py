@@ -5,6 +5,7 @@ import os
 
 
 __StaticDir__=os.path.abspath(os.path.dirname(__file__))+"/static/"
+__ExcelDir__=__StaticDir__+"/excel/"
 
 #initiate the app
 appME=Flask(__name__) #__name__=app

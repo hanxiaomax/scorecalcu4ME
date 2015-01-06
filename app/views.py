@@ -3,9 +3,9 @@ from flask import (render_template,flash,redirect,session,url_for,request,reques
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 
-from models import User,Score_items, ROLE_USER, ROLE_ADMIN
+from models import User,Score_items, ROLE_USER, ROLE_ADMIN,Excelmap
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic
+from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic,__ExcelDir__
 from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
@@ -132,13 +132,17 @@ def _getMyScore():
     #0 :delete
     #1 :getscore
     opt=request.args.get('opt',type=int)
-
-    if(opt==1) :
-        return getmyscore._getmyscore()
-    elif(opt==0):
-        return getmyscore._deleteapply()
+    campID = request.args.get('campID', type=str)
+    user=User.get_user(campID)
+    if user:
+        if(opt==1) :
+            return getmyscore._getmyscore(user)
+        elif(opt==0):
+            return getmyscore._deleteapply(user)
+        else:
+            return getmyscore._getTotal(user)#Update the total score (called when searching or login)
     else:
-        return getmyscore._getTotal()#Update the total score (called when searching or login)
+        return "user not found"
 
 
 
@@ -217,6 +221,32 @@ def test():
 @appME.route('/_makepublic',methods=["POST", "GET"])
 def makePublic():
     if request.method == 'POST':
-       return makepublic._makepublic()
-        # print admin,name,timestart,timeend,note,bischecked # campID=request.args.get('campID',type=str)
+        return makepublic._makepublic()
+    elif request.method == 'GET':
+        if request.args.get('Delete',type=str)=='Delete':
+            excelID=request.args.get('id',type=int)
+            Excelmap.deleteExcel(excelID)
+            return " "
+        elif request.args.get('View',type=str)=='View':
+            excelID=request.args.get('id',type=int)
+            e=Excelmap.query.filter(excelID==Excelmap.id).first()
+            filename= os.path.basename(e.filepath)
+            return url_for('download_excel', filename = filename)
+        elif request.args.get('Changestatus',type=str)=='Changestatus':
+            excelID=request.args.get('id',type=int)
+            e=Excelmap.query.filter(excelID==Excelmap.id).first()
+            _status=request.args.get('status',type=int)
+            e.status=_status
+            db.session.commit()
+            return str(_status)
 
+
+        else:
+            return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable
+
+@appME.route('/download_excel/<filename>')
+def download_excel(filename):
+    "download excel"
+
+    return send_from_directory(__ExcelDir__,
+                               filename)

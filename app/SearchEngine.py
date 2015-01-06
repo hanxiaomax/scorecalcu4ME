@@ -45,6 +45,7 @@ class Engine(object):
             total+=Scoreitem.add
         return total
 
+    #TODO:应该和model里面的userInfo合并
     def getuserinfodic(self,campID):
         user = User.get_user(campID)
 
@@ -57,7 +58,7 @@ class Engine(object):
                 "grade" : user.grade,
                 "sum" : self.getSum(Scoreitems),
             }
-        print Dict
+        # print Dict
         return Dict
 
 
@@ -73,13 +74,4 @@ if __name__ == '__main__':
         Scoreitems=engine.getUserScoreitems(user,Score_items.applytime,Now-timedelta(days=1),Now)
         print Scoreitems
         print engine.getSum(Scoreitems)
-
-    # i=11
-    # for user_campID in userlist:
-    #     i+=1
-    #     # self._writerow(i,self._getinfobuf(user))
-    #     engine=Engine()
-
-    #     print engine.getuserinfodic(user_campID)
-    # print engine.getuserinfodic("130280")
 

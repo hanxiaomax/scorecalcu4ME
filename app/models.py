@@ -210,7 +210,6 @@ class Excelmap(db.Model):
                 }
 
             excellist["excellist"].append(data)
-        # print excellist
 
         return jsonify(excellist)
 

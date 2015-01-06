@@ -45,6 +45,23 @@ class Engine(object):
             total+=Scoreitem.add
         return total
 
+    def getuserinfodic(self,campID):
+        user = User.get_user(campID)
+
+        Now=datetime.today()
+        Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=1),Now)
+
+        Dict={
+                "name" : user.name,
+                "campID" : user.campID,
+                "grade" : user.grade,
+                "sum" : self.getSum(Scoreitems),
+            }
+        print Dict
+        return Dict
+
+
+
 
 if __name__ == '__main__':
     engine=Engine()
@@ -56,4 +73,13 @@ if __name__ == '__main__':
         Scoreitems=engine.getUserScoreitems(user,Score_items.applytime,Now-timedelta(days=1),Now)
         print Scoreitems
         print engine.getSum(Scoreitems)
+
+    # i=11
+    # for user_campID in userlist:
+    #     i+=1
+    #     # self._writerow(i,self._getinfobuf(user))
+    #     engine=Engine()
+
+    #     print engine.getuserinfodic(user_campID)
+    # print engine.getuserinfodic("130280")
 

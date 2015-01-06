@@ -38,7 +38,7 @@ def _makepublic():
             }
 
     engine=Engine()
-    userlist=engine.getUserlist_byGrade(_grade)
+    userlist=engine.getUserlist_byGrade(_grade)#得到该年级全部人的学号
 
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
     maker.run(userlist)#开始创建excel文件，接收变量userlist

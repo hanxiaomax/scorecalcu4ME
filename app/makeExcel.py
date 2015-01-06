@@ -2,7 +2,7 @@
 from xlwt import Workbook, easyxf
 from app import db,appME,__StaticDir__
 from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
-
+from SearchEngine import Engine
 
 class MakeExcel(object):
     def __init__(self,excelinfo=None):
@@ -62,11 +62,14 @@ class MakeExcel(object):
     def saveAs(self,filename):
         self.workbook.save(filename)
 
-    def run(self,userdic):
+    def run(self,userlist):
         i=11
-        for user in userdic:
+        for user_campID in userlist:
             i+=1
-            self._writerow(i,self._getinfobuf(user))
+            # self._writerow(i,self._getinfobuf(user))
+            engine=Engine()
+
+            self._writerow(i,engine.getuserinfodic(user_campID))
 
 
 

@@ -58,6 +58,7 @@ class User(db.Model):
         "get all the infomation about user return as a dict"
         userInfoDict={}
         user = cls.get_user(campID)
+
         try:
             if user:
                 _name = user.name

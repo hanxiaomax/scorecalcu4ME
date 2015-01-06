@@ -24,18 +24,19 @@ class MakeExcel(object):
             'borders:top medium,bottom medium,left medium,right medium;'
             )
 
-        _excelinfo=[excelinfo["filename"],excelinfo["start"],excelinfo["end"],excelinfo["admin"],excelinfo["note"],excelinfo["maketime"]]
+        _excelinfo=[excelinfo["filename"],excelinfo["start"],excelinfo["end"],excelinfo["admin"],excelinfo["note"],excelinfo["maketime"],excelinfo["grade"]]
         self.sheet.write_merge(0,2,0,10,excelinfo["filename"], xls_title)
         self.sheet.write_merge(3,4,2,10,excelinfo["admin"],xls_info)
         self.sheet.write_merge(3,4,0,1,u"创建者：",xls_info)
-        self.sheet.write_merge(5,6,2,10,excelinfo["note"],xls_info)
-        self.sheet.write_merge(5,6,0,1,u"备注：",xls_info)
+        self.sheet.write_merge(5,6,2,10,excelinfo["grade"],xls_info)
+        self.sheet.write_merge(5,6,0,1,u"公示年级：",xls_info)
         self.sheet.write_merge(7,8,2,10,excelinfo["maketime"],xls_info)
         self.sheet.write_merge(7,8,0,1,u"创建时间：",xls_info)
+        self.sheet.write_merge(9,10,2,10,excelinfo["note"],xls_info)
+        self.sheet.write_merge(9,10,0,1,u"备注：",xls_info)
 
 
-        for i in range(len( _excelinfo)):
-            self.sheet.write(13,i,_excelinfo[i],xls_info)
+
 
         for i in range(len(_tableTitle)):#Make table title
             self.sheet.write(11,i,_tableTitle[i])
@@ -56,8 +57,19 @@ class MakeExcel(object):
         return userInfoDict#return as unicode,so do not need decode in write() function
 
 
+
+
     def saveAs(self,filename):
         self.workbook.save(filename)
+
+    def run(self,userdic):
+        i=11
+        for user in userdic:
+            i+=1
+            self._writerow(i,self._getinfobuf(user))
+
+
+
 
 
 if __name__ == '__main__':

@@ -1,8 +1,9 @@
 #coding:utf-8
 from flask import Flask,request,jsonify
 from app import db,appME
-from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
+from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN,Score_items
 import os
+from datetime import datetime
 
 def _getmyscore(user):
 
@@ -18,6 +19,9 @@ def _getmyscore(user):
                 "cell": User.getItemInfo(s)
             }
         jsondict["rows"].append(data)
+
+
+
     return jsonify(jsondict)
 
 def _deleteapply(user):

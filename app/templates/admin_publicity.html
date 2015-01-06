@@ -117,24 +117,34 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                   <form id="excelform" role="form">
                       <div class="form-group">
-                        <label for="disabledTextInput">公示标题</label>
+                        <label for="name">公示标题</label>
                         <input type="text" name="name" id="name" class="form-control" placeholder="奖学金素质分公示">
                       </div>
                       <div class="form-group">
+                        <label for="gradelist">年级</label>
+                        <select class="form-control" id="gradelist">
+                          <option value='2013硕'>2013硕</option>
+                          <option value='2012博'>2012博</option>
+                        </select>
+                      </div>
 
-                        <label for="disabledTextInput">时间区间</label>
+                      <div class="form-group">
+
+                        <label for="datepicker1">时间区间</label>
 
                           <input type="text" name='datepicker1' id="datepicker1" class="form-control" placeholder="起">
 
                           <p  align="center"><span class="glyphicon glyphicon-chevron-down"></span></p>
                           <input type="text" name='datepicker2' id="datepicker2" class="form-control" placeholder="止">
                       </div>
-<div class="form-group">
-<label for="textarea">公示内容</label>
-         <textarea class="form-control" rows="2" id="textarea" placeholder="关于本次公示的补充说明或备注，可选"></textarea>
-         </div>
-         <div class="form-group">
-                        <label for="disabledTextInput" >创建者</label>
+
+                      <div class="form-group">
+                          <label for="textarea">公示内容</label>
+                               <textarea class="form-control" rows="2" id="textarea" placeholder="关于本次公示的补充说明或备注，可选"></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="adminname" >创建者</label>
                         <input type="text" id="adminname" class="form-control" value={{adminname}} readonly>
                       </div>
                       <div class="checkbox">
@@ -181,7 +191,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           note:note,
           ischecked:ischecked,
           adminNAME:$("#adminname").val(),
-          admin:{{user.campID}}
+          admin:{{user.campID}},
+          grade:$("#gradelist option:selected").text(),
       },
       function(){
         alert("提交成功")

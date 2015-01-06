@@ -24,7 +24,8 @@ def _saveapply(filepath=False):
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
     _time=request.args.get('time',type=unicode)#should get a unicode
-    #print _time
+    # _time=_time.decode('utf-8')
+    # print datetime.datetime.strptime(_time, '%Y-%m-%d')
     _applytime=datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')#format the timestamp return as a string
     _add=getvalue(_catagory,_name)
     _uuid=request.args.get('UUID', type=str)

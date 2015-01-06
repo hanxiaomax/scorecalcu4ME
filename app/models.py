@@ -19,7 +19,7 @@ class User(db.Model):
     role = db.Column(db.SmallInteger, default = ROLE_USER)
     score_items = db.relationship('Score_items', backref = 'student', lazy = 'dynamic')
     public_items= db.relationship('Excelmap', backref = 'teacher', lazy = 'dynamic')
-    score=db.Column(db.String(10),default="0")
+    score=db.Column(db.Float,default=0.0)
 
 
 
@@ -159,7 +159,7 @@ class Score_items(db.Model):
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
     time = db.Column(db.String(140))
-    add=db.Column(db.Integer)
+    add=db.Column(db.Float)
     applytime=db.Column(db.String(30))#need to save a formated string
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
     picpath=db.Column(db.String(140))
@@ -168,7 +168,7 @@ class Score_items(db.Model):
 
 
     def __repr__(self):
-        return '<Score %r>' % (self.time)
+        return '<Score %r>' % (self.id)
 
 
 class Excelmap(db.Model):
@@ -184,7 +184,7 @@ class Excelmap(db.Model):
     status=db.Column(db.SmallInteger)
 
     def __repr__(self):
-        return '<Score %r>' % (self.id)
+        return '<Excelmap %r>' % (self.id)
 
     @classmethod
     def getExcelLits(cls):

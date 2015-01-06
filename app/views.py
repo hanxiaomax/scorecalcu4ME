@@ -226,6 +226,7 @@ def makePublic():
         if request.args.get('Delete',type=str)=='Delete':
             excelID=request.args.get('id',type=int)
             Excelmap.deleteExcel(excelID)
+            return " "
         elif request.args.get('View',type=str)=='View':
             excelID=request.args.get('id',type=int)
             e=Excelmap.query.filter(excelID==Excelmap.id).first()

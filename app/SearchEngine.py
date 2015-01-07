@@ -1,6 +1,6 @@
 #coding:utf-8
 from datetime import datetime,timedelta
-from models import User,Score_items
+from models import User,Score_items,STATUS_YES
 from app import db
 from flask import jsonify
 
@@ -13,7 +13,7 @@ class TimeManager(object):
         return dbTime.strftime('%Y-%m-%d %H:%M')
     #把字符串时间转换为datetime对像
     def dbTime(self,humanTime):
-        return datetime.strptime(humanTime,'%Y-%m-%d %H:%M')
+        return datetime.strptime(humanTime,'%Y-%m-%d')
 
     def compareTime(self,start,end):
         delta=end-start
@@ -25,6 +25,9 @@ class TimeManager(object):
 
 class Engine(object):
     """搜索引擎，从数据库中按需取得数据并进行包装"""
+    def __init__(self):
+        self.tm=TimeManager()
+
     def getUserlist_byGrade(self,grade):
         users=User.query.filter(User.grade==grade).all()
         userlist=[]
@@ -32,23 +35,34 @@ class Engine(object):
             userlist.append(user)
         return userlist
 
+    # def _searchWithTime(self,timeitem,start,end):
+    #     return Score_items.query.filter(db.and_(timeitem.between(start+timedelta(days+1),end),Score_items.status==1,Score_items.user_id==user.id)).all()
+
     def getUserScoreitems(self,campID,timeitem,start,end):
         "返回符合条件的全部加分条目 return as a list contains all Score_items objects"
         user=User.query.filter(User.campID==campID).first()
-        print user
+
+        # if status==STATUS_YES:
+        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_YES,Score_items.user_id==user.id)).all()
+        # elif status==STATUS_NO:
+        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_NO,Score_items.user_id==user.id)).all()
+        # elif status ==STATUS_UNKNOWN:
+        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_UNKNOWN,Score_items.user_id==user.id)).all()
+        # else:
+        #     result=Score_items.query.filter(db.and_(Score_items.user_id==user.id)).all()
+
+
         if start==None or end==None:
-            print "@@"
-            result=Score_items.query.filter(db.and_(Score_items.status==1,Score_items.user_id==user.id)).all()
+            result=Score_items.query.filter(Score_items.user_id==user.id).all()
         else:
-            result=Score_items.query.filter(db.and_(timeitem.between(start,end),Score_items.status==1,Score_items.user_id==user.id)).all()
+            #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
+            result=Score_items.query.filter(db.and_(timeitem.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
         # print result
         return result
 
 
     def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
         userDetailDict={}
-        print "getUserDetail",start_time,end_time
-
         items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
         print items
         userDetailDict={
@@ -56,7 +70,7 @@ class Engine(object):
                     "campID" : user.campID,
                     "grade" : user.grade,
                     "sum" : self.getSum(items),
-                    "items":[]#User.scoreInfo4SomeOne(user.campID,is_jsonify=False)["items"]
+                    "items":[]
         }
         for item in items:
             userDetailDict["items"].append(User.getItemInfo(item))
@@ -68,37 +82,13 @@ class Engine(object):
             return userDetailDict
 
 
-        # def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
-        # """get someone's score_items by campID,return as json or dict,
-        #     scoreInfo4SomeOne["items"] contains all the info about the score_items
-        #     as a list
-        # """
-        # scoreInfoDict={
-        # "campID":campID,
-        # "items":[]
-        # }
-        # user=User.get_user(campID)
-        # if user and user.role==ROLE_USER:
-        #     items=user.score_items.all()
-        #     for item in items:
-        #         scoreInfoDict["items"].append(cls.getItemInfo(item))
-        #     has_reslut=True
-        # else:
-        #     has_reslut=False
-        # if  has_reslut and is_jsonify :
-        #     return jsonify(scoreInfoDict)
-        # elif has_reslut:
-        #     return scoreInfoDict
-        # else:
-        #     return "No user found"
-
-
 
     def getSum(self,Scoreitems):
         "根据加分条目计算总分"
         total=0.0
         for Scoreitem in Scoreitems:
-            total+=Scoreitem.add
+            if Scoreitem.status==STATUS_YES:#仅计算已加分数
+                total+=Scoreitem.add
         return total
 
     def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary

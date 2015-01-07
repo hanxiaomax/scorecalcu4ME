@@ -183,7 +183,7 @@ def getStuInfo():
     campID=request.args.get('campID',type=str)
     starttime=request.args.get('starttime',type=unicode)
     endtime=request.args.get('endtime',type=unicode)
-    print "/_getStuInfo",starttime,endtime
+
     user=User.get_user(campID)
 
     engine=Engine()

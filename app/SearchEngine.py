@@ -108,6 +108,23 @@ class Engine(object):
         else:
             return userSummaryDict
 
+    #在生成公示前进行全局更新，另有两处更新分别在搜索前和用户个人登陆前，只更新个人，使用_getTotal(user)函数
+    # def updateTotal(self):
+    #     users=User.query.all()
+    #     for user in users:
+    #         _score_items=user.score_items.all()
+    #         total=0.0
+    #         for s in _score_items:
+    #             if (s.status==STATUS_YES):
+    #                 if s.add is not None:
+    #                     total+=s.add
+    #         user.score=total
+
+    #     db.session.commit()
+
+
+
+
 
 
 

@@ -12,6 +12,7 @@ import json
 import uuid
 from SearchEngine import Engine
 basedir=os.path.abspath(os.path.dirname(__file__))
+
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -239,6 +240,7 @@ def makePublic():
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
             filename= os.path.basename(e.filepath)
             return url_for('download_excel', filename = filename)
+
         elif request.args.get('Changestatus',type=str)=='Changestatus':
             excelID=request.args.get('id',type=int)
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
@@ -246,8 +248,9 @@ def makePublic():
             e.status=_status
             db.session.commit()
             return str(_status)
-
-
+        # elif request.args.get('act',type=str)=='updateTotal':
+        #     engine.updateTotal()
+        #     return " "
         else:
             return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable
 

@@ -266,17 +266,44 @@ $('#myTab a').click(function(e) {
   $(this).tab('show')
 })
 
+
+function InitTimepicker() {
+    $("#datepicker1").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+    $("#datepicker2").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+}
+
+
 $(function(){
         $("input:radio").change(function(){
           var selectedvalue = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
           if (selectedvalue=="interval") {
+
               $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker1' placeholder='起始日期'/>");
               $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker2' placeholder='截止日期'/>");
-              //放在这里才有效
-              $( "#datepicker1" ).datepicker({
-              });
-              $( "#datepicker2" ).datepicker({
-              });
+
+              InitTimepicker()
           }
           else{
             $("#timepickerdiv").empty()
@@ -293,8 +320,12 @@ $(function() {
       campID: $('input[name="campID"]').val()
     }); //更新总分
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      campID: $('input[name="campID"]').val()
+      campID: $('input[name="campID"]').val(),
+      starttime:$("#datepicker1").val(),
+      endtime:$("#datepicker2").val()
     }, function(data) {
+        // alert($("#datepicker1").val())
+        // alert($("#datepicker2").val())
         $("#score_items thead").empty()
         $("#score_items tbody").empty() //获取#score_items下面的tbody
         $("#student thead").empty()

@@ -181,10 +181,13 @@ def uploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     campID=request.args.get('campID',type=str)
+    starttime=request.args.get('starttime',type=unicode)
+    endtime=request.args.get('endtime',type=unicode)
+    print "/_getStuInfo",starttime,endtime
     user=User.get_user(campID)
 
     engine=Engine()
-    return engine.getUserDetail(user)
+    return engine.getUserDetail(user,starttime,endtime)
 
 
 def save_file(filestorage,uuid):

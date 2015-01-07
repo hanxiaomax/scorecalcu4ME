@@ -33,10 +33,65 @@ class Engine(object):
         return userlist
 
     def getUserScoreitems(self,campID,timeitem,start,end):
-        "返回符合条件的全部加分条目"
+        "返回符合条件的全部加分条目 return as a list contains all Score_items objects"
         user=User.query.filter(User.campID==campID).first()
-        result=Score_items.query.filter(db.and_(timeitem.between(start,end),Score_items.status==1,Score_items.user_id==user.id)).all()
+        print user
+        if start==None or end==None:
+            print "@@"
+            result=Score_items.query.filter(db.and_(Score_items.status==1,Score_items.user_id==user.id)).all()
+        else:
+            result=Score_items.query.filter(db.and_(timeitem.between(start,end),Score_items.status==1,Score_items.user_id==user.id)).all()
+        # print result
         return result
+
+
+    def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
+        userDetailDict={}
+        print "getUserDetail",start_time,end_time
+
+        items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
+        print items
+        userDetailDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : self.getSum(items),
+                    "items":[]#User.scoreInfo4SomeOne(user.campID,is_jsonify=False)["items"]
+        }
+        for item in items:
+            userDetailDict["items"].append(User.getItemInfo(item))
+
+
+        if is_jsonify:
+            return  jsonify(userDetailDict)
+        else:
+            return userDetailDict
+
+
+        # def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
+        # """get someone's score_items by campID,return as json or dict,
+        #     scoreInfo4SomeOne["items"] contains all the info about the score_items
+        #     as a list
+        # """
+        # scoreInfoDict={
+        # "campID":campID,
+        # "items":[]
+        # }
+        # user=User.get_user(campID)
+        # if user and user.role==ROLE_USER:
+        #     items=user.score_items.all()
+        #     for item in items:
+        #         scoreInfoDict["items"].append(cls.getItemInfo(item))
+        #     has_reslut=True
+        # else:
+        #     has_reslut=False
+        # if  has_reslut and is_jsonify :
+        #     return jsonify(scoreInfoDict)
+        # elif has_reslut:
+        #     return scoreInfoDict
+        # else:
+        #     return "No user found"
+
 
 
     def getSum(self,Scoreitems):
@@ -46,10 +101,10 @@ class Engine(object):
             total+=Scoreitem.add
         return total
 
-    def getUserSummary(self,user,is_jsonify=True):#getUserSummary
+    def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
         # user = User.get_user(campID)
         userSummaryDict={}
-        Now=datetime.today()
+
         Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=1),Now)
 
         userSummaryDict={
@@ -64,21 +119,6 @@ class Engine(object):
             return userSummaryDict
 
 
-    def getUserDetail(self,user,is_jsonify=True):
-        userDetailDict={}
-
-        userDetailDict={
-                     "name" : user.name,
-                    "campID" : user.campID,
-                    "grade" : user.grade,
-                    "sum" : user.score,
-                    "items":User.scoreInfo4SomeOne(user.campID,is_jsonify=False)["items"]
-        }
-        if is_jsonify:
-            return  jsonify(userDetailDict)
-        else:
-            return userDetailDict
-
 
 
 
@@ -87,10 +127,13 @@ if __name__ == '__main__':
     engine=Engine()
     Now=datetime.today()
     userlist=engine.getUserlist_byGrade(u"2013硕")
+    st=raw_input("start time : ")
+    end=raw_input("end time : ")
     print userlist
     for user in userlist:
         print  user
-        Scoreitems=engine.getUserScoreitems(user,Score_items.applytime,Now-timedelta(days=1),Now)
+        # Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=2),Now)
+        Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,st,end)
         print Scoreitems
         print engine.getSum(Scoreitems)
 

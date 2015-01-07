@@ -179,8 +179,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     $('#createbtn').bind('click', function () {
       if ($("#excelform").valid()) {
         var name=$("#name").val();
-      var timestart=$("#datepicker1").val();
-      var timeend=$("#datepicker2").val();
+      var starttime=$("#datepicker1").val();
+      var endtime=$("#datepicker2").val();
       var note=$("#textarea").val();//防止大规模数据？
       var ischecked=$('#checkbox').is(':checked');
       $.post($SCRIPT_ROOT+"/_makepublic",

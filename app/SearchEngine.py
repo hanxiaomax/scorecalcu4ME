@@ -2,7 +2,7 @@
 from datetime import datetime,timedelta
 from models import User,Score_items
 from app import db
-
+from flask import jsonify
 
 
 class TimeManager(object):
@@ -10,10 +10,10 @@ class TimeManager(object):
 
     #把datetime对像转换为字符串形式
     def strTime(self,dbTime):
-        return dbTime.strftime('%Y-%H-%d')
+        return dbTime.strftime('%Y-%m-%d %H:%M')
     #把字符串时间转换为datetime对像
     def dbTime(self,humanTime):
-        return datetime.strptime(humanTime,'%Y-%H-%d')
+        return datetime.strptime(humanTime,'%Y-%m-%d %H:%M')
 
     def compareTime(self,start,end):
         delta=end-start
@@ -29,7 +29,7 @@ class Engine(object):
         users=User.query.filter(User.grade==grade).all()
         userlist=[]
         for user in users:
-            userlist.append(user.campID)
+            userlist.append(user)
         return userlist
 
     def getUserScoreitems(self,campID,timeitem,start,end):
@@ -38,6 +38,7 @@ class Engine(object):
         result=Score_items.query.filter(db.and_(timeitem.between(start,end),Score_items.status==1,Score_items.user_id==user.id)).all()
         return result
 
+
     def getSum(self,Scoreitems):
         "根据加分条目计算总分"
         total=0.0
@@ -45,21 +46,39 @@ class Engine(object):
             total+=Scoreitem.add
         return total
 
-    #TODO:应该和model里面的userInfo合并
-    def getuserinfodic(self,campID):
-        user = User.get_user(campID)
-
+    def getUserSummary(self,user,is_jsonify=True):#getUserSummary
+        # user = User.get_user(campID)
+        userSummaryDict={}
         Now=datetime.today()
         Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=1),Now)
 
-        Dict={
+        userSummaryDict={
                 "name" : user.name,
                 "campID" : user.campID,
                 "grade" : user.grade,
                 "sum" : self.getSum(Scoreitems),
             }
-        # print Dict
-        return Dict
+        if is_jsonify:
+            return  jsonify(userSummaryDict)
+        else:
+            return userSummaryDict
+
+
+    def getUserDetail(self,user,is_jsonify=True):
+        userDetailDict={}
+
+        userDetailDict={
+                     "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : user.score,
+                    "items":User.scoreInfo4SomeOne(user.campID,is_jsonify=False)["items"]
+        }
+        if is_jsonify:
+            return  jsonify(userDetailDict)
+        else:
+            return userDetailDict
+
 
 
 

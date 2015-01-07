@@ -10,6 +10,7 @@ from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
 import uuid
+from SearchEngine import Engine
 basedir=os.path.abspath(os.path.dirname(__file__))
 @lm.user_loader
 def load_user(user_id):
@@ -180,7 +181,10 @@ def uploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     campID=request.args.get('campID',type=str)
-    return User.userInfo(campID)
+    user=User.get_user(campID)
+
+    engine=Engine()
+    return engine.getUserDetail(user)
 
 
 def save_file(filestorage,uuid):

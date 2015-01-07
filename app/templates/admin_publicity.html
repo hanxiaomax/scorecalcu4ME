@@ -190,8 +190,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,
-          timestart:timestart,
-          timeend:timeend,
+          timestart:starttime,
+          timeend:endtime,
           note:note,
           ischecked:ischecked,
           adminNAME:$("#adminname").val(),
@@ -335,11 +335,11 @@ $().ready(function() {
  $("#excelform").validate(
   {
     rules: {
-          timestart: {
+          datepicker1: {
             required:true,
             dateISO:true
           },
-          timeend:{
+          datepicker2:{
             required:true,
             dateISO:true
           },

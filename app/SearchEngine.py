@@ -56,6 +56,7 @@ class Engine(object):
             result=Score_items.query.filter(Score_items.user_id==user.id).all()
         else:
             #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
+            print type(start)
             result=Score_items.query.filter(db.and_(timeitem.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
         # print result
         return result
@@ -95,7 +96,7 @@ class Engine(object):
         # user = User.get_user(campID)
         userSummaryDict={}
 
-        Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=1),Now)
+        Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
 
         userSummaryDict={
                 "name" : user.name,

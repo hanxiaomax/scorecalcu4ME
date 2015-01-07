@@ -77,13 +77,13 @@ class MakeExcel(object):
     def saveAs(self,filename):
         self.workbook.save(filename)
 
-    def run(self,userlist):
+    def run(self,userlist,starttime,endtime):
         i=self.STARTLINE
         for user in userlist:
             i+=1
             # self._writerow(i,self._getinfobuf(user))
             engine=Engine()
-            self._writerow(i,engine.getUserSummary(user,is_jsonify=False))
+            self._writerow(i,engine.getUserSummary(user,starttime,endtime,is_jsonify=False))
 
 
 

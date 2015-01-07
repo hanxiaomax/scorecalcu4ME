@@ -297,8 +297,8 @@ $(function(){
           var selectedvalue = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
           if (selectedvalue=="interval") {
 
-              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker1' placeholder='起始日期'/>");
-              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker2' placeholder='截止日期'/>");
+              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
+              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
 
               InitTimepicker()
           }
@@ -367,16 +367,24 @@ $(function() {
   });
 });
 
-
 $().ready(function() {
  $("#searchform").validate(
   {
     rules: {
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
           inputcampID: {
             required:true,
-          }
+          },
         },
     wrapper: "p"
+
   });
 });
 </script>

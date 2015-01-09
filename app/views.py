@@ -255,7 +255,6 @@ def makePublic():
             db.session.commit()
             return str(_status)
         elif request.args.get('act',type=str)=='updateTotal':
-            print "!!!"
             engine=Engine()
             engine.updateTotal()
             return " "

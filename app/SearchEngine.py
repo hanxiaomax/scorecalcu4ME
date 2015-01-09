@@ -56,7 +56,6 @@ class Engine(object):
             result=Score_items.query.filter(Score_items.user_id==user.id).all()
         else:
             #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
-            print type(start)
             result=Score_items.query.filter(db.and_(timeitem.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
         # print result
         return result
@@ -66,7 +65,7 @@ class Engine(object):
         if user:
             userDetailDict={}
             items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
-            print items
+
             userDetailDict={
                          "name" : user.name,
                         "campID" : user.campID,
@@ -114,9 +113,8 @@ class Engine(object):
             return u"无法找到"
 
     def getGradeSumary(self,grade,start_time=None,end_time=None,is_jsonify=True):
-        print grade
+
         userlist=self.getUserlist_byGrade(grade)
-        print userlist
         GradeSumaryDict={
         "grade":grade,
         "GradeSumary":[]
@@ -125,7 +123,6 @@ class Engine(object):
             u=self.getUserSummary(user,start_time,end_time,False)
             GradeSumaryDict["GradeSumary"].append(u)
 
-        print GradeSumaryDict
         if is_jsonify:
             return  jsonify(GradeSumaryDict)
         else:

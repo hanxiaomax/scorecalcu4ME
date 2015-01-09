@@ -184,9 +184,9 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         var endtime=$("#datepicker2").val();
         var note=$("#textarea").val();//防止大规模数据？
         var ischecked=$('#checkbox').is(':checked');
-      // $.get($SCRIPT_ROOT+"/_makepublic",{
-      //   act:"updateTotal"
-      // });
+        $.get($SCRIPT_ROOT+"/_makepublic",{
+          act:"updateTotal"
+        });
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,

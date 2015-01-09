@@ -63,25 +63,27 @@ class Engine(object):
 
 
     def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
-        userDetailDict={}
-        items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
-        print items
-        userDetailDict={
-                     "name" : user.name,
-                    "campID" : user.campID,
-                    "grade" : user.grade,
-                    "sum" : self.getSum(items),
-                    "items":[]
-        }
-        for item in items:
-            userDetailDict["items"].append(User.getItemInfo(item))
+        if user:
+            userDetailDict={}
+            items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
+            print items
+            userDetailDict={
+                         "name" : user.name,
+                        "campID" : user.campID,
+                        "grade" : user.grade,
+                        "sum" : self.getSum(items),
+                        "items":[]
+            }
+            for item in items:
+                userDetailDict["items"].append(User.getItemInfo(item))
 
 
-        if is_jsonify:
-            return  jsonify(userDetailDict)
+            if is_jsonify:
+                return  jsonify(userDetailDict)
+            else:
+                return userDetailDict
         else:
-            return userDetailDict
-
+            return u"无法找到"
 
 
     def getSum(self,Scoreitems):
@@ -93,35 +95,62 @@ class Engine(object):
         return total
 
     def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
-        # user = User.get_user(campID)
-        userSummaryDict={}
+        if user:
+            userSummaryDict={}
 
-        Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
+            Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
 
-        userSummaryDict={
-                "name" : user.name,
-                "campID" : user.campID,
-                "grade" : user.grade,
-                "sum" : self.getSum(Scoreitems),
-            }
-        if is_jsonify:
-            return  jsonify(userSummaryDict)
+            userSummaryDict={
+                    "name" : user.name,
+                    "campID" : user.campID,
+                    "grade" : user.grade,
+                    "sum" : self.getSum(Scoreitems),
+                }
+            if is_jsonify:
+                return  jsonify(userSummaryDict)
+            else:
+                return userSummaryDict
         else:
-            return userSummaryDict
+            return u"无法找到"
 
+    def getGradeSumary(self,grade,start_time=None,end_time=None,is_jsonify=True):
+        print grade
+        userlist=self.getUserlist_byGrade(grade)
+        print userlist
+        GradeSumaryDict={
+        "grade":grade,
+        "GradeSumary":[]
+        }
+        for user in userlist:
+            u=self.getUserSummary(user,start_time,end_time,False)
+            GradeSumaryDict["GradeSumary"].append(u)
+
+        print GradeSumaryDict
+        if is_jsonify:
+            return  jsonify(GradeSumaryDict)
+        else:
+            return GradeSumaryDict
+
+
+
+
+
+
+
+    #TODO:是否应该在获取getgradesumary函数内部调用而不是在view中？
     #在生成公示前进行全局更新，另有两处更新分别在搜索前和用户个人登陆前，只更新个人，使用_getTotal(user)函数
-    # def updateTotal(self):
-    #     users=User.query.all()
-    #     for user in users:
-    #         _score_items=user.score_items.all()
-    #         total=0.0
-    #         for s in _score_items:
-    #             if (s.status==STATUS_YES):
-    #                 if s.add is not None:
-    #                     total+=s.add
-    #         user.score=total
+    def updateTotal(self):
+        users=User.query.all()
+        for user in users:
+            _score_items=user.score_items.all()
+            total=0.0
+            for s in _score_items:
+                if (s.status==STATUS_YES):
+                    if s.add is not None:
+                        total+=s.add
+            user.score=total
 
-    #     db.session.commit()
+        db.session.commit()
 
 
 

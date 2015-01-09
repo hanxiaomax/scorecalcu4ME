@@ -177,17 +177,21 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
   $(function () {
     $('#createbtn').bind('click', function () {
+
       if ($("#excelform").valid()) {
         var name=$("#name").val();
-      var timestart=$("#datepicker1").val();
-      var timeend=$("#datepicker2").val();
-      var note=$("#textarea").val();//防止大规模数据？
-      var ischecked=$('#checkbox').is(':checked');
+        var starttime=$("#datepicker1").val();
+        var endtime=$("#datepicker2").val();
+        var note=$("#textarea").val();//防止大规模数据？
+        var ischecked=$('#checkbox').is(':checked');
+        $.get($SCRIPT_ROOT+"/_makepublic",{
+          act:"updateTotal"
+        });
       $.post($SCRIPT_ROOT+"/_makepublic",
       {
           name:name,
-          timestart:timestart,
-          timeend:timeend,
+          timestart:starttime,
+          timeend:endtime,
           note:note,
           ischecked:ischecked,
           adminNAME:$("#adminname").val(),
@@ -199,6 +203,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         add_excel_list()
 
       });
+
       }
 
        return false
@@ -330,11 +335,11 @@ $().ready(function() {
  $("#excelform").validate(
   {
     rules: {
-          timestart: {
+          datepicker1: {
             required:true,
             dateISO:true
           },
-          timeend:{
+          datepicker2:{
             required:true,
             dateISO:true
           },

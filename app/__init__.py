@@ -2,7 +2,7 @@ from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 import os
-
+# from SearchEngine import Engine
 
 __StaticDir__=os.path.abspath(os.path.dirname(__file__))+"/static/"
 __ExcelDir__=__StaticDir__+"/excel/"
@@ -13,6 +13,8 @@ appME.config.from_object('config')
 
 #initiate the database
 db = SQLAlchemy(appME)
+
+# engine=Engine()
 
 #initiate flask-login
 lm = LoginManager()

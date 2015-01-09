@@ -43,11 +43,11 @@ def _getTotal(user):
 
 
     _score_items=user.score_items.all()
-    total=0
+    total=0.0
     for s in _score_items:
         if (s.status==STATUS_YES):
             if s.add is not None:
-                total+=float(s.add)
+                total+=s.add
     #TODO:should move to another place
     #this works only when user login again
     user.score=total

@@ -29,7 +29,7 @@ def _makepublic():
     #需要写进excel的info栏的内容
     excelinfo={
              "filename" : _name,
-            "start" : _note,
+            "start" : _timestart,
             "end" : _timeend,
             "admin" : _adminName,
             "note":_note,
@@ -38,10 +38,10 @@ def _makepublic():
             }
 
     engine=Engine()
-    userlist=engine.getUserlist_byGrade(_grade)#得到该年级全部人的学号
+    userlist=engine.getUserlist_byGrade(_grade)#得到该年级全部的學生
 
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
-    maker.run(userlist)#开始创建excel文件，接收变量userlist
+    maker.run(userlist,_timestart,_timeend)#开始创建excel文件，接收变量userlist
 
     filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
     maker.saveAs(filepath)

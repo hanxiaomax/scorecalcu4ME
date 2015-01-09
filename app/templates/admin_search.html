@@ -95,6 +95,10 @@
   display: inline-block;
   border-radius: 50%;
   }
+  label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
+}
+
 </style>
 <div class="container-fluid">
   <div class="row">
@@ -114,149 +118,129 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   <body>
     <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</h1>
-    <div class="row clearfix">
-      <div class="col-md-12 column">
-        <ul class="nav nav-tabs" role="tablist" id="myTab">
-          <li role="presentation" class="active"><a href="#home" role="tab" data-toggle="tab">按学号查询</a></li>
-          <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">按年级班级查询</a></li>
-        </ul>
-        <div class="tab-content">
-          <div role="tabpanel" class="tab-pane active" id="home">
-          <div class="row clearfix"><br/></div>
-            <div class="row clearfix">
-              <div class="col-md-6 column ">
-                <div class="panel panel-primary">
 
-                  <div class="panel-heading">搜索</div>
-                  <div class="panel-body">
-                  <div class="container-fluid">
+    <div class="row clearfix" name="tab-nav">
+      <div class="col-md-6 column">
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+          <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">按学号查询</a></li>
+          <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">按年级班级查询</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row clearfix" name="panel">
+      <br/>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="withcampid">
+           <div class="col-md-7 column ">
+            <div class="panel panel-primary">
+              <div class="panel-heading">搜索</div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
                     <div class="row">
                       <div class=" col-md-8">
-                        <form class="form-horizontal" role="form">
-                      <div class="form-group">
-                        <label for="inputcampID" class="col-md-2 control-label">学号</label>
-                        <div class="col-md-6">
-                          <input type="text" class="form-control" name="campID" id="inputcampID" placeholder="130280">
-                        </div>
-                      </div>
-                      <div class="form-group" name="radiobtn">
-                      <div class="col-md-offset-2 col-md-6">
-                        <label class="radio-inline">
-                          <input type="radio"  name="Radio" value="all" checked="checked">全部
-                        </label>
-                        <label class="radio-inline">
-                          <input type="radio"  name="Radio" value="interval">区间
-                        </label>
-                        <p></p>
-                        <div class="controls" id="timepickerdiv">
+                          <form id="searchform" class="form-horizontal" role="form">
+                            <div class="form-group">
+                              <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                              <div class="col-md-6">
+                                <input type="text" class="form-control" name="inputcampID" id="inputcampID" placeholder="130280">
+                              </div>
+                            </div>
+                            <div class="form-group" name="radiobtn">
+                              <div class="col-md-offset-2 col-md-6">
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio" value="all" checked="checked">全部
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio" value="interval">区间
+                                   <br/>
+                                </label>
+                                <br/>
+                                <br/>
+                                <div class="controls" id="timepickerdiv">
 
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-offset-2 col-md-6">
+                                <button id="OnSearch" type="button" class="btn btn-info btn-block">搜索</button>
+                              </div>
+                            </div>
+                          </form>
                       </div>
-                      </div>
+                      <div class="col-md-4">
+                          <table class="table table-bordered table-hover" id="student">
 
-                      </div>
-                      <div class="form-group">
-                        <div class="col-md-offset-2 col-md-6">
-                          <button id="OnSearch" type="button" class="btn btn-info btn-block">搜索</button>
-                        </div>
-                      </div>
-                    </form>
-                      </div>
-                      <div class="col-md-3">
-                      <p></p>
-                  <table class="table table-bordered table-hover" id="student">
-                  </table>
+                          </table>
                       </div>
 
                     </div>
-
-                  </div>
-                  </div>
-                  <!-- Table -->
-
-                  <table class="table table-bordered table-hover " id="score_items">
-                  </table>
                 </div>
               </div>
-              <div class="col-md-6 column">
+              <table class="table table-bordered table-hover table-condensed " id="score_items">
+              </table>
+            </div>
+           </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane " id="withgrade">
+           <div class="col-md-7 column ">
+            <div class="panel panel-primary">
+              <div class="panel-heading">搜索</div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class=" col-md-8">
+                          <form id="searchgradeform" class="form-horizontal" role="form">
+                            <div class="form-group">
+                              <label for="gradelist" class="col-md-2 control-label">年级</label>
+                              <div class="col-md-6">
+                                <select class="form-control" id="gradelist">
+                                  <option>2013硕</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group" name="radiobtn2">
+                              <div class="col-md-offset-2 col-md-6">
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio2" value="all" checked="checked">全部
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio2" value="interval_grade">区间
+                                  <br/>
+                                </label>
+                                <br/>
+                                <br/>
+                                <div class="controls" id="timepickerdiv_grade">
+
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-offset-2 col-md-6">
+                                <button id="OnSearchgrade" type="button" class="btn btn-info btn-block">搜索</button>
+                              </div>
+                            </div>
+                          </form>
+                      </div>
+                    </div>
+                </div>
               </div>
-            </div>
-            <div class="row clearfix">
-              <div class="col-md-6 column">
-              <table class="flexme3" style="display: none" id='searchstu'></table>
-            </div>
-            <div class="col-md-6 column">
-            </div>
-          </div>
-          <div class="row clearfix">
-            <div class="col-md-4 column">
-              <br>
-            </div>
-          </div>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="profile">
-          <div class="row clearfix">
-            <div class="col-md-6 column ">
-              <table class="table" id="student">
-                <thead>
-                  <tr>
-                    <th>
-                      姓名
-                    </th>
-                    <th>
-                      学号
-                    </th>
-                    <th>
-                      年级
-                    </th>
-                    <th>
-                      总分
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="info">
-                    <td id="name">
-                    </td>
-                    <td id="campID">
-                    </td>
-                    <td id="grade">
-                    </td>
-                    <td id="sum">
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <table class="table" id="score_items">
+              <table class="table table-bordered table-hover table-condensed " id="students">
               </table>
             </div>
-            <div class="col-md-6 column">
-            </div>
-          </div>
-          <div class="row clearfix">
-            <div class="col-md-6 column">
-            <table class="flexme3" style="display: none" id='searchstu'></table>
-          </div>
-          <div class="col-md-6 column">
-          </div>
-        </div>
-        <div class="row clearfix">
-          <div class="col-md-2 column">
-            <br>
-            <input id="searchcampID" name="campID" type="text" placeholder="学号" class="input-xlarge" >
-            <br>
-            <br>
-            <button id="OnSearch" type="button" class="btn btn-primary btn-default">查询</button>
-          </div>
-          <div class="col-md-4 column">
-            <br>
-          </div>
+           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-</div>
+
 </body>
+
+
+
 </div>
 <script type="text/javascript">
 //tab
@@ -266,34 +250,77 @@ $('#myTab a').click(function(e) {
   $(this).tab('show')
 })
 
+
+function InitTimepicker() {
+    $("#datepicker1").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+    $("#datepicker2").datepicker({
+      dateFormat: "yy-mm-dd",
+      onSelect: function(startDate) {
+        var $startDate = $("#datepicker1");
+        var $endDate = $('#datepicker2');
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+}
+
+
 $(function(){
-        $("input:radio").change(function(){
-          var selectedvalue = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
-          if (selectedvalue=="interval") {
-              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker1' placeholder='起始日期'/>");
-              $("#timepickerdiv").append("<input type='text' class='form-control' id='datepicker2' placeholder='截止日期'/>");
-              //放在这里才有效
-              $( "#datepicker1" ).datepicker({
-              });
-              $( "#datepicker2" ).datepicker({
-              });
+        $("input[name='Radio']").change(function(){
+
+          var selectedvalue1 = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
+          if (selectedvalue1=="interval") {
+              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
+              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
+              InitTimepicker()
           }
           else{
             $("#timepickerdiv").empty()
           };
+        });
+});
 
-
+$(function(){
+        $("input[name='Radio2']").change(function(){
+          var selectedvalue2 = $("input[name='Radio2']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
+          if (selectedvalue2=="interval_grade") {
+              $("#timepickerdiv_grade").append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
+              $("#timepickerdiv_grade").append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
+              InitTimepicker()
+          }
+          else{
+            $("#timepickerdiv_grade").empty()
+          };
         });
 });
 
 //查询按钮
 $(function() {
+  var searchtype="bycampID"
   $("#OnSearch").bind("click", function() {
-    $.get($SCRIPT_ROOT + "/_getMyScore", {
-      campID: $('input[name="campID"]').val()
+    if ($("#searchform").valid()){
+      $.get($SCRIPT_ROOT + "/_getMyScore", {
+      campID: $('input[name="inputcampID"]').val()
     }); //更新总分
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      campID: $('input[name="campID"]').val()
+      campID: $('input[name="inputcampID"]').val(),
+      starttime:$("#datepicker1").val(),
+      endtime:$("#datepicker2").val(),
+      searchtype:searchtype
     }, function(data) {
         $("#score_items thead").empty()
         $("#score_items tbody").empty() //获取#score_items下面的tbody
@@ -308,18 +335,109 @@ $(function() {
         $("#student").append(tbody_stu)
 
 
-        var thead = "<tr class='info'> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 获奖时间时间 </th> <th> 申请时间 </th><th> 审核状态 </th> </tr> " //不能包含<thead>
+        var thead = "<tr class='info'> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 时间 </th> <th> 申请时间 </th><th> 审核状态 </th> </tr> " //不能包含<thead>
 
         $("#score_items").append(thead)
-
+        var tbBody = ""
 
         $.each(data.items, function() {
-          var tbBody = ""
-          tbBody += "<tr ><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+          if(this.status=="未审核"){
+
+          tbBody += "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
+          }
+          else if (this.status=="通过") {
+            tbBody += "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+          $("#score_items").append(tbBody)
+
+          }
+          else{
+            tbBody += "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+          $("#score_items").append(tbBody)
+          }
+
+
         });
       }
     });
+    }
+
+  });
+});
+
+$(function() {
+  $("#OnSearchgrade").bind("click", function() {
+    var searchtype="bygrade"
+    if ($("#searchgradeform").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$("#gradelist option:selected").text(),
+      starttime:$("#datepicker1").val(),
+      endtime:$("#datepicker2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+        alert(data)
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
+
+        $("#students").append(thead)
+
+        $.each(data.GradeSumary, function() {
+          var tbBody = ""
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
+          $("#students").append(tbBody)
+
+
+
+        });
+      }
+    });
+    }
+
+  });
+});
+$().ready(function() {
+ $("#searchform").validate(
+  {
+    rules: {
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
+          inputcampID: {
+            required:true,
+          },
+        },
+    wrapper: "p"
+
+  });
+});
+
+$().ready(function() {
+ $("#searchgradeform").validate(
+  {
+    rules: {
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
+        },
+    wrapper: "p"
+
   });
 });
 </script>

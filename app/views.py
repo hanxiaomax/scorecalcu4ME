@@ -10,7 +10,9 @@ from werkzeug import secure_filename,SharedDataMiddleware
 import os
 import json
 import uuid
+from SearchEngine import Engine
 basedir=os.path.abspath(os.path.dirname(__file__))
+
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -179,8 +181,20 @@ def uploader():
 
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
-    campID=request.args.get('campID',type=str)
-    return User.userInfo(campID)
+    engine=Engine()
+    searchtype=request.args.get('searchtype',type=str)
+    starttime=request.args.get('starttime',type=unicode)
+    endtime=request.args.get('endtime',type=unicode)
+    if  searchtype=="bycampID":
+        campID=request.args.get('campID',type=str)
+        user=User.get_user(campID)
+        return engine.getUserDetail(user,starttime,endtime)
+    elif searchtype=="bygrade":
+        grade=request.args.get('grade',type=unicode)
+        engine.updateTotal()#如果按年级查询，更新数据库总分
+        return engine.getGradeSumary(grade,starttime,endtime)
+    else:
+        return u"无法找到"
 
 
 def save_file(filestorage,uuid):
@@ -211,7 +225,7 @@ def changePW():
         db.session.commit()
         return "True"
     else:
-        return "Flase"
+        return "False"
 
 
 @appME.route('/test',methods=["POST", "GET"])
@@ -232,6 +246,7 @@ def makePublic():
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
             filename= os.path.basename(e.filepath)
             return url_for('download_excel', filename = filename)
+
         elif request.args.get('Changestatus',type=str)=='Changestatus':
             excelID=request.args.get('id',type=int)
             e=Excelmap.query.filter(excelID==Excelmap.id).first()
@@ -239,8 +254,10 @@ def makePublic():
             e.status=_status
             db.session.commit()
             return str(_status)
-
-
+        elif request.args.get('act',type=str)=='updateTotal':
+            engine=Engine()
+            engine.updateTotal()
+            return " "
         else:
             return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable
 

@@ -198,10 +198,11 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group">
                               <label for="gradelist" class="col-md-2 control-label">年级</label>
                               <div class="col-md-6">
-                                <select class="form-control" id="gradelist">
-                                  <option>2013硕</option>
-                                </select>
+                                <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="2013硕">
+                                <span class="help-block">格式：年份(本硕博)</span>
                               </div>
+
+
                             </div>
                             <div class="form-group" name="radiobtn2">
                               <div class="col-md-offset-2 col-md-6">
@@ -371,7 +372,7 @@ $(function() {
     if ($("#searchgradeform").valid()){
 
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      grade:$("#gradelist option:selected").text(),
+      grade:$('input[name="gradeinput"]').val(),
       starttime:$("#datepicker1").val(),
       endtime:$("#datepicker2").val(),
       searchtype:searchtype

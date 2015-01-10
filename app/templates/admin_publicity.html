@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+
+
   <style type="text/css">
   /*
   * Base structure
@@ -122,10 +124,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                       <div class="form-group">
                         <label for="gradelist">年级</label>
-                        <select class="form-control" id="gradelist">
-                          <option value='2013硕'>2013硕</option>
-                          <option value='2012博'>2012博</option>
-                        </select>
+                        <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="2013硕">
+                        <span class="help-block">格式：年份(本硕博)</span>
                       </div>
 
                       <div class="form-group">
@@ -196,7 +196,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           ischecked:ischecked,
           adminNAME:$("#adminname").val(),
           admin:{{user.campID}},
-          grade:$("#gradelist option:selected").text(),
+          grade:$('input[name="gradeinput"]').val(),
       },
       function(){
         alert("提交成功")
@@ -219,7 +219,7 @@ function add_excel_list() {
       pic: "111"
     },
     function(data) {
-      var thead = "<tr><th>ID</th><th>标题</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      var thead = "<tr><th>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
       $("#exceltable").append(thead)
       var tbody = ""
       $.each(data.excellist, function() {
@@ -234,7 +234,7 @@ function add_excel_list() {
              btnstyle="btn-warning"
           }
 
-        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
+        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.grade + "</td>"+"<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
 
         $("#exceltable").append(tbBody)
       });
@@ -332,6 +332,8 @@ function InitTimepicker() {
 }
 
 $().ready(function() {
+
+
  $("#excelform").validate(
   {
     rules: {
@@ -345,14 +347,23 @@ $().ready(function() {
           },
           name: {
             required:true,
-
           },
+          gradeinput:
+          {
+            right_format:true,
+          },
+
 
         },
     wrapper: "p"
 
   });
 });
+
+jQuery.validator.addMethod("right_format", function(value, element) {
+    var tel = /^20[0-9]{2}[本,硕,博]$/;
+    return this.optional(element) || (tel.test(value));
+}, "请使用正确的格式，如2013本");
 
 InitTimepicker()
 add_excel_list()

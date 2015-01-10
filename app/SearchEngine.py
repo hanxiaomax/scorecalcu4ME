@@ -113,20 +113,23 @@ class Engine(object):
             return u"无法找到"
 
     def getGradeSumary(self,grade,start_time=None,end_time=None,is_jsonify=True):
-
         userlist=self.getUserlist_byGrade(grade)
-        GradeSumaryDict={
-        "grade":grade,
-        "GradeSumary":[]
-        }
-        for user in userlist:
-            u=self.getUserSummary(user,start_time,end_time,False)
-            GradeSumaryDict["GradeSumary"].append(u)
+        if len(userlist)>0 :
 
-        if is_jsonify:
-            return  jsonify(GradeSumaryDict)
+            GradeSumaryDict={
+            "grade":grade,
+            "GradeSumary":[]
+            }
+            for user in userlist:
+                u=self.getUserSummary(user,start_time,end_time,False)
+                GradeSumaryDict["GradeSumary"].append(u)
+
+            if is_jsonify:
+                return  jsonify(GradeSumaryDict)
+            else:
+                return GradeSumaryDict
         else:
-            return GradeSumaryDict
+            return u"不存在该年级"
 
 
 

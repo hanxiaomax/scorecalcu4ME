@@ -75,32 +75,217 @@
   .main .page-header {
   margin-top: 10;
   }
-
-  </style>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-3 col-md-2 sidebar">
-        <ul class="nav nav-sidebar">
-          <li><a href={{url_for('users',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon-user"></span> 素质分申请</a></li>
-          <li class="active"><a href={{url_for('user_publicity',user_id=user_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
-        </ul>
-        <ul class="nav nav-sidebar">
-          <li><a href={{url_for('logout')}}>退出</a></li>
-        </ul>
-      </div>
+  label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
+}
+</style>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href={{url_for('users',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon-user"></span> 素质分申请</a></li>
+        <li class="active"><a href={{url_for('user_publicity',user_id=user_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
+        <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+      </ul>
+      <ul class="nav nav-sidebar">
+        <li><a href={{url_for('logout')}}>退出</a></li>
+      </ul>
     </div>
   </div>
-  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <body>
+    <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="table-responsive">
+            <table class="table table-hover" id="exceltable">
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+      <div class="panel panel-primary">
+              <div class="panel-heading">搜索详细得分项目</div>
 
-<body>
-      <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示</h1>
+              <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class=" col-md-8">
+                          <form id="searchform" class="form-horizontal" role="form">
+                            <div class="form-group">
+                              <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                              <div class="col-md-6">
+                                <input type="text" class="form-control" name="inputcampID" id="inputcampID" placeholder="130280">
+                              </div>
+                            </div>
+                            <div class="form-group" name="radiobtn">
+                              <div class="col-md-offset-2 col-md-6">
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio" value="all" checked="checked">全部
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio"  name="Radio" value="interval">区间
+                                   <br/>
+                                </label>
+                                <br/>
+                                <br/>
+                                <div class="controls" id="timepickerdiv">
 
-</body>
-  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-offset-2 col-md-6">
+                                <button id="OnSearch" type="button" class="btn btn-info btn-block">搜索</button>
+                              </div>
+                            </div>
+                          </form>
+                      </div>
+                      <div class="col-md-4">
+                          <table class="table table-bordered table-hover" id="student">
+
+                          </table>
+                      </div>
+
+                    </div>
+                </div>
+              </div>
+              <table class="table table-bordered table-hover table-condensed " id="score_items">
+              </table>
+    </div>
+      </div>
+    </div>
+
+  </body>
+</div>
 </div>
 
 <script type="text/javascript">
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+<script type="text/javascript">
+
+  $(function () {
+    $('#createbtn').bind('click', function () {
+
+      if ($("#excelform").valid()) {
+        var name=$("#name").val();
+        var starttime=$("#datepicker1").val();
+        var endtime=$("#datepicker2").val();
+        var note=$("#textarea").val();//防止大规模数据？
+        var ischecked=$('#checkbox').is(':checked');
+        $.get($SCRIPT_ROOT+"/_makepublic",{
+          act:"updateTotal"
+        });
+      $.post($SCRIPT_ROOT+"/_makepublic",
+      {
+          name:name,
+          timestart:starttime,
+          timeend:endtime,
+          note:note,
+          ischecked:ischecked,
+          adminNAME:$("#adminname").val(),
+          admin:{{user.campID}},
+          grade:$('input[name="gradeinput"]').val(),
+      },
+      function(){
+        alert("提交成功")
+        add_excel_list()
+
+      });
+
+      }
+
+       return false
+    });
+    return false
+});
+
+
+function add_excel_list() {
+  $("#exceltable thead").empty()
+  $("#exceltable tbody").empty()
+  $.get($SCRIPT_ROOT + "/_makepublic", {
+      pic: "111"
+    },
+    function(data) {
+      var thead = "<tr><th>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      $("#exceltable").append(thead)
+      var tbody = ""
+      $.each(data.excellist, function() {
+        var tbBody = ""
+          var btnstyle
+          if (this.status=="正在公示") {
+              tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.grade + "</td>"+"<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/></td></tr>";
+          }
+
+
+
+
+        $("#exceltable").append(tbBody)
+      });
+
+    });
+  // $("#benefit_add").click(function(){alert("1");});
+
+}
+function del(obj) {
+    con=confirm("删除该条公示，包括其对应的excel文件（如不希望删除excel文件，请点击“停止公示/正在公示”按钮）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_makepublic", {
+      id:tr.children[0].innerText,
+      Delete:'Delete'
+
+    }, function(){
+
+    });
+    };
+
+
+  }
+
+
+$().ready(function() {
+
+
+ $("#excelform").validate(
+  {
+    rules: {
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
+          name: {
+            required:true,
+          },
+          gradeinput:
+          {
+            required:true,
+            right_format:true,
+          },
+
+
+        },
+    wrapper: "p"
+
+  });
+});
+
+
+InitTimepicker(true)
+add_excel_list()
+makeDatepicker("Radio","interval","#timepickerdiv")
+makeDatepicker("Radio2","interval_grade","#timepickerdiv_grade")
 
 </script>
 {% endblock %}

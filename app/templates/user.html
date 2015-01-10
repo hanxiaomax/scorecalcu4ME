@@ -231,39 +231,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 <script type="text/javascript">
 
 
-// 生成一个或两个datepicker，并且保证结束时间大于开始时间
-function InitTimepicker(double) {
-  if (double) {
-    $("#datepicker1").datepicker({
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
 
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
 
-    });
-    $("#datepicker2").datepicker({
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
-    });
-  }
-  else{
-      $( "#datepicker" ).datepicker();
-  }
-
-}
 
 InitTimepicker(true)
 
@@ -277,7 +246,9 @@ function generateUUID(){
     });
     return uuid;
 };
+
 var UUID=generateUUID()
+
 var pic="false"
  $(document).ready(function() {
 

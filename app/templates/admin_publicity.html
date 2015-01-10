@@ -304,32 +304,7 @@ function status(obj) {
     })
   }
 
-function InitTimepicker() {
-    $("#datepicker1").datepicker({
-      dateFormat: "yy-mm-dd",
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
-    });
-    $("#datepicker2").datepicker({
-      dateFormat: "yy-mm-dd",
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
-    });
-}
+
 
 $().ready(function() {
 
@@ -350,6 +325,7 @@ $().ready(function() {
           },
           gradeinput:
           {
+            required:true,
             right_format:true,
           },
 
@@ -360,12 +336,8 @@ $().ready(function() {
   });
 });
 
-jQuery.validator.addMethod("right_format", function(value, element) {
-    var tel = /^20[0-9]{2}[本,硕,博]$/;
-    return this.optional(element) || (tel.test(value));
-}, "请使用正确的格式，如2013本");
 
-InitTimepicker()
+InitTimepicker(true)
 add_excel_list()
 
 

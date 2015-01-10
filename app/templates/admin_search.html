@@ -252,62 +252,9 @@ $('#myTab a').click(function(e) {
 })
 
 
-function InitTimepicker() {
-    $("#datepicker1").datepicker({
-      dateFormat: "yy-mm-dd",
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
-    });
-    $("#datepicker2").datepicker({
-      dateFormat: "yy-mm-dd",
-      onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
-        var endDate = $endDate.datepicker('getDate');
-        if (endDate < startDate) {
-          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
-        }
-        $endDate.datepicker("option", "minDate", startDate);
-      }
-    });
-}
+makeDatepicker("Radio","interval","#timepickerdiv")
+makeDatepicker("Radio2","interval_grade","#timepickerdiv_grade")
 
-
-$(function(){
-        $("input[name='Radio']").change(function(){
-
-          var selectedvalue1 = $("input[name='Radio']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
-          if (selectedvalue1=="interval") {
-              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
-              $("#timepickerdiv").append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
-              InitTimepicker()
-          }
-          else{
-            $("#timepickerdiv").empty()
-          };
-        });
-});
-
-$(function(){
-        $("input[name='Radio2']").change(function(){
-          var selectedvalue2 = $("input[name='Radio2']:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
-          if (selectedvalue2=="interval_grade") {
-              $("#timepickerdiv_grade").append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
-              $("#timepickerdiv_grade").append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
-              InitTimepicker()
-          }
-          else{
-            $("#timepickerdiv_grade").empty()
-          };
-        });
-});
 
 //查询按钮
 $(function() {
@@ -438,10 +385,12 @@ $().ready(function() {
           },
           gradeinput:{
             required:true,
+            right_format:true,
           },
         },
     wrapper: "p"
   });
 });
+
 </script>
 {% endblock %}

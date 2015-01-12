@@ -129,7 +129,6 @@ class User(db.Model):
                 "item_name": item.item_name,
                 "add": item.add,
                 "time": cls._setTime(item.time_st,item.time_ed),
-                # "time_ed": item.time_ed,
                 "applytime": item.applytime,
                 "status":cls._getStatus(item),
                 "certification": cls._isUploaded(item),

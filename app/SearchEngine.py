@@ -129,7 +129,7 @@ class Engine(object):
             else:
                 return GradeSumaryDict
         else:
-            return u"不存在该年级"
+            return None
 
 
 

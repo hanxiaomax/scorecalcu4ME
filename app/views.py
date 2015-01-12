@@ -267,3 +267,11 @@ def download_excel(filename):
 
     return send_from_directory(__ExcelDir__,
                                filename)
+
+@appME.route('/remotevali',methods=["POST", "GET"])
+def remotevali():
+    grade=request.args.get('grade',type=str)
+    print grade
+    return "false"
+
+

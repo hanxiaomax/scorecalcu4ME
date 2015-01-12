@@ -83,7 +83,10 @@ class MakeExcel(object):
             i+=1
             # self._writerow(i,self._getinfobuf(user))
             engine=Engine()
-            self._writerow(i,engine.getUserSummary(user,starttime,endtime,is_jsonify=False))
+            result=engine.getUserSummary(user,starttime,endtime,is_jsonify=False)
+            if result is None:
+                return
+            self._writerow(i,result)
 
 
 

@@ -198,10 +198,16 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           admin:{{user.campID}},
           grade:$('input[name="gradeinput"]').val(),
       },
-      function(){
-        alert("提交成功")
-        add_excel_list()
+      function(data){
+        if (data=="true") {
+          alert("提交成功")
+          add_excel_list()
+        }else{
+          alert(data)
+        }
 
+// alert("提交成功")
+//           add_excel_list()
       });
 
       }
@@ -328,16 +334,13 @@ $().ready(function() {
             required:true,
             right_format:true,
           },
-
-
         },
+
     wrapper: "p"
 
   });
 });
 
-
-InitTimepicker(true)
 add_excel_list()
 
 

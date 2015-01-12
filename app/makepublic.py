@@ -40,26 +40,26 @@ def _makepublic():
     engine=Engine()
     userlist=engine.getUserlist_byGrade(_grade)#得到该年级全部的學生
 
+    if len(userlist)==0:
+        return u"不存在该年级"
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
-    maker.run(userlist,_timestart,_timeend)#开始创建excel文件，接收变量userlist
+    if maker.run(userlist,_timestart,_timeend):#开始创建excel文件，接收变量userlist
+        filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
+        maker.saveAs(filepath)
+        #把生成的excel的相关信息存放到数据库的表中
+        exceldb=Excelmap(Excelname=_name,
+            creater=_adminName,
+            creater_time=_maketime,
+            start_time=_timestart,
+            end_time=_timeend,
+            filepath=filepath,
+            teacher=admin,
+            status=_status
+            )
+        db.session.add(exceldb)
+        db.session.commit()
+        return "true"
+    else :
+        return u"0条结果，无法生成公示"
 
-    filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
-    maker.saveAs(filepath)
-
-
-    #把生成的excel的相关信息存放到数据库的表中
-    exceldb=Excelmap(Excelname=_name,
-        creater=_adminName,
-        creater_time=_maketime,
-        start_time=_timestart,
-        end_time=_timeend,
-        filepath=filepath,
-        teacher=admin,
-        status=_status
-        )
-    db.session.add(exceldb)
-    db.session.commit()
-
-
-    return " "
 

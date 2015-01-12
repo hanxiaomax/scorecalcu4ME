@@ -128,13 +128,22 @@ class User(db.Model):
                 "name":item.student.name,
                 "item_name": item.item_name,
                 "add": item.add,
-                "time": item.time,
+                "time": cls._setTime(item.time_st,item.time_ed),
+                # "time_ed": item.time_ed,
                 "applytime": item.applytime,
                 "status":cls._getStatus(item),
                 "certification": cls._isUploaded(item),
                 "uuid":item.uuid
         }
         return data
+
+    @classmethod
+    def _setTime(self,time_start,time_end):
+        if time_start == time_end:
+            return time_start
+        else:
+            return time_start+u"至"+time_end
+
 
     @classmethod
     def _isUploaded(cls,item):
@@ -159,7 +168,8 @@ class Score_items(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
-    time = db.Column(db.String(140))
+    time_st = db.Column(db.String(30))
+    time_ed = db.Column(db.String(30))
     add=db.Column(db.Float)
     applytime=db.Column(db.String(30))#need to save a formated string
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)

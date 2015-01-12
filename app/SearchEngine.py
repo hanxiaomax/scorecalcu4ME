@@ -35,22 +35,17 @@ class Engine(object):
             userlist.append(user)
         return userlist
 
-    # def _searchWithTime(self,timeitem,start,end):
-    #     return Score_items.query.filter(db.and_(timeitem.between(start+timedelta(days+1),end),Score_items.status==1,Score_items.user_id==user.id)).all()
-
     def getUserScoreitems(self,campID,timeitem,start,end):
         "返回符合条件的全部加分条目 return as a list contains all Score_items objects"
+
         user=User.query.filter(User.campID==campID).first()
+        print str(timeitem)
+        # if "#" in timeitem:
+        #     print "$$$"
+        #     s=timeitem.split('#')[0]
+        #     e=timeitem.split('#')[1]
 
-        # if status==STATUS_YES:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_YES,Score_items.user_id==user.id)).all()
-        # elif status==STATUS_NO:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_NO,Score_items.user_id==user.id)).all()
-        # elif status ==STATUS_UNKNOWN:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_UNKNOWN,Score_items.user_id==user.id)).all()
-        # else:
-        #     result=Score_items.query.filter(db.and_(Score_items.user_id==user.id)).all()
-
+        # print s+u"至"+e
 
         if start==None or end==None:
             result=Score_items.query.filter(Score_items.user_id==user.id).all()
@@ -163,14 +158,22 @@ class Engine(object):
 if __name__ == '__main__':
     engine=Engine()
     Now=datetime.today()
-    userlist=engine.getUserlist_byGrade(u"2013硕")
-    st=raw_input("start time : ")
-    end=raw_input("end time : ")
-    print userlist
-    for user in userlist:
-        print  user
-        # Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=2),Now)
-        Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,st,end)
-        print Scoreitems
-        print engine.getSum(Scoreitems)
+    # userlist=engine.getUserlist_byGrade(u"2013硕")
+    # st=raw_input("start time : ")
+    # end=raw_input("end time : ")
+    # print userlist
+    # for user in userlist:
+    #     print  user
+    #     # Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=2),Now)
+    #     Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,st,end)
+    #     print Scoreitems
+    #     print engine.getSum(Scoreitems)
+    # for user in userlist:
+    #     print  user
+    #     Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=2),Now)
+    #     Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,st,end)
+    #     print Scoreitems
+    #     print engine.getSum(Scoreitems)
 
+    Scoreitems=engine.getUserScoreitems("130280",Score_items.time,"2015-01-01","2015-02-10")
+    print Scoreitems

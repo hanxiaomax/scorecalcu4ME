@@ -23,7 +23,8 @@ def _saveapply(filepath=False):
     _catagory = request.args.get('catagory', type=unicode)#should be unicode,if it is str than we will get None
     _name = request.args.get('name', type=unicode)
     _campID = request.args.get('campID', type=str)
-    _time=request.args.get('time',type=unicode)#should get a unicode
+    _time_st=request.args.get('time_st',type=unicode)#should get a unicode
+    _time_ed=request.args.get('time_ed',type=unicode)#should get a unicode
     # _time=_time.decode('utf-8')
     # print datetime.datetime.strptime(_time, '%Y-%m-%d')
     _applytime=datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')#format the timestamp return as a string
@@ -36,7 +37,8 @@ def _saveapply(filepath=False):
 
     s=Score_items(catagory=_catagory,
         item_name=_name,
-        time=_time,
+        time_st=_time_st,
+        time_ed=_time_ed,
         add=_add,
         applytime=_applytime,
         student=user,

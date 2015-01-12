@@ -307,15 +307,36 @@ $(".flexme3").flexigrid({
                             }
                       }
                       else if (com == "查看证明"){
-                          if ($('.trSelected', grid).length>1) {
+
+                        var grid_count=$('.trSelected', grid).length
+
+                          if (grid_count>1) {
                             alert("请选择单一条目")
                           }
+                          else if (grid_count==0)
+                          {
+                            alert("未选中任何条目")
+                          }
                           else{
-                            $.each($('.trSelected', grid),
-                              function(key, value){
+                            $.each($('.trSelected', grid),function(key, value){
+                              if(value.children[8].innerText=="无")
+                              {
+                                alert("没有上传图片");
+                              }
+                              else{
+                                $.each($('.trSelected', grid),
+                                function(key, value){
                                 var uuid=value.firstChild.innerText
                                 window.open("/uploads/"+uuid+".jpg")
-                            })
+                              });
+                            }
+                           });
+
+
+
+
+
+
                           }
                       }
                 }

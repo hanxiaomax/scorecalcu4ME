@@ -275,3 +275,22 @@ def remotevali():
     return "false"
 
 
+
+@appME.route('/help/')
+#make this view function accepts GET and POST requests
+def help():
+
+
+    return render_template('ReadMe.html',
+                            title=u'机械工程学院素质分管理系统',
+                            )
+
+
+@appME.route('/helpteacher/')
+#make this view function accepts GET and POST requests
+def helpteacher():
+
+
+    return render_template('ReadMeTEA.html',
+                            title=u'机械工程学院素质分管理系统',
+                            )

@@ -294,3 +294,7 @@ def helpteacher():
     return render_template('ReadMeTEA.html',
                             title=u'机械工程学院素质分管理系统',
                             )
+
+@appME.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404

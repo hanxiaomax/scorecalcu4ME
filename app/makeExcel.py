@@ -43,7 +43,7 @@ class MakeExcel(object):
         self.sheet.write_merge(4,5,0,1,u"公示年级：",xls_info)
         self.sheet.write_merge(6,7,2,4,timemanager.strTime(excelinfo["maketime"]),xls_info)
         self.sheet.write_merge(6,7,0,1,u"创建时间：",xls_info)
-        self.sheet.write_merge(8,9,2,4,excelinfo["start"]+u"至"+excelinfo["start"],xls_info)
+        self.sheet.write_merge(8,9,2,4,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
         self.sheet.write_merge(8,9,0,1,u"公示区间：",xls_info)
         self.sheet.write_merge(10,11,2,4,excelinfo["note"],self.xls_detail)
         self.sheet.write_merge(10,11,0,1,u"备注：",xls_info)
@@ -79,14 +79,20 @@ class MakeExcel(object):
 
     def run(self,userlist,starttime,endtime):
         i=self.STARTLINE
+        _count=0
         for user in userlist:
             i+=1
-            # self._writerow(i,self._getinfobuf(user))
+
             engine=Engine()
             result=engine.getUserSummary(user,starttime,endtime,is_jsonify=False)
-            if result is None:
-                return
+            print result
+            if result is not None:
+                _count+=1#增加一条记录
             self._writerow(i,result)
+        if _count>0:
+            return True #至少有一个条目
+        else:
+            return False #没有任何条目
 
 
 

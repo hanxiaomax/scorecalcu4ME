@@ -25,7 +25,8 @@ def _makepublic():
         _status=OPEN
     else:
         _status=CLOSE
-
+    print _timestart
+    print _timeend
     #需要写进excel的info栏的内容
     excelinfo={
              "filename" : _name,
@@ -59,6 +60,7 @@ def _makepublic():
         db.session.add(exceldb)
         db.session.commit()
         return "true"
+
     else :
         return u"0条结果，无法生成公示"
 

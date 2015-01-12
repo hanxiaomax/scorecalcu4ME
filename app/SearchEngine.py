@@ -102,6 +102,9 @@ class Engine(object):
                 return userSummaryDict
         else:
             return u"无法找到"
+
+
+
     def getSum(self,Scoreitems):
         "根据加分条目计算总分"
         total=0.0

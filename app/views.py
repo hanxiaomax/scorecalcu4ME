@@ -36,6 +36,8 @@ def login():
                 return redirect(url_for('admins_review', admin_id = current_user.campID))
             else:
                 return redirect("/login/")
+        else:
+            flash(u"用户名或密码错误")
 
     return render_template('login.html',
                             title=u'机械工程学院素质分管理系统',
@@ -188,6 +190,8 @@ def getStuInfo():
     if  searchtype=="bycampID":
         campID=request.args.get('campID',type=str)
         user=User.get_user(campID)
+        # for i in engine.getUserDetail(user,starttime,endtime,False)["items"]:
+        #     print i
         return engine.getUserDetail(user,starttime,endtime)
     elif searchtype=="bygrade":
         grade=request.args.get('grade',type=unicode)

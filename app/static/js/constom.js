@@ -64,6 +64,8 @@ function makeDatepicker(radio_name,selectedvalue,divname){
 }
 
 
+
+//查询按钮
 $(function() {
   var searchtype="bycampID"
   $("#OnSearch").bind("click", function() {
@@ -84,7 +86,8 @@ $(function() {
 
       if (data == "无法找到") {
         alert(data)
-      } else {
+      }
+      else {
 
         var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
         $("#student").append(tbody_stu)
@@ -98,16 +101,16 @@ $(function() {
         $.each(data.items, function() {
           if(this.status=="未审核"){
 
-          tbBody += "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+          tbBody = "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
           }
           else if (this.status=="通过") {
-            tbBody += "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+            tbBody = "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
 
           }
           else{
-            tbBody += "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+            tbBody = "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
           }
 
@@ -116,7 +119,6 @@ $(function() {
       }
     });
     }
-
   });
 });
 

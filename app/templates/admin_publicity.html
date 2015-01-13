@@ -90,8 +90,13 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
           <li class="active"><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+          <li><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span> 后台管理</a>
+
         </ul>
         <ul class="nav nav-sidebar">
+
+          <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+
           <li><a href={{url_for('logout')}}>退出</a></li>
         </ul>
       </div>
@@ -102,14 +107,14 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-10">
 <div class="table-responsive">
             <table class="table table-hover" id="exceltable">
 
             </table>
           </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon glyphicon-plus"></span> 创建新公示</h3>

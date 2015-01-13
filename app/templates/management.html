@@ -3,7 +3,6 @@
   <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
-  <script type="text/javascript" src="/static/js/constom.js"></script>
   <style type="text/css">
   /*
   * Base structure
@@ -106,14 +105,15 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     <div class="col-sm-3 col-md-2 sidebar">
       <ul class="nav nav-sidebar">
         <li><a href={{url_for('admins_review',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-eye-open"></span> 素质分审核</a></li>
-        <li class="active"><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
+        <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
         <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
         <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
-        <li><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span> 后台管理</a>
+        <li class="active"><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span>后台管理</a>
 
 
       </ul>
       <ul class="nav nav-sidebar">
+
         <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
         <li><a href={{url_for('logout')}}>退出</a></li>
       </ul>
@@ -122,13 +122,13 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 </div>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   <body>
-    <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</h1>
+    <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-cog"></span>后台管理</h1>
 
     <div class="row clearfix" name="tab-nav">
-      <div class="col-md-6 column">
+      <div class="col-md-8 column">
         <ul class="nav nav-tabs" role="tablist" id="myTab">
-          <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">按学号查询</a></li>
-          <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">按年级班级查询</a></li>
+          <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">素质分管理</a></li>
+          <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">学生信息管理</a></li>
         </ul>
       </div>
     </div>
@@ -137,7 +137,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       <br/>
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="withcampid">
-           <div class="col-md-7 column ">
+           <div class="col-md-8 column ">
             <div class="panel panel-primary">
               <div class="panel-heading">搜索</div>
 
@@ -191,7 +191,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         </div>
 
         <div role="tabpanel" class="tab-pane " id="withgrade">
-           <div class="col-md-7 column ">
+           <div class="col-md-8 column ">
             <div class="panel panel-primary">
               <div class="panel-heading">搜索</div>
 
@@ -250,74 +250,88 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 </div>
 <script type="text/javascript">
 //tab
-var _value = $("#searchcampID").val()
+
 $('#myTab a').click(function(e) {
   e.preventDefault()
   $(this).tab('show')
 })
 
-
-makeDatepicker("Radio","interval","#timepickerdiv")
-makeDatepicker("Radio2","interval_grade","#timepickerdiv_grade")
-
-
+var _value = $("#searchcampID").val()
 
 $(function() {
-  $("#OnSearchgrade").bind("click", function() {
-    var searchtype="bygrade"
-    if ($("#searchgradeform").valid()){
-
+  var searchtype="bycampID"
+  $("#OnSearch").bind("click", function() {
+    if ($("#searchform").valid()){
+      $.get($SCRIPT_ROOT + "/_getMyScore", {
+      campID: $('input[name="inputcampID"]').val()
+    }); //更新总分
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      grade:$('input[name="gradeinput"]').val(),
+      campID: $('input[name="inputcampID"]').val(),
       starttime:$("#datepicker1").val(),
       endtime:$("#datepicker2").val(),
       searchtype:searchtype
     }, function(data) {
-        $("#students thead").empty()
-        $("#students tbody").empty()
-
+        $("#score_items thead").empty()
+        $("#score_items tbody").empty() //获取#score_items下面的tbody
+        $("#student thead").empty()
+        $("#student tbody").empty()
 
       if (data == "无法找到") {
         alert(data)
       }
       else {
-        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
 
-        $("#students").append(thead)
+        var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
+        $("#student").append(tbody_stu)
 
-        $.each(data.GradeSumary, function() {
-          var tbBody = ""
-            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
-          $("#students").append(tbBody)
+
+        var thead = "<tr class='info'> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 时间 </th> <th> 申请时间 </th><th> 审核状态 </th> <th>操作</th></tr> " //不能包含<thead>
+
+        $("#score_items").append(thead)
+        var tbBody = ""
+
+        $.each(data.items, function() {
+          if(this.status=="未审核"){
+
+          tbBody = "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+          $("#score_items").append(tbBody)
+          }
+          else if (this.status=="通过") {
+            tbBody = "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+
+          $("#score_items").append(tbBody)
+
+          }
+          else{
+            tbBody = "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+          $("#score_items").append(tbBody)
+          }
+
+
         });
       }
     });
     }
-
   });
 });
 
 
-$().ready(function() {
- $("#searchgradeform").validate(
-  {
-    rules: {
-          datepicker1: {
-            required:true,
-            dateISO:true
-          },
-          datepicker2:{
-            required:true,
-            dateISO:true
-          },
-          gradeinput:{
-            required:true,
-            right_format:true,
-          },
-        },
-    wrapper: "p"
-  });
-});
+function delscore(obj) {
+    con=confirm("是否删除该条申请（不可撤销）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_management", {
+      itemID:tr.children[0].innerText,
+      Delete:'Delete'
+      // campID:$('input[name="inputcampID"]').val()
 
+    }, function(){
+
+    });
+    };
+
+
+  }
 </script>
 {% endblock %}

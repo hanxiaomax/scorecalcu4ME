@@ -180,6 +180,11 @@ class Score_items(db.Model):
     def __repr__(self):
         return '<Score %r>' % (self.id)
 
+    @classmethod
+    def delete(cls,id):
+        s=cls.query.filter(id==cls.id).first()
+        db.session.delete(s)
+        db.session.commit()
 
 class Excelmap(db.Model):
     """docstring for excelmap"""

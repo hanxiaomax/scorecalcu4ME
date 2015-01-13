@@ -116,18 +116,16 @@
 
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col-md-8">
-                  <div class="panel panel-primary">
-                    <div class="panel-heading">
-                      <h3 class="panel-title">待审核申请</h3>
-                    </div>
-                    <div class="panel-body">
+                  <div class="col-md-10">
+
+
+
 
                       <table class="flexme3" style="display: none"></table>
 
 
-                    </div>
-                  </div>
+
+
 
                   </div>
                 </div>
@@ -186,14 +184,14 @@ $(".flexme3").flexigrid({
                     {
                     display : '申请人',
                     name : 'name',
-                    width : 80,
+                    width : 60,
                     sortable : false,
                     align : 'center'
                     },
                     {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 80,
+                    width : 60,
                     sortable : false,
                     align : 'center'
                     }, {
@@ -211,7 +209,7 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '获奖时间',
                         name : 'time',
-                        width : 130,
+                        width : 170,
                         sortable : true,
                         align : 'center',
                         hide : false
@@ -225,7 +223,7 @@ $(".flexme3").flexigrid({
                 {
                         display : '相关证明',
                         name : 'certification',
-                        width : 40,
+                        width : 60,
                         sortable : false,
                         align : 'left'
                 },
@@ -264,7 +262,7 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 750,
+                width : 770,
                 height : 500
             });
               function Control(com, grid) {

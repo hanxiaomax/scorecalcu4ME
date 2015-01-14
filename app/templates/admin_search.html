@@ -127,8 +127,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     <div class="row clearfix" name="tab-nav">
       <div class="col-md-6 column">
         <ul class="nav nav-tabs" role="tablist" id="myTab">
-          <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">按学号查询</a></li>
-          <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">按年级班级查询</a></li>
+          <li role="presentation" class="active" name="tabA"><a href="#withcampid" role="tab" data-toggle="tab">按学号查询</a></li>
+          <li role="presentation" ><a href="#withgrade" role="tab" data-toggle="tab">按年级班级查询</a></li>
         </ul>
       </div>
     </div>
@@ -155,10 +155,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group" name="radiobtn">
                               <div class="col-md-offset-2 col-md-6">
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="all" checked="checked">全部
+                                  <input type="radio"  name="rb1" id="rbA" value="all" checked="checked">全部
                                 </label>
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="interval">区间
+                                  <input type="radio"  name="rb1" id="rbB" value="interval">区间
                                    <br/>
                                 </label>
                                 <br/>
@@ -212,10 +212,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group" name="radiobtn2">
                               <div class="col-md-offset-2 col-md-6">
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio2" value="all" checked="checked">全部
+                                  <input type="radio"  name="rb2" id="rbC" value="all" checked="checked">全部
                                 </label>
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio2" value="interval_grade">区间
+                                  <input type="radio"  name="rb2" id="rbD" value="interval_grade">区间
                                   <br/>
                                 </label>
                                 <br/>
@@ -251,73 +251,46 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 <script type="text/javascript">
 //tab
 var _value = $("#searchcampID").val()
-$('#myTab a').click(function(e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
 
 
-makeDatepicker("Radio","interval","#timepickerdiv")
-makeDatepicker("Radio2","interval_grade","#timepickerdiv_grade")
+  $('#myTab a').click(function(e) {
+    e.preventDefault()
+    $(this).tab('show')
+
+  })
 
 
+$(function(){
+  $("input[name=rb1]").change(function(){
 
-$(function() {
-  $("#OnSearchgrade").bind("click", function() {
-    var searchtype="bygrade"
-    if ($("#searchgradeform").valid()){
-
-    $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      grade:$('input[name="gradeinput"]').val(),
-      starttime:$("#datepicker1").val(),
-      endtime:$("#datepicker2").val(),
-      searchtype:searchtype
-    }, function(data) {
-        $("#students thead").empty()
-        $("#students tbody").empty()
-
-
-      if (data == "无法找到") {
-        alert(data)
-      }
-      else {
-        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
-
-        $("#students").append(thead)
-
-        $.each(data.GradeSumary, function() {
-          var tbBody = ""
-            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
-          $("#students").append(tbBody)
+          var selected = $("input[name='rb1']:checked").val();
+          if (selected=="interval") {
+              makeDatepicker("#timepickerdiv","pickeB")//生成pickeB1和pickeB2
+          }
+          else{
+            $(timepickerdiv).empty()
+          };
         });
-      }
-    });
-    }
+});
 
-  });
+$(function(){
+  $("input[name=rb2]").change(function(){
+
+          var selected = $("input[name='rb2']:checked").val();
+          if (selected=="interval_grade") {
+              makeDatepicker("#timepickerdiv_grade","pickeD")//生成pickeD1和pickeD2
+          }
+          else{
+            $(timepickerdiv_grade).empty()
+          };
+        });
 });
 
 
-$().ready(function() {
- $("#searchgradeform").validate(
-  {
-    rules: {
-          datepicker1: {
-            required:true,
-            dateISO:true
-          },
-          datepicker2:{
-            required:true,
-            dateISO:true
-          },
-          gradeinput:{
-            required:true,
-            right_format:true,
-          },
-        },
-    wrapper: "p"
-  });
-});
+
+
+
+
 
 </script>
 {% endblock %}

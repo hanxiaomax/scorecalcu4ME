@@ -131,10 +131,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group" name="radiobtn">
                               <div class="col-md-offset-2 col-md-6">
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="all" checked="checked">全部
+                                  <input type="radio"  name="rb1" id="rbA" value="all" checked="checked">全部
                                 </label>
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="interval">区间
+                                  <input type="radio"  name="rb1" id="rbB" value="interval">区间
                                    <br/>
                                 </label>
                                 <br/>
@@ -175,41 +175,22 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 </script>
 <script type="text/javascript">
 
-  $(function () {
-    $('#createbtn').bind('click', function () {
+$(function(){
+  $("input[name=rb1]").change(function(){
 
-      if ($("#excelform").valid()) {
-        var name=$("#name").val();
-        var starttime=$("#datepicker1").val();
-        var endtime=$("#datepicker2").val();
-        var note=$("#textarea").val();//防止大规模数据？
-        var ischecked=$('#checkbox').is(':checked');
-        $.get($SCRIPT_ROOT+"/_makepublic",{
-          act:"updateTotal"
+          var selected = $("input[name='rb1']:checked").val();
+          if (selected=="interval") {
+              makeDatepicker("#timepickerdiv","pickeB")//生成pickeB1和pickeB2
+          }
+          else{
+            $(timepickerdiv).empty()
+          };
         });
-      $.post($SCRIPT_ROOT+"/_makepublic",
-      {
-          name:name,
-          timestart:starttime,
-          timeend:endtime,
-          note:note,
-          ischecked:ischecked,
-          adminNAME:$("#adminname").val(),
-          admin:{{user.campID}},
-          grade:$('input[name="gradeinput"]').val(),
-      },
-      function(){
-        alert("提交成功")
-        add_excel_list()
-
-      });
-
-      }
-
-       return false
-    });
-    return false
 });
+
+
+
+
 
 
 function add_excel_list() {
@@ -228,16 +209,9 @@ function add_excel_list() {
           if (this.status=="正在公示") {
               tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.grade + "</td>"+"<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/></td></tr>";
           }
-
-
-
-
         $("#exceltable").append(tbBody)
       });
-
     });
-  // $("#benefit_add").click(function(){alert("1");});
-
 }
 
 function view(obj) {
@@ -254,41 +228,7 @@ function view(obj) {
   }
 
 
-$().ready(function() {
-
-
- $("#excelform").validate(
-  {
-    rules: {
-          datepicker1: {
-            required:true,
-            dateISO:true
-          },
-          datepicker2:{
-            required:true,
-            dateISO:true
-          },
-          name: {
-            required:true,
-          },
-          gradeinput:
-          {
-            required:true,
-            right_format:true,
-          },
-
-
-        },
-    wrapper: "p"
-
-  });
-});
-
-
-InitTimepicker(true)
 add_excel_list()
-makeDatepicker("Radio","interval","#timepickerdiv")
-makeDatepicker("Radio2","interval_grade","#timepickerdiv_grade")
 
 </script>
 {% endblock %}

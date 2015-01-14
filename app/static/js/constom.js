@@ -14,13 +14,15 @@ jQuery.validator.addMethod("isSixdigit", function(value, element) {
 }, "请输入6位数学号");
 
 
+
+
 //初始化两个datepick，保证后者可选日期不能早于前者
-function InitTimepicker(double) {
+function InitTimepicker(double,pickername) {
   if (double) {
-    $("#datepicker1").datepicker({
+    $("#"+pickername+"1").datepicker({
       onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
         var endDate = $endDate.datepicker('getDate');
 
         if (endDate < startDate) {
@@ -30,10 +32,11 @@ function InitTimepicker(double) {
       }
 
     });
-    $("#datepicker2").datepicker({
+
+    $("#"+pickername+"2").datepicker({
       onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
         var endDate = $endDate.datepicker('getDate');
         if (endDate < startDate) {
           $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
@@ -45,27 +48,16 @@ function InitTimepicker(double) {
   else{
       $( "#datepicker" ).datepicker();
   }
-
 }
-//创建datepicker所需的div
-function makeDatepicker(radio_name,selectedvalue,divname){
-  $("input[name="+radio_name+"]").change(function(){
-
-          var selected = $("input[name="+radio_name+"]:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
-          if (selected==selectedvalue) {
-              $(divname).append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
-              $(divname).append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
-              InitTimepicker(true)
-          }
-          else{
-            $(divname).empty()
-          };
-        });
-}
+function makeDatepicker(divname,pickername){
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"1"+" id="+pickername+"1"+" placeholder='起始日期'/>");
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"2"+" id="+pickername+"2"+" placeholder='截止日期'/>");
+    InitTimepicker(true,pickername)
+};
 
 
 
-//查询按钮
+
 $(function() {
   var searchtype="bycampID"
   $("#OnSearch").bind("click", function() {
@@ -75,8 +67,8 @@ $(function() {
     }); //更新总分
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
       campID: $('input[name="inputcampID"]').val(),
-      starttime:$("#datepicker1").val(),
-      endtime:$("#datepicker2").val(),
+      starttime:$("#pickeB1").val(),
+      endtime:$("#pickeB2").val(),
       searchtype:searchtype
     }, function(data) {
         $("#score_items thead").empty()
@@ -122,15 +114,53 @@ $(function() {
   });
 });
 
+$(function() {
+  $("#OnSearchgrade").bind("click", function() {
+    var searchtype="bygrade"
+    if ($("#searchgradeform").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$('input[name="gradeinput"]').val(),
+      starttime:$("#pickeD1").val(),
+      endtime:$("#pickeD2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
+
+        $("#students").append(thead)
+
+        $.each(data.GradeSumary, function() {
+          var tbBody = ""
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
+          $("#students").append(tbBody)
+        });
+      }
+    });
+    }
+
+  });
+});
+
+
+
+//验证按学号搜索
 $().ready(function() {
  $("#searchform").validate(
   {
     rules:{
-          datepicker1: {
+          pickeB1: {
             required:true,
             dateISO:true
           },
-          datepicker2:{
+          pickeB2:{
             required:true,
             dateISO:true
           },
@@ -141,5 +171,27 @@ $().ready(function() {
         },
     wrapper: "p"
 
+  });
+});
+
+//验证按年级搜索
+$().ready(function() {
+ $("#searchgradeform").validate(
+  {
+    rules: {
+          pickeD1: {
+            required:true,
+            dateISO:true
+          },
+          pickeD2:{
+            required:true,
+            dateISO:true
+          },
+          gradeinput:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
   });
 });

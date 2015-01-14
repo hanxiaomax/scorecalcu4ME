@@ -160,7 +160,14 @@ class User(db.Model):
         else:
             return u"驳回"
 
-
+    @classmethod
+    def delete(cls,campID):
+        u=cls.query.filter(campID==cls.campID).first()
+        db.session.delete(u)
+        db.session.commit()
+    @classmethod
+    def edit(cls,campID):
+        u=cls.query.filter(campID==cls.campID).first()
 
 
 class Score_items(db.Model):

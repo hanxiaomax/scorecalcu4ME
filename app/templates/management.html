@@ -155,10 +155,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group" name="radiobtn">
                               <div class="col-md-offset-2 col-md-6">
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="all" checked="checked">全部
+                                  <input type="radio"  name="rb1" id="rbA" value="all" checked="checked">全部
                                 </label>
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio" value="interval">区间
+                                  <input type="radio"  name="rb1" id="rbB" value="interval">区间
                                    <br/>
                                 </label>
                                 <br/>
@@ -212,10 +212,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group" name="radiobtn2">
                               <div class="col-md-offset-2 col-md-6">
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio2" value="all" checked="checked">全部
+                                  <input type="radio"  name="rb2" id="rbC" value="all" checked="checked">全部
                                 </label>
                                 <label class="radio-inline">
-                                  <input type="radio"  name="Radio2" value="interval_grade">区间
+                                  <input type="radio"  name="rb2" id="rbD" value="interval_grade">区间
                                   <br/>
                                 </label>
                                 <br/>
@@ -250,13 +250,132 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 </div>
 <script type="text/javascript">
 //tab
+jQuery.validator.addMethod("right_format", function(value, element) {
+    var tel = /^20[0-9]{2}[本,硕,博]$/;
+    return this.optional(element) || (tel.test(value));
+}, "请使用正确的格式，如2013本");
+
+
+
+//验证学号必须是6位
+jQuery.validator.addMethod("isSixdigit", function(value, element) {
+    var tel = /^[0-9]{6}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请输入6位数学号");
+
 
 $('#myTab a').click(function(e) {
   e.preventDefault()
   $(this).tab('show')
 })
-
+///////////
 var _value = $("#searchcampID").val()
+
+
+///////////////
+function InitTimepicker(double,pickername) {
+  if (double) {
+    $("#"+pickername+"1").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
+        var endDate = $endDate.datepicker('getDate');
+
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+
+    });
+
+    $("#"+pickername+"2").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+  }
+  else{
+      $( "#datepicker" ).datepicker();
+  }
+}
+function makeDatepicker(divname,pickername){
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"1"+" id="+pickername+"1"+" placeholder='起始日期'/>");
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"2"+" id="+pickername+"2"+" placeholder='截止日期'/>");
+    InitTimepicker(true,pickername)
+};
+
+
+$(function(){
+  $("input[name=rb1]").change(function(){
+
+          var selected = $("input[name='rb1']:checked").val();
+          if (selected=="interval") {
+              makeDatepicker("#timepickerdiv","pickeB")//生成pickeB1和pickeB2
+          }
+          else{
+            $(timepickerdiv).empty()
+          };
+        });
+});
+
+$(function(){
+  $("input[name=rb2]").change(function(){
+
+          var selected = $("input[name='rb2']:checked").val();
+          if (selected=="interval_grade") {
+              makeDatepicker("#timepickerdiv_grade","pickeD")//生成pickeD1和pickeD2
+          }
+          else{
+            $(timepickerdiv_grade).empty()
+          };
+        });
+});
+
+$(function() {
+  $("#OnSearchgrade").bind("click", function() {
+    var searchtype="bygrade"
+    if ($("#searchgradeform").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$('input[name="gradeinput"]').val(),
+      starttime:$("#pickeD1").val(),
+      endtime:$("#pickeD2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th><th>操作</th></tr> " //不能包含<thead>
+
+        $("#students").append(thead)
+
+        $.each(data.GradeSumary, function() {
+          var tbBody = ""
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='编辑' onclick='edit(this)'/><span> </span><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
+          $("#students").append(tbBody)
+        });
+      }
+    });
+    }
+
+  });
+});
+
+
+
+
 
 $(function() {
   var searchtype="bycampID"
@@ -324,14 +443,66 @@ function delscore(obj) {
     $.get($SCRIPT_ROOT + "/_management", {
       itemID:tr.children[0].innerText,
       Delete:'Delete'
-      // campID:$('input[name="inputcampID"]').val()
-
     }, function(){
-
     });
     };
+}
+function delstu(obj) {
+    con=confirm("是否删除该学生信息（不可撤销）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_management", {
+      campID:tr.children[0].innerText,
+      Delete:'DeleteStu'
+    }, function(){
+    });
+    };
+}
 
+//验证按学号搜索
+$().ready(function() {
+ $("#searchform").validate(
+  {
+    rules:{
+          pickeB1: {
+            required:true,
+            dateISO:true
+          },
+          pickeB2:{
+            required:true,
+            dateISO:true
+          },
+          inputcampID: {
+            required:true,
+            isSixdigit:true
+          },
+        },
+    wrapper: "p"
 
-  }
+  });
+});
+
+//验证按年级搜索
+$().ready(function() {
+ $("#searchgradeform").validate(
+  {
+    rules: {
+          pickeD1: {
+            required:true,
+            dateISO:true
+          },
+          pickeD2:{
+            required:true,
+            dateISO:true
+          },
+          gradeinput:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
 </script>
 {% endblock %}

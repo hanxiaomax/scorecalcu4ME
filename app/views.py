@@ -319,40 +319,21 @@ def management_handle():
     elif request.method == 'GET':
         if request.args.get('Delete',type=str)=='Delete':
             itemID=request.args.get('itemID',type=int)
-            # campID=request.args.get('campID',type=str)
-            # user=User.get_user(campID)
             Score_items.delete(itemID)
             return " "
+        elif request.args.get('Delete',type=str)=='DeleteStu':
+            campID=request.args.get('campID',type=str)
+            User.delete(campID)
+            return " "
+        elif request.args.get('Edit',type=str)=='Edit':
+            campID=request.args.get('campID',type=str)
+            User.edit(campID)
+            return " "
 
-        # elif request.args.get('View',type=str)=='View':
-        #     excelID=request.args.get('id',type=int)
-        #     e=Excelmap.query.filter(excelID==Excelmap.id).first()
-        #     filename= os.path.basename(e.filepath)
-        #     return url_for('download_excel', filename = filename)
 
-        # elif request.args.get('Changestatus',type=str)=='Changestatus':
-        #     excelID=request.args.get('id',type=int)
-        #     e=Excelmap.query.filter(excelID==Excelmap.id).first()
-        #     _status=request.args.get('status',type=int)
-        #     e.status=_status
-        #     db.session.commit()
-        #     return str(_status)
-        # elif request.args.get('act',type=str)=='updateTotal':
-        #     engine=Engine()
-        #     engine.updateTotal()
-        #     return " "
-        # else:
-        #     return Excelmap.getExcelLits()#must be a jsonify object or it will return dict is not callable
-# def _deleteapply(user):
-#     Delete=request.args.get('Delete',type=int)
 
-#     _score_items=user.score_items.all()
-#     canDelete="No"
-#     for s in _score_items:
-#         if (s.id==Delete and s.status!=STATUS_YES):
-#             canDelete="Yes"
-#             if s.picpath is not None :
-#                 os.remove(appME.config['UPLOAD_FOLDER']+s.uuid+".jpg")
-#             db.session.delete(s)
-#     db.session.commit()
-#     return canDelete
+
+
+
+
+

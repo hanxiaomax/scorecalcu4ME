@@ -189,6 +189,7 @@ class Excelmap(db.Model):
     creater_time=db.Column(db.DateTime)
     filepath=db.Column(db.String(140))
     status=db.Column(db.SmallInteger)
+    grade= db.Column(db.String(64),index = True)
 
     def __repr__(self):
         return '<Excelmap %r>' % (self.id)
@@ -208,11 +209,11 @@ class Excelmap(db.Model):
                         "id":item.id,
                         "Excelname": item.Excelname,
                         "creater":item.creater,
-                        "start_time": item.start_time,
-                        "end_time": item.end_time,
+                        "time":item.start_time+u"至"+item.end_time,
                         "creater_time": item.creater_time,
                         "filepath": item.filepath,
-                        "status":_status
+                        "status":_status,
+                        "grade":item.grade
                 }
 
             excellist["excellist"].append(data)

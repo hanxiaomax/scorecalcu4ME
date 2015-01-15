@@ -25,8 +25,7 @@ def _makepublic():
         _status=OPEN
     else:
         _status=CLOSE
-    print _timestart
-    print _timeend
+
     #需要写进excel的info栏的内容
     excelinfo={
              "filename" : _name,
@@ -55,7 +54,8 @@ def _makepublic():
             end_time=_timeend,
             filepath=filepath,
             teacher=admin,
-            status=_status
+            status=_status,
+            grade=_grade
             )
         db.session.add(exceldb)
         db.session.commit()

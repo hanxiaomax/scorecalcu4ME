@@ -195,3 +195,44 @@ $().ready(function() {
     wrapper: "p"
   });
 });
+
+
+function add_excel_list(role) {
+  $("#exceltable thead").empty()
+  $("#exceltable tbody").empty()
+  $.get($SCRIPT_ROOT + "/_makepublic", {
+      pic: "111"
+    },
+    function(data) {
+      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      $("#exceltable").append(thead)
+      var tbody = ""
+      if (role=="student") {
+        $.each(data.excellist, function() {
+        var tbBody = ""
+          if (this.status=="正在公示") {
+              tbBody += "<tr ><td style='display:none;'>" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.grade + "</td>"+"<td>" + this.time + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载' onclick='view(this)'/></td></tr>";
+          }
+        $("#exceltable").append(tbBody)
+      });
+      }else{
+        $.each(data.excellist, function() {
+        var tbBody = ""
+
+          var btnstyle
+          if (this.status=="正在公示") {
+             btnstyle="btn-success"
+          }
+          else
+          {
+             btnstyle="btn-warning"
+          }
+
+        tbBody = "<tr ><td style='display:none;'>" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.grade + "</td>"+"<td>" + this.time + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
+
+        $("#exceltable").append(tbBody)
+      });
+      }
+
+    });
+}

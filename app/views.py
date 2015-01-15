@@ -331,11 +331,15 @@ def management_handle():
             User.edit(campID)
             return " "
         elif request.args.get('Add',type=str)=='Add':
-            name=request.args.get('add_name',type=str)
+            name=request.args.get('add_name',type=unicode)
             campID=request.args.get('add_campID',type=str)
-            grade=request.args.get('add_grade',type=str)
-            User.addstudent(campID,name,grade)
-            return " "
+            grade=request.args.get('add_grade',type=unicode)
+            user=User.get_user(campID)
+            if user:
+                return "学号重复"
+            else :
+                User.addstudent(campID,name,grade)
+                return "添加成功"
 
 
 

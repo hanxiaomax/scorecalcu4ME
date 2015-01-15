@@ -99,9 +99,8 @@
   label.error {
 background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
 }
-.add_panel{
+.pop_panel{
   background-color: #eee;
-
   display: none;
   border-width: 1px;border-style: solid;-moz-border-radius: 11px;-khtml-border-radius: 11px;-webkit-border-radius: 11px;border-radius: 11px;padding:50px;
 }
@@ -246,8 +245,30 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                     <div class="col-md-4 " >
 
-                        <form role="form" class="add_panel" id="add">
+                        <form role="form" class="pop_panel" id="add">
                         <p class="text-center">添加学生信息</p>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">姓名</label>
+                            <input type="text" class="form-control" id="add_name" name="add_name" >
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">学号</label>
+                            <input type="text" class="form-control" id="add_campID" name="add_campID">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">年级</label>
+                            <input type="text" class="form-control" id="add_grade " name="add_grade">
+                          </div>
+                          <br/>
+                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
+                        </form>
+                      </div>
+
+                      <div class="col-md-4 " >
+
+                        <form role="form" class="pop_panel" id="edit_panel">
+                        <p class="text-center" id='edit_title'></p>
+
                           <div class="form-group">
                             <label for="exampleInputEmail1">姓名</label>
                             <input type="text" class="form-control" id="add_name" >
@@ -260,8 +281,10 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <label for="exampleInputPassword1">年级</label>
                             <input type="text" class="form-control" id="addd_grade " >
                           </div>
+                          <br/>
+                        <button type="submit" class="btn btn-warning btn-block " onclick='submitedit()'>修改</button>
 
-                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
+
                         </form>
                       </div>
                     </div>
@@ -397,13 +420,13 @@ $(function() {
         alert(data)
       }
       else {
-        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th><th>操作</th></tr> " //不能包含<thead>
+        var thead = "<tr class='info'><td style='display:none;'> id </td> <td> 学号 </td> <td> 姓名 </td> <td> 年级 </td> <td> 分值 </td><td>操作</th></tr> " //不能包含<thead>
 
         $("#students").append(thead)
 
         $.each(data.GradeSumary, function() {
           var tbBody = ""
-            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button' id='add' class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
+            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
           $("#students").append(tbBody)
         });
       }
@@ -501,40 +524,33 @@ function delstu(obj) {
 }
 
 $('#addtrigger').click(function(e) {
-
     $('#add').lightbox_me({
         overlayCSS:{background: 'gray', opacity: .6},
         centered: true,
         onLoad: function() {
-
-
             }
         });
     e.preventDefault();
 });
 
-$('#edittrigger').click(function(e) {
-    $('#edit_panel').lightbox_me({
-
-        overlayCSS:{background: 'gray', opacity: .6},
-        centered: true,
-        onLoad: function() {
-
-            }
-        });
-    e.preventDefault();
-});
 
 function edit(obj) {
+  var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+  id=tr.children[2].innerText
   $('#edit_panel').lightbox_me({
         modalCSS:{},
         overlayCSS:{background: 'gray', opacity: .6},
         centered: true,
         onLoad: function() {
-
+          $("#edit_title").html("修改该生信息("+id+")+<p style='display:none id='id'></p>")
             }
         });
-      $.get($SCRIPT_ROOT + "/_management", {
+}
+
+
+
+function submitedit(){
+  $.get($SCRIPT_ROOT + "/_management", {
       campID:tr.children[0].innerText,
       Edit:'Edit',
       edit_name:$("#edit_name"),
@@ -547,17 +563,26 @@ function edit(obj) {
     });
 }
 
+
+
 function addnewuser() {
-      $.get($SCRIPT_ROOT + "/_management", {
+  var _name=$('input[name="add_name"]').val()
+  var _campID=$('input[name="add_campID"]').val()
+  var _grade=$('input[name="add_grade"]').val()
+
+  if ($("#add").valid()){
+     $.get($SCRIPT_ROOT + "/_management", {
       Add:'Add',
-      add_name:$("#add_name").val(),
-      add_campID:$("#add_campID").val(),
-      add_grade:$("#addd_grade").val(),
+      add_name:_name,//"dd",
+      add_campID:_campID,//"130280",
+      add_grade:_grade,//"2013本"
       // edit_role:,
 
-    }, function(){
-      alert("添加成功")
+    }, function(result){
+      alert(result)
     });
+  }
+
 }
 
 
@@ -606,5 +631,27 @@ $().ready(function() {
     wrapper: "p"
   });
 });
+
+$().ready(function() {
+ $("#add").validate(
+  {
+    rules: {
+          add_name: {
+            required:true,
+          },
+          add_campID:{
+            required:true,
+          },
+          add_grade:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
 </script>
 {% endblock %}
+
+
+

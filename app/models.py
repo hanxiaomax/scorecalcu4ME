@@ -53,45 +53,7 @@ class User(db.Model):
             return None
         return user
 
-    # @classmethod
-    # def userInfo(cls,campID,is_jsonify=True,brief=False):
-    #     "get all the infomation about user return as a dict"
-    #     userInfoDict={}
-    #     user = cls.get_user(campID)
 
-    #     try:
-    #         if user:
-    #             _name = user.name
-    #             _campID = user.campID
-    #             _grade = user.grade
-    #             _score = user.score
-    #             if brief:
-    #                 userInfoDict={
-    #                  "name" : user.name,
-    #                 "campID" : user.campID,
-    #                 "grade" : user.grade,
-    #                 "sum" : user.score,
-    #                 }
-    #                 if is_jsonify:
-    #                     return  jsonify(userInfoDict)
-    #                 else:
-    #                     return userInfoDict
-    #             else:
-    #                 userInfoDict={
-    #                  "name" : user.name,
-    #                 "campID" : user.campID,
-    #                 "grade" : user.grade,
-    #                 "sum" : user.score,
-    #                 "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
-    #                 }
-    #                 if is_jsonify:
-    #                     return  jsonify(userInfoDict)
-    #                 else:
-    #                     return userInfoDict
-    #         else:
-    #             return "无法找到"
-    #     except:
-    #         return "无法找到"
 
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
@@ -162,11 +124,12 @@ class User(db.Model):
 
     @classmethod
     def addstudent(cls,campID,name,grade):
+
         u=User(campID=campID,
                     name=name,
                     grade=grade,
                     password=campID,
-                    role=0)
+                    role=0,score=0.0)
         db.session.add(u)
         db.session.commit()
 
@@ -178,7 +141,7 @@ class User(db.Model):
     @classmethod
     def edit(cls,campID):
         u=cls.query.filter(campID==cls.campID).first()
-        print u
+
         u.name=request.args.get("edit_name",type=unicode)
         u.campID=request.args.get("edit_campID",type=unicode)
         u.grade=request.args.get("edit_grade",type=unicode)

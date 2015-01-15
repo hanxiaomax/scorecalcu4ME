@@ -91,6 +91,7 @@ class Engine(object):
             Scoreitems=self.getUserScoreitems(user.campID,Score_items.time_st,Score_items.time_ed,start_time,end_time)
 
             userSummaryDict={
+                    "id":user.id,
                     "name" : user.name,
                     "campID" : user.campID,
                     "grade" : user.grade,

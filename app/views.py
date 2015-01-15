@@ -272,11 +272,7 @@ def download_excel(filename):
     return send_from_directory(__ExcelDir__,
                                filename)
 
-# @appME.route('/remotevali',methods=["POST", "GET"])
-# def remotevali():
-#     grade=request.args.get('grade',type=str)
-#     print grade
-#     return "false"
+
 
 
 
@@ -326,20 +322,28 @@ def management_handle():
             User.delete(campID)
             return " "
         elif request.args.get('Edit',type=str)=='Edit':
-            campID=request.args.get('campID',type=str)
-            print campID
-            User.edit(campID)
-            return " "
+            id=request.args.get('id',type=str)
+            name=request.args.get('edit_name',type=unicode)
+            campID=request.args.get('edit_campID',type=str)
+            grade=request.args.get('edit_grade',type=unicode)
+            # print "id:"+id
+            # print "name:"+name
+            # print "campID:"+campID
+            # print "grade:"+grade
+
+            return User.edit(id,campID,name,grade)
+
+
         elif request.args.get('Add',type=str)=='Add':
             name=request.args.get('add_name',type=unicode)
             campID=request.args.get('add_campID',type=str)
             grade=request.args.get('add_grade',type=unicode)
             user=User.get_user(campID)
             if user:
-                return "学号重复"
+                return u"学号重复"
             else :
                 User.addstudent(campID,name,grade)
-                return "添加成功"
+                return u"添加成功"
 
 
 

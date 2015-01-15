@@ -271,15 +271,15 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                           <div class="form-group">
                             <label for="exampleInputEmail1">姓名</label>
-                            <input type="text" class="form-control" id="add_name" >
+                            <input type="text" class="form-control" id="edit_name" name="edit_name">
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword1">学号</label>
-                            <input type="text" class="form-control" id="add_campID" >
+                            <input type="text" class="form-control" id="edit_campID" name="edit_campID">
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword1">年级</label>
-                            <input type="text" class="form-control" id="addd_grade " >
+                            <input type="text" class="form-control" id="edit_grade " name="edit_grade">
                           </div>
                           <br/>
                         <button type="submit" class="btn btn-warning btn-block " onclick='submitedit()'>修改</button>
@@ -510,13 +510,15 @@ function delscore(obj) {
     });
     };
 }
+
+
 function delstu(obj) {
     con=confirm("是否删除该学生信息（不可撤销）")
     if (con) {
       var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
     tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
     $.get($SCRIPT_ROOT + "/_management", {
-      campID:tr.children[0].innerText,
+      campID:tr.children[1].innerText,
       Delete:'DeleteStu'
     }, function(){
     });
@@ -536,31 +538,39 @@ $('#addtrigger').click(function(e) {
 
 function edit(obj) {
   var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
-  id=tr.children[2].innerText
+  id=tr.children[0].innerText
+  name=tr.children[2].innerText
   $('#edit_panel').lightbox_me({
         modalCSS:{},
         overlayCSS:{background: 'gray', opacity: .6},
         centered: true,
         onLoad: function() {
-          $("#edit_title").html("修改该生信息("+id+")+<p style='display:none id='id'></p>")
+          $("#edit_title").html("修改该生信息("+name+")<input  name='id' style='display:none' value="+id+">")
             }
         });
 }
 
 
-
 function submitedit(){
-  $.get($SCRIPT_ROOT + "/_management", {
-      campID:tr.children[0].innerText,
-      Edit:'Edit',
-      edit_name:$("#edit_name"),
-      edit_campID:$("#edit_campID"),
-      edit_grade:$("#edit_grade"),
-      // edit_role:,
+  var ID=$('input[name="id"]').val()
+  var _name=$('input[name="edit_name"]').val()
+  var _campID=$('input[name="edit_campID"]').val()
+  var _grade=$('input[name="edit_grade"]').val()
+  if ($("#edit_panel").valid()){
+    $.get($SCRIPT_ROOT + "/_management", {
 
-    }, function(){
-      alert("修改成功")
+      Edit:'Edit',
+      edit_name:_name,
+      edit_campID:_campID,
+      edit_grade:_grade,
+      id:ID,
+
+
+    }, function(result){
+      alert(result)
     });
+  }
+
 }
 
 
@@ -641,8 +651,29 @@ $().ready(function() {
           },
           add_campID:{
             required:true,
+            // isSixdigit:true
           },
           add_grade:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+$().ready(function() {
+ $("#edit_panel").validate(
+  {
+    rules: {
+          edit_name: {
+            required:true,
+          },
+          edit_campID:{
+            required:true,
+            // isSixdigit:true
+          },
+          edit_grade:{
             required:true,
             right_format:true,
           },

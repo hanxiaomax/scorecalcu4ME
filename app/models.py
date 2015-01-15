@@ -138,15 +138,21 @@ class User(db.Model):
         u=cls.query.filter(campID==cls.campID).first()
         db.session.delete(u)
         db.session.commit()
-    @classmethod
-    def edit(cls,campID):
-        u=cls.query.filter(campID==cls.campID).first()
 
-        u.name=request.args.get("edit_name",type=unicode)
-        u.campID=request.args.get("edit_campID",type=unicode)
-        u.grade=request.args.get("edit_grade",type=unicode)
-        # u.role=request.args.get("edit_role",type=int)
-        db.session.commit()
+
+    @classmethod
+    def edit(cls,id,campID,name,grade):
+
+        u=cls.query.filter(id==cls.id).first()
+        if User.get_user(campID):
+            return u"该学号已经存在"
+        else:
+            # print u
+            u.name=name
+            u.campID=campID
+            u.grade=grade
+            db.session.commit()
+            return u"修改成功"
 
 
 class Score_items(db.Model):

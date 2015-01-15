@@ -327,7 +327,14 @@ def management_handle():
             return " "
         elif request.args.get('Edit',type=str)=='Edit':
             campID=request.args.get('campID',type=str)
+            print campID
             User.edit(campID)
+            return " "
+        elif request.args.get('Add',type=str)=='Add':
+            name=request.args.get('add_name',type=str)
+            campID=request.args.get('add_campID',type=str)
+            grade=request.args.get('add_grade',type=str)
+            User.addstudent(campID,name,grade)
             return " "
 
 

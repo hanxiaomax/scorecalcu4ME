@@ -161,6 +161,16 @@ class User(db.Model):
             return u"驳回"
 
     @classmethod
+    def addstudent(cls,campID,name,grade):
+        u=User(campID=campID,
+                    name=name,
+                    grade=grade,
+                    password=campID,
+                    role=0)
+        db.session.add(u)
+        db.session.commit()
+
+    @classmethod
     def delete(cls,campID):
         u=cls.query.filter(campID==cls.campID).first()
         db.session.delete(u)
@@ -168,6 +178,12 @@ class User(db.Model):
     @classmethod
     def edit(cls,campID):
         u=cls.query.filter(campID==cls.campID).first()
+        print u
+        u.name=request.args.get("edit_name",type=unicode)
+        u.campID=request.args.get("edit_campID",type=unicode)
+        u.grade=request.args.get("edit_grade",type=unicode)
+        # u.role=request.args.get("edit_role",type=int)
+        db.session.commit()
 
 
 class Score_items(db.Model):

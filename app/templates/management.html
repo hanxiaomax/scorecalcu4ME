@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<script type="text/javascript" src="/static/js/jquery.lightbox_me.js"></script>
   <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
@@ -98,6 +99,12 @@
   label.error {
 background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
 }
+.add_panel{
+  background-color: #eee;
+
+  display: none;
+  border-width: 1px;border-style: solid;-moz-border-radius: 11px;-khtml-border-radius: 11px;-webkit-border-radius: 11px;border-radius: 11px;padding:50px;
+}
 
 </style>
 <div class="container-fluid">
@@ -192,10 +199,13 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
         <div role="tabpanel" class="tab-pane " id="withgrade">
            <div class="col-md-8 column ">
-            <div class="panel panel-primary">
-              <div class="panel-heading">搜索</div>
+            <div class="panel panel-primary" >
+              <div class="panel-heading">搜索<span> </span>
+                <button type="submit" id="addtrigger" class="btn-xs btn-default">添加学生信息</button>
+              </div>
 
               <div class="panel-body">
+
                 <div class="container-fluid">
                     <div class="row">
                       <div class=" col-md-8">
@@ -229,15 +239,42 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                               <div class="col-md-offset-2 col-md-6">
                                 <button id="OnSearchgrade" type="button" class="btn btn-info btn-block">搜索</button>
                               </div>
+
                             </div>
                           </form>
                       </div>
+
+                    <div class="col-md-4 " >
+
+                        <form role="form" class="add_panel" id="add">
+                        <p class="text-center">添加学生信息</p>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">姓名</label>
+                            <input type="text" class="form-control" id="add_name" >
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">学号</label>
+                            <input type="text" class="form-control" id="add_campID" >
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">年级</label>
+                            <input type="text" class="form-control" id="addd_grade " >
+                          </div>
+
+                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
+                        </form>
+                      </div>
                     </div>
+
                 </div>
               </div>
               <table class="table table-bordered table-hover table-condensed " id="students">
               </table>
+
             </div>
+           </div>
+           <div class="col-md-2" >
+
            </div>
         </div>
       </div>
@@ -338,8 +375,11 @@ $(function(){
         });
 });
 
+
 $(function() {
+
   $("#OnSearchgrade").bind("click", function() {
+
     var searchtype="bygrade"
     if ($("#searchgradeform").valid()){
 
@@ -363,7 +403,7 @@ $(function() {
 
         $.each(data.GradeSumary, function() {
           var tbBody = ""
-            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='编辑' onclick='edit(this)'/><span> </span><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button' id='add' class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
           $("#students").append(tbBody)
         });
       }
@@ -459,6 +499,68 @@ function delstu(obj) {
     });
     };
 }
+
+$('#addtrigger').click(function(e) {
+
+    $('#add').lightbox_me({
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+
+
+            }
+        });
+    e.preventDefault();
+});
+
+$('#edittrigger').click(function(e) {
+    $('#edit_panel').lightbox_me({
+
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+
+            }
+        });
+    e.preventDefault();
+});
+
+function edit(obj) {
+  $('#edit_panel').lightbox_me({
+        modalCSS:{},
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+
+            }
+        });
+      $.get($SCRIPT_ROOT + "/_management", {
+      campID:tr.children[0].innerText,
+      Edit:'Edit',
+      edit_name:$("#edit_name"),
+      edit_campID:$("#edit_campID"),
+      edit_grade:$("#edit_grade"),
+      // edit_role:,
+
+    }, function(){
+      alert("修改成功")
+    });
+}
+
+function addnewuser() {
+      $.get($SCRIPT_ROOT + "/_management", {
+      Add:'Add',
+      add_name:$("#add_name").val(),
+      add_campID:$("#add_campID").val(),
+      add_grade:$("#addd_grade").val(),
+      // edit_role:,
+
+    }, function(){
+      alert("添加成功")
+    });
+}
+
+
 
 //验证按学号搜索
 $().ready(function() {

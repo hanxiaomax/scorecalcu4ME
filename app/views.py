@@ -234,7 +234,8 @@ def changePW():
 
 @appME.route('/test',methods=["POST", "GET"])
 def test():
-    return render_template("test.html")
+    # return render_template("123")
+    return "hello world"
 
 @appME.route('/_makepublic',methods=["POST", "GET"])
 def makePublic():

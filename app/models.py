@@ -226,3 +226,30 @@ class Excelmap(db.Model):
         os.remove(e.filepath)
         db.session.delete(e)
         db.session.commit()
+
+
+class Grade(db.Model):
+    """docstring for grade"""
+    id = db.Column(db.Integer, primary_key = True)
+    grade_name = db.Column(db.String(20))
+
+
+    @classmethod
+    def add(cls,new_grade):
+        _g=Grade(grade_name=new_grade)
+        db.session.add(_g)
+        db.session.commit()
+
+    @classmethod
+    def remove(cls,grade_name):
+        _g=cls.query.filter(grade_name==grade_name).first()
+        db.session.delete(_g)
+        db.session.commit()
+
+    @classmethod
+    def get_grades(cls):
+        grades_name=[]
+        for grade in cls.query.all():
+            grades_name.append(grade.grade_name)
+        return grades_name
+

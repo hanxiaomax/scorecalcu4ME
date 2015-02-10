@@ -8,19 +8,16 @@ import datetime
 # from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 
 def _makepublic():
-    _name=request.form["name"]
+    _name = request.form["name"]
     _timestart=request.form["timestart"]
     _timeend=request.form["timeend"]
     _note=request.form["note"]
     _ischecked=request.form["ischecked"]
     _adminID=request.form["admin"]#as campID
     _adminName=request.form["adminNAME"]
-    _maketime=datetime.datetime.today()
     _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
     _grade=request.form["grade"]
-    admin=User.query.filter(User.campID == _adminID).first()
-
-
+    _maketime=datetime.datetime.today()
     if _ischecked=="true":
         _status=OPEN
     else:

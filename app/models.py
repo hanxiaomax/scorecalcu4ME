@@ -237,6 +237,7 @@ class Grade(db.Model):
     @classmethod
     def add(cls,new_grade):
         _g=Grade(grade_name=new_grade)
+
         db.session.add(_g)
         db.session.commit()
 

@@ -154,6 +154,10 @@ class Engine(object):
 
         db.session.commit()
 
+    def getPassword(self,campID):
+        u=User.get_user(campID)
+        return u.password
+
 
 
 

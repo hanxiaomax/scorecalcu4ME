@@ -1,9 +1,9 @@
 
 //验证年级输入格式
 jQuery.validator.addMethod("right_format", function(value, element) {
-    var tel = /^20[0-9]{2}[本,硕,博]$/;
+    var tel = /^[本,硕,博]20[0-9]{2}$/;
     return this.optional(element) || (tel.test(value));
-}, "请使用正确的格式，如2013本");
+}, "请使用正确的格式，如本2013");
 
 
 

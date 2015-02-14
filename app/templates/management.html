@@ -147,6 +147,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         <ul class="nav nav-tabs" role="tablist" id="myTab">
           <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">素质分管理</a></li>
           <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">学生信息管理</a></li>
+          <li role="presentation"><a href="#grade_management" role="tab" data-toggle="tab">年级信息维护</a></li>
         </ul>
       </div>
     </div>
@@ -346,7 +347,34 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
            </div>
         </div>
+
+        <div role="tabpanel" class="tab-pane " id="grade_management">
+           <div class="col-md-8 column ">
+            <div class="panel panel-primary">
+              <div class="panel-heading">年级信息维护</div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                    <div class="col-md-6">
+                     <form id="grade_manage_form">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">添加年级</label>
+                        <input class="form-control" id="addgradeinput" name="addgradeinput" placeholder="本2013">
+                      </div>
+                      <button id="OnAddGrade" type="submit" class="btn btn-block btn-info ">提交</button>
+                    </form>
+                    </div>
+                    </div>
+                </div>
+              </div>
+
+            </div>
+           </div>
+        </div>
+
       </div>
+
     </div>
 
 </body>
@@ -444,7 +472,7 @@ $(function(){
         });
 });
 
-
+//搜索按钮
 $(function() {
 
   $("#OnSearchgrade").bind("click", function() {
@@ -482,6 +510,27 @@ $(function() {
   });
 });
 
+//添加年级按钮
+$(function() {
+
+  $("#OnAddGrade").bind("click", function() {
+
+
+    if ($("#grade_manage_form").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$('input[name="gradeinput"]').val(),
+      starttime:$("#pickeD1").val(),
+      endtime:$("#pickeD2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+    });
+    }
+
+  });
+});
 
 
 var upload_xls=""
@@ -713,6 +762,20 @@ $().ready(function() {
 });
 
 $().ready(function() {
+ $("#grade_manage_form").validate(
+  {
+    rules: {
+            addgradeinput:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+
+$().ready(function() {
  $("#add").validate(
   {
     rules: {
@@ -721,7 +784,7 @@ $().ready(function() {
           },
           add_campID:{
             required:true,
-            // isSixdigit:true
+            isSixdigit:true
           },
           add_grade:{
             required:true,

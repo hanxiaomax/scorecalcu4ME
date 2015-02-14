@@ -19,9 +19,12 @@ class TimeManager(object):
         delta=end-start
         return delta.days#返回相差的日期
 
-    def filterByTime(self,timeitem,start,end):
-        result=Score_items.query.filter(timeitem.between(start,end)).all()
+    def filterByTime(self,time_st,time_ed,start,end):
+        result=Score_items.query.filter(time_st,time_ed.between(start,end)).all()
         return result
+
+    # def maketimeItem(self,time_st,time_ed):
+    #     return [time_st,time_ed]
 
 class Engine(object):
     """搜索引擎，从数据库中按需取得数据并进行包装"""
@@ -35,36 +38,30 @@ class Engine(object):
             userlist.append(user)
         return userlist
 
-    # def _searchWithTime(self,timeitem,start,end):
-    #     return Score_items.query.filter(db.and_(timeitem.between(start+timedelta(days+1),end),Score_items.status==1,Score_items.user_id==user.id)).all()
-
-    def getUserScoreitems(self,campID,timeitem,start,end):
+    def getUserScoreitems(self,campID,time_st,time_ed,start,end):
         "返回符合条件的全部加分条目 return as a list contains all Score_items objects"
+
         user=User.query.filter(User.campID==campID).first()
-
-        # if status==STATUS_YES:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_YES,Score_items.user_id==user.id)).all()
-        # elif status==STATUS_NO:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_NO,Score_items.user_id==user.id)).all()
-        # elif status ==STATUS_UNKNOWN:
-        #     result=Score_items.query.filter(db.and_(Score_items.status==STATUS_UNKNOWN,Score_items.user_id==user.id)).all()
-        # else:
-        #     result=Score_items.query.filter(db.and_(Score_items.user_id==user.id)).all()
-
 
         if start==None or end==None:
             result=Score_items.query.filter(Score_items.user_id==user.id).all()
         else:
             #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
-            result=Score_items.query.filter(db.and_(timeitem.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
-        # print result
+            # result=Score_items.query.filter(db.and_(time_st,time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
+            result=Score_items.query.filter(db.and_(time_st.between(self.tm.dbTime(start),self.tm.dbTime(end)),
+                                                    time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)),
+                                                    Score_items.user_id==user.id)).all()
         return result
+             # result=Score_items.query.filter(db.and_(time_st,time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
+
 
 
     def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
         if user:
             userDetailDict={}
-            items=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
+            items=self.getUserScoreitems(user.campID,Score_items.time_st,
+                                                    Score_items.time_ed,
+                                                    start_time,end_time)
 
             userDetailDict={
                          "name" : user.name,
@@ -85,21 +82,16 @@ class Engine(object):
             return u"无法找到"
 
 
-    def getSum(self,Scoreitems):
-        "根据加分条目计算总分"
-        total=0.0
-        for Scoreitem in Scoreitems:
-            if Scoreitem.status==STATUS_YES:#仅计算已加分数
-                total+=Scoreitem.add
-        return total
+
 
     def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
         if user:
             userSummaryDict={}
 
-            Scoreitems=self.getUserScoreitems(user.campID,Score_items.applytime,start_time,end_time)
+            Scoreitems=self.getUserScoreitems(user.campID,Score_items.time_st,Score_items.time_ed,start_time,end_time)
 
             userSummaryDict={
+                    "id":user.id,
                     "name" : user.name,
                     "campID" : user.campID,
                     "grade" : user.grade,
@@ -111,6 +103,16 @@ class Engine(object):
                 return userSummaryDict
         else:
             return u"无法找到"
+
+
+
+    def getSum(self,Scoreitems):
+        "根据加分条目计算总分"
+        total=0.0
+        for Scoreitem in Scoreitems:
+            if Scoreitem.status==STATUS_YES:#仅计算已加分数
+                total+=Scoreitem.add
+        return total
 
     def getGradeSumary(self,grade,start_time=None,end_time=None,is_jsonify=True):
         userlist=self.getUserlist_byGrade(grade)
@@ -129,7 +131,7 @@ class Engine(object):
             else:
                 return GradeSumaryDict
         else:
-            return u"不存在该年级"
+            return "无法找到"
 
 
 
@@ -152,6 +154,10 @@ class Engine(object):
 
         db.session.commit()
 
+    def getPassword(self,campID):
+        u=User.get_user(campID)
+        return u.password
+
 
 
 
@@ -163,14 +169,9 @@ class Engine(object):
 if __name__ == '__main__':
     engine=Engine()
     Now=datetime.today()
-    userlist=engine.getUserlist_byGrade(u"2013硕")
-    st=raw_input("start time : ")
-    end=raw_input("end time : ")
-    print userlist
-    for user in userlist:
-        print  user
-        # Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,Now-timedelta(days=2),Now)
-        Scoreitems=engine.getUserScoreitems(user.campID,Score_items.applytime,st,end)
-        print Scoreitems
-        print engine.getSum(Scoreitems)
 
+
+    Scoreitems1=engine.getUserScoreitems("130280",Score_items.time_st,Score_items.time_ed,"2014-01-09","2015-01-8")
+    Scoreitems2=engine.getUserScoreitems("130280",Score_items.time_st,Score_items.time_ed,None,None)
+    print Scoreitems1
+    print Scoreitems2

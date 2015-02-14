@@ -8,6 +8,9 @@
     <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='js/bootstrap.min.js') }}>
 
     <title>机械工程学院素质分管理系统</title>
+    <!--[if lte IE 7]>
+    <div >您正在使用 Internet Explorer 7，本网站不支持</div>
+    <![endif]-->
     <style type="text/css">
     /*必须的*/
 
@@ -87,14 +90,14 @@
         {% endfor %}<br>
         </p>
         <p>
-        {{ form.password(class='form-control login-field',placeholder='密码') }}<br>
+        {{ form.password(class='form-control login-field',placeholder='密码：初始密码为学号，请登陆后修改') }}<br>
         {% for error in form.password.errors %}
           <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
         </p>
         <p>{{ form.remember_me }} 记住我</p>
         <!-- <p><input type="submit" value="登陆"></p> -->
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
       </form>
       <div class="push"></div>
     </div>

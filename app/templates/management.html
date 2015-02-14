@@ -1,0 +1,798 @@
+{% extends "base.html" %}
+{% block content %}
+<script type="text/javascript" src="/static/js/jquery.lightbox_me.js"></script>
+<link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+
+  <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
+  <style type="text/css">
+  /*
+  * Base structure
+  */
+  /* Move down content because we have a fixed navbar that is 50px tall */
+  body {
+  padding-top: 50px;
+  }
+  /*
+  * Global add-ons
+  */
+  .sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  }
+  /*
+  * Top navigation
+  * Hide default border to remove 1px line.
+  */
+  .navbar-fixed-top {
+  border: 0;
+  }
+  /*
+  * Sidebar
+  */
+  /* Hide for mobile, show later */
+  .sidebar {
+  display: none;
+  }
+  @media (min-width: 768px) {
+  .sidebar {
+  position: fixed;
+  top: 51px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #f5f5f5;
+  border-right: 1px solid #eee;
+  }
+  }
+  /* Sidebar navigation */
+  .nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+  }
+  .nav-sidebar > li > a {
+  padding-right: 20px;
+  padding-left: 20px;
+  }
+  .nav-sidebar > .active > a,
+  .nav-sidebar > .active > a:hover,
+  .nav-sidebar > .active > a:focus {
+  color: #fff;
+  background-color: #428bca;
+  }
+  /*
+  * Main content
+  */
+  .main {
+  padding: 20px;
+  }
+  @media (min-width: 768px) {
+  .main {
+  padding-right: 40px;
+  padding-left: 40px;
+  }
+  }
+  .main .page-header {
+  margin-top: 10;
+  }
+  /*
+  * Placeholder dashboard ideas
+  */
+  .placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+  }
+  .placeholders h4 {
+  margin-bottom: 0;
+  }
+  .placeholder {
+  margin-bottom: 20px;
+  }
+  .placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+  }
+  label.error {
+background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
+}
+.pop_panel{
+  background-color: #eee;
+  display: none;
+  border-width: 1px;border-style: solid;-moz-border-radius: 11px;-khtml-border-radius: 11px;-webkit-border-radius: 11px;border-radius: 11px;padding:50px;
+}
+.row-model{
+  margin-top: 20px;
+  width: 350px;
+}
+.title{
+  margin-top: -21px;
+
+}
+.result{
+
+}
+</style>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+      <ul class="nav nav-sidebar">
+        <li><a href={{url_for('admins_review',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-eye-open"></span> 素质分审核</a></li>
+        <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
+        <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
+        <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+        <li class="active"><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span>后台管理</a>
+
+
+      </ul>
+      <ul class="nav nav-sidebar">
+
+        <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+        <li><a href={{url_for('logout')}}>退出</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+  <body>
+    <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-cog"></span>后台管理</h1>
+
+    <div class="row clearfix" name="tab-nav">
+      <div class="col-md-8 column">
+        <ul class="nav nav-tabs" role="tablist" id="myTab">
+          <li role="presentation" class="active"><a href="#withcampid" role="tab" data-toggle="tab">素质分管理</a></li>
+          <li role="presentation"><a href="#withgrade" role="tab" data-toggle="tab">学生信息管理</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row clearfix" name="panel">
+      <br/>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="withcampid">
+           <div class="col-md-8 column ">
+            <div class="panel panel-primary">
+              <div class="panel-heading">搜索</div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class=" col-md-8">
+                          <form id="searchform" class="form-horizontal" role="form">
+                            <div class="form-group">
+                              <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                              <div class="col-md-6">
+                                <input type="text" class="form-control" name="inputcampID" id="inputcampID" placeholder="130280">
+                              </div>
+                            </div>
+                            <div class="form-group" name="radiobtn">
+                              <div class="col-md-offset-2 col-md-6">
+                                <label class="radio-inline">
+                                  <input type="radio"  name="rb1" id="rbA" value="all" checked="checked">全部
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio"  name="rb1" id="rbB" value="interval">区间
+                                   <br/>
+                                </label>
+                                <br/>
+                                <br/>
+                                <div class="controls" id="timepickerdiv">
+
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-offset-2 col-md-6">
+                                <button id="OnSearch" type="button" class="btn btn-info btn-block">搜索</button>
+                              </div>
+                            </div>
+                          </form>
+                      </div>
+                      <div class="col-md-4">
+                          <table class="table table-bordered table-hover" id="student">
+
+                          </table>
+                      </div>
+
+                    </div>
+                </div>
+              </div>
+              <table class="table table-bordered table-hover table-condensed " id="score_items">
+              </table>
+            </div>
+           </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane " id="withgrade">
+           <div class="col-md-8 column ">
+            <div class="panel panel-primary" >
+              <div class="panel-heading">搜索<span> </span>
+                <button type="submit" id="addtrigger" class="btn-xs btn-default">添加学生信息</button>
+                <button type="submit" id="massaddtrigger" class="btn-xs btn-default">批量添加学生信息</button>
+
+              </div>
+
+              <div class="panel-body">
+
+                <div class="container-fluid">
+                    <div class="row">
+                      <div class=" col-md-8">
+                          <form id="searchgradeform" class="form-horizontal" role="form">
+                            <div class="form-group">
+                              <label for="gradelist" class="col-md-2 control-label">年级</label>
+                              <div class="col-md-6">
+                                <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="硕2013">
+                                <span class="help-block">格式：年份(本硕博)</span>
+                              </div>
+
+
+                            </div>
+                            <div class="form-group" name="radiobtn2">
+                              <div class="col-md-offset-2 col-md-6">
+                                <label class="radio-inline">
+                                  <input type="radio"  name="rb2" id="rbC" value="all" checked="checked">全部
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio"  name="rb2" id="rbD" value="interval_grade">区间
+                                  <br/>
+                                </label>
+                                <br/>
+                                <br/>
+                                <div class="controls" id="timepickerdiv_grade">
+
+                                </div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-md-offset-2 col-md-6">
+                                <button id="OnSearchgrade" type="button" class="btn btn-info btn-block">搜索</button>
+                              </div>
+
+                            </div>
+                          </form>
+                      </div>
+
+                    <div class="col-md-4 " >
+
+                        <form role="form" class="pop_panel" id="add">
+                        <p class="text-center">添加学生信息</p>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">姓名</label>
+                            <input type="text" class="form-control" id="add_name" name="add_name" >
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">学号</label>
+                            <input type="text" class="form-control" id="add_campID" name="add_campID">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">年级</label>
+                            <input type="text" class="form-control" id="add_grade " name="add_grade">
+                          </div>
+                          <br/>
+                          <button type="submit" class="btn btn-primary btn-block" onclick='addnewuser()'>添加</button>
+                        </form>
+
+
+                      </div>
+
+                    <div class="col-md-4">
+
+                      <form role="form" class="pop_panel" id="massadd">
+                        <div class="title">
+                          <p class="text-center">批量添加学生信息</p>
+                        </div>
+
+                        <div style="color: #000000;margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #0A0707;"></div>
+
+                        <div class="row-model">
+                          <label for="file_upload" class="col-md-5 control-label">上传excel文件</label>
+                          <div class="col-md-7" style="margin-top: -5px;" >
+                           <input id="file_upload" name="file_upload" type="file" />
+                          </div>
+
+                          <br/>
+                           <div style="color: #000000;margin-top: 60px; margin-bottom: 20px; border: 0; border-top: 1px solid #EEEEEE;"></div>
+                          <div class="result" id="showResult">
+
+                          </div>
+
+                          <button id="Massadd-btn" type="submit" class="btn btn-primary btn-block" disabled="true" onclick='onmassadd()'>添加</button>
+                        </div>
+
+
+                        </form>
+
+                    </div>
+
+                      <div class="col-md-4 "  >
+
+                        <form role="form" class="pop_panel row-model" id="edit_panel">
+                        <p class="text-center" id='edit_title'></p>
+
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">姓名</label>
+                            <input type="text" class="form-control" id="edit_name" name="edit_name">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">学号</label>
+                            <input type="text" class="form-control" id="edit_campID" name="edit_campID">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputPassword1">年级</label>
+                            <input type="text" class="form-control" id="edit_grade " name="edit_grade">
+                          </div>
+                          <br/>
+                        <button type="submit" class="btn btn-warning btn-block " onclick='submitedit()'>修改</button>
+
+
+                        </form>
+
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+              <table class="table table-bordered table-hover table-condensed " id="students">
+              </table>
+
+            </div>
+           </div>
+           <div class="col-md-2" >
+
+           </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+
+
+</div>
+<script type="text/javascript">
+//tab
+jQuery.validator.addMethod("right_format", function(value, element) {
+    var tel = /^[本,硕,博]20[0-9]{2}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请使用正确的格式，如本2013");
+
+
+
+//验证学号必须是6位
+jQuery.validator.addMethod("isSixdigit", function(value, element) {
+    var tel = /^[0-9]{6}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请输入6位数学号");
+
+
+$('#myTab a').click(function(e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+///////////
+var _value = $("#searchcampID").val()
+
+
+///////////////
+function InitTimepicker(double,pickername) {
+  if (double) {
+    $("#"+pickername+"1").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
+        var endDate = $endDate.datepicker('getDate');
+
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+
+    });
+
+    $("#"+pickername+"2").datepicker({
+      onSelect: function(startDate) {
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
+        var endDate = $endDate.datepicker('getDate');
+        if (endDate < startDate) {
+          $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
+        }
+        $endDate.datepicker("option", "minDate", startDate);
+      }
+    });
+  }
+  else{
+      $( "#datepicker" ).datepicker();
+  }
+}
+function makeDatepicker(divname,pickername){
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"1"+" id="+pickername+"1"+" placeholder='起始日期'/>");
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"2"+" id="+pickername+"2"+" placeholder='截止日期'/>");
+    InitTimepicker(true,pickername)
+};
+
+
+$(function(){
+  $("input[name=rb1]").change(function(){
+
+          var selected = $("input[name='rb1']:checked").val();
+          if (selected=="interval") {
+              makeDatepicker("#timepickerdiv","pickeB")//生成pickeB1和pickeB2
+          }
+          else{
+            $(timepickerdiv).empty()
+          };
+        });
+});
+
+$(function(){
+  $("input[name=rb2]").change(function(){
+
+          var selected = $("input[name='rb2']:checked").val();
+          if (selected=="interval_grade") {
+              makeDatepicker("#timepickerdiv_grade","pickeD")//生成pickeD1和pickeD2
+          }
+          else{
+            $(timepickerdiv_grade).empty()
+          };
+        });
+});
+
+
+$(function() {
+
+  $("#OnSearchgrade").bind("click", function() {
+
+    var searchtype="bygrade"
+    if ($("#searchgradeform").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$('input[name="gradeinput"]').val(),
+      starttime:$("#pickeD1").val(),
+      endtime:$("#pickeD2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+        var thead = "<tr class='info'><td style='display:none;'> id </td> <td> 学号 </td> <td> 姓名 </td> <td> 年级 </td> <td> 分值 </td><td>操作</th></tr> " //不能包含<thead>
+
+        $("#students").append(thead)
+
+        $.each(data.GradeSumary, function() {
+          var tbBody = ""
+            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
+          $("#students").append(tbBody)
+        });
+      }
+    });
+    }
+
+  });
+});
+
+
+
+var upload_xls=""
+
+$(function() {
+  var searchtype="bycampID"
+  $("#OnSearch").bind("click", function() {
+    if ($("#searchform").valid()){
+      $.get($SCRIPT_ROOT + "/_getMyScore", {
+      campID: $('input[name="inputcampID"]').val()
+    }); //更新总分
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      campID: $('input[name="inputcampID"]').val(),
+      starttime:$("#datepicker1").val(),
+      endtime:$("#datepicker2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#score_items thead").empty()
+        $("#score_items tbody").empty() //获取#score_items下面的tbody
+        $("#student thead").empty()
+        $("#student tbody").empty()
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+
+        var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
+        $("#student").append(tbody_stu)
+
+
+        var thead = "<tr class='info'> <th> 申请号 </th> <th> 所属类别 </th> <th> 加分项目 </th> <th> 分值 </th> <th> 时间 </th> <th> 申请时间 </th><th> 审核状态 </th> <th>操作</th></tr> " //不能包含<thead>
+
+        $("#score_items").append(thead)
+        var tbBody = ""
+
+        $.each(data.items, function() {
+          if(this.status=="未审核"){
+
+          tbBody = "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+          $("#score_items").append(tbBody)
+          }
+          else if (this.status=="通过") {
+            tbBody = "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+
+          $("#score_items").append(tbBody)
+
+          }
+          else{
+            tbBody = "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td>"+"<td><input type='button' class='btn btn-danger btn-xs' value='删除' onclick='delscore(this)'/></td></tr>";
+          $("#score_items").append(tbBody)
+          }
+
+
+        });
+      }
+    });
+    }
+  });
+});
+
+
+function delscore(obj) {
+    con=confirm("是否删除该条申请（不可撤销）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_management", {
+      itemID:tr.children[0].innerText,
+      Delete:'Delete'
+    }, function(){
+    });
+    };
+}
+
+
+function delstu(obj) {
+    con=confirm("是否删除该学生信息（不可撤销）")
+    if (con) {
+      var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    tr.parentNode.removeChild(tr); //从tr的父元素[tbody]移除tr
+    $.get($SCRIPT_ROOT + "/_management", {
+      campID:tr.children[1].innerText,
+      Delete:'DeleteStu'
+    }, function(){
+    });
+    };
+}
+//模态窗口
+$('#addtrigger').click(function(e) {
+    $('#add').lightbox_me({
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+            }
+        });
+    e.preventDefault();
+});
+
+$('#massaddtrigger').click(function(e) {
+    $('#massadd').lightbox_me({
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+            }
+        });
+    e.preventDefault();
+});
+
+/////////////////////
+
+
+function edit(obj) {
+  var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+  id=tr.children[0].innerText
+  name=tr.children[2].innerText
+  $('#edit_panel').lightbox_me({
+        modalCSS:{},
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+          $("#edit_title").html("修改该生信息("+name+")<input  name='id' style='display:none' value="+id+">")
+            }
+        });
+}
+
+
+function submitedit(){
+  var ID=$('input[name="id"]').val()
+  var _name=$('input[name="edit_name"]').val()
+  var _campID=$('input[name="edit_campID"]').val()
+  var _grade=$('input[name="edit_grade"]').val()
+  if ($("#edit_panel").valid()){
+    $.get($SCRIPT_ROOT + "/_management", {
+
+      Edit:'Edit',
+      edit_name:_name,
+      edit_campID:_campID,
+      edit_grade:_grade,
+      id:ID,
+
+
+    }, function(result){
+      alert(result)
+    });
+  }
+
+}
+
+
+
+function addnewuser() {
+  var _name=$('input[name="add_name"]').val()
+  var _campID=$('input[name="add_campID"]').val()
+  var _grade=$('input[name="add_grade"]').val()
+
+  if ($("#add").valid()){
+     $.get($SCRIPT_ROOT + "/_management", {
+      Add:'Add',
+      add_name:_name,//"dd",
+      add_campID:_campID,//"130280",
+      add_grade:_grade,//"2013本"
+      // edit_role:,
+
+    }, function(result){
+      alert(result)
+    });
+  }
+}
+
+function onmassadd() {
+if ($("#add").valid()){
+     $.get($SCRIPT_ROOT + "/_import_stu_from_xlsx", {
+      excelname:upload_xls,
+    }, function(data){
+      $("#Massadd-btn").attr('disabled',false);
+      alert(data.result)
+      if (len(data.failed_list)!=None) {
+        alert("以下学号重复："+data.failed_list)
+      };
+
+
+    });
+
+  }
+
+}
+
+//验证按学号搜索
+$().ready(function() {
+ $("#searchform").validate(
+  {
+    rules:{
+          pickeB1: {
+            required:true,
+            dateISO:true
+          },
+          pickeB2:{
+            required:true,
+            dateISO:true
+          },
+          inputcampID: {
+            required:true,
+            isSixdigit:true
+          },
+        },
+    wrapper: "p"
+
+  });
+});
+
+//验证按年级搜索
+$().ready(function() {
+ $("#searchgradeform").validate(
+  {
+    rules: {
+          pickeD1: {
+            required:true,
+            dateISO:true
+          },
+          pickeD2:{
+            required:true,
+            dateISO:true
+          },
+          gradeinput:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+$().ready(function() {
+ $("#add").validate(
+  {
+    rules: {
+          add_name: {
+            required:true,
+          },
+          add_campID:{
+            required:true,
+            // isSixdigit:true
+          },
+          add_grade:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+$().ready(function() {
+ $("#edit_panel").validate(
+  {
+    rules: {
+          edit_name: {
+            required:true,
+          },
+          edit_campID:{
+            required:true,
+            // isSixdigit:true
+          },
+          edit_grade:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+
+//上传控件
+ $(document).ready(function() {
+
+      $('#file_upload').uploadify({
+        'swf': '/static/uploadify/uploadify.swf',
+        'uploader': $SCRIPT_ROOT+'/_uploadxlsx',
+        'auto': true,
+        'buttonText' : '浏览...',
+        'fileObjName' : 'the_files',
+        'fileTypeDesc' : 'Excel Files',
+        'fileTypeExts' : '*.xlsx;',
+        'multi': false,
+        'removeCompleted': true, // Could set to true, then list completed uploads onComplete
+        'onSelect' : function(file) {
+            var filename=file.name;
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+        },
+      'onUploadStart': function (file) {
+
+      },
+      'onUploadSuccess' : function(file, data, response) {
+        alert("上传成功，请点击添加按钮")
+        upload_xls=file.name
+        $("#Massadd-btn").attr('disabled',false);
+
+
+      }
+      });
+    });
+</script>
+<!-- ugly hack to keep chrome form crashing when using uploadify -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
+{% endblock %}
+
+
+

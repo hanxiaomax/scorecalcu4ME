@@ -1,3 +1,4 @@
 *.pyc
 workshop/
 app.db
+.idea/

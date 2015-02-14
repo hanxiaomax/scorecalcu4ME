@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-
+<script type="text/javascript" src="/static/js/constom.js"></script>
   <style type="text/css">
   /*
   * Base structure
@@ -90,8 +90,13 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
           <li class="active"><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+          <li><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span> 后台管理</a>
+
         </ul>
         <ul class="nav nav-sidebar">
+
+          <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+
           <li><a href={{url_for('logout')}}>退出</a></li>
         </ul>
       </div>
@@ -102,14 +107,14 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       <h1 class="page-header"><span class="glyphicon glyphicon-th-list"></span> 素质分公示系统</h1>
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-md-10">
 <div class="table-responsive">
             <table class="table table-hover" id="exceltable">
 
             </table>
           </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="panel panel-primary">
               <div class="panel-heading">
                 <h3 class="panel-title"><span class="glyphicon glyphicon glyphicon-plus"></span> 创建新公示</h3>
@@ -124,11 +129,11 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                       <div class="form-group">
                         <label for="gradelist">年级</label>
-                        <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="2013硕">
+                        <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="硕2013">
                         <span class="help-block">格式：年份(本硕博)</span>
                       </div>
 
-                      <div class="form-group">
+                      <div class="form-group" >
 
                         <label for="datepicker1">时间区间</label>
 
@@ -198,10 +203,13 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           admin:{{user.campID}},
           grade:$('input[name="gradeinput"]').val(),
       },
-      function(){
-        alert("提交成功")
-        add_excel_list()
-
+      function(data){
+        if (data=="true") {
+          alert("提交成功")
+          add_excel_list()
+        }else{
+          alert(data)
+        }
       });
 
       }
@@ -212,37 +220,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 });
 
 
-function add_excel_list() {
-  $("#exceltable thead").empty()
-  $("#exceltable tbody").empty()
-  $.get($SCRIPT_ROOT + "/_makepublic", {
-      pic: "111"
-    },
-    function(data) {
-      var thead = "<tr><th>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
-      $("#exceltable").append(thead)
-      var tbody = ""
-      $.each(data.excellist, function() {
-        var tbBody = ""
-          // tbBody += "<tr ><td>" + this.Excelname + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>"+ "<td>" + "<a href='javascript:;' class='remove'><span id='remove' class='glyphicon glyphicon glyphicon-remove'> </span></a><span>  </span><span class='glyphicon glyphicon glyphicon-cloud-download'></span><span>  </span><span class='glyphicon glyphicon glyphicon glyphicon-eye-open'></span>"+ "</td></tr>";
-          var btnstyle
-          if (this.status=="正在公示") {
-             btnstyle="btn-success"
-          }
-          else
-          {
-             btnstyle="btn-warning"
-          }
 
-        tbBody += "<tr ><td >" + this.id + "</td>" + "<td>" + this.grade + "</td>"+"<td>" + this.Excelname + "</td>"+"<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载查看' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
-
-        $("#exceltable").append(tbBody)
-      });
-
-    });
-  // $("#benefit_add").click(function(){alert("1");});
-
-}
 function del(obj) {
     con=confirm("删除该条公示，包括其对应的excel文件（如不希望删除excel文件，请点击“停止公示/正在公示”按钮）")
     if (con) {
@@ -256,8 +234,6 @@ function del(obj) {
 
     });
     };
-
-
   }
 function view(obj) {
     var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
@@ -328,17 +304,17 @@ $().ready(function() {
             required:true,
             right_format:true,
           },
-
-
         },
+
     wrapper: "p"
 
   });
 });
 
 
-InitTimepicker(true)
-add_excel_list()
+
+InitTimepicker(true,"datepicker")
+add_excel_list("teacher")
 
 
 </script>

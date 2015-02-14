@@ -11,6 +11,7 @@ import os
 import json
 import uuid
 from SearchEngine import Engine
+from makeExcel import ImportFromXls
 basedir=os.path.abspath(os.path.dirname(__file__))
 
 @lm.user_loader
@@ -36,6 +37,8 @@ def login():
                 return redirect(url_for('admins_review', admin_id = current_user.campID))
             else:
                 return redirect("/login/")
+        else:
+            flash(u"用户名或密码错误")
 
     return render_template('login.html',
                             title=u'机械工程学院素质分管理系统',
@@ -172,12 +175,27 @@ def uploaded_file(filename):
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 
-
+#处理图片上传操作
 @appME.route('/_uploader',methods=["POST", "GET"])
-def uploader():
+def picuploader():
     if request.method == 'POST':
-        save_files()
+        save_files("pic")
         return 'Uploaded'
+
+#处理excel上传操作
+@appME.route('/_uploadxlsx',methods=["POST", "GET"])
+def exceluploader():
+    if request.method == 'POST':
+        save_files("excel")
+        return 'Uploaded'
+
+
+
+
+
+
+
+
 
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
@@ -188,6 +206,8 @@ def getStuInfo():
     if  searchtype=="bycampID":
         campID=request.args.get('campID',type=str)
         user=User.get_user(campID)
+        # for i in engine.getUserDetail(user,starttime,endtime,False)["items"]:
+        #     print i
         return engine.getUserDetail(user,starttime,endtime)
     elif searchtype=="bygrade":
         grade=request.args.get('grade',type=unicode)
@@ -197,22 +217,7 @@ def getStuInfo():
         return u"无法找到"
 
 
-def save_file(filestorage,uuid):
-    "Save a Werkzeug file storage object to the upload folder."
-    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
-    filename=str(uuid)+".jpg"
-    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
-    filestorage.save(filepath)
 
-
-def save_files(request=request):
-    "Save all files in a request to the app's upload folder."
-    UUID=request.form.get("UUID")#FORM NOT ARGES
-    for _, filestorage in request.files.iteritems():
-        # Workaround: larger uploads cause a dummy file named '<fdopen>'.
-        # See the Flask mailing list for more information.
-        if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
-            save_file(filestorage,UUID)
 
 @appME.route('/_changePW',methods=["POST", "GET"])
 def changePW():
@@ -230,7 +235,8 @@ def changePW():
 
 @appME.route('/test',methods=["POST", "GET"])
 def test():
-    return render_template("test.html")
+    # return render_template("123")
+    return "hello world"
 
 @appME.route('/_makepublic',methods=["POST", "GET"])
 def makePublic():
@@ -267,3 +273,141 @@ def download_excel(filename):
 
     return send_from_directory(__ExcelDir__,
                                filename)
+
+
+
+
+
+
+@appME.route('/management/admin_<int:admin_id>', methods=["POST", "GET"])
+@login_required
+def management(admin_id):
+    admin = User.query.filter(User.campID == admin_id).first()
+    if not admin:
+        flash("The user is not exist.")
+        redirect("/login/")
+    return render_template(
+            "management.html",
+            user=admin,
+            admin_id=admin_id)
+
+
+@appME.route('/helpteacher/')
+#make this view function accepts GET and POST requests
+def helpteacher():
+    return render_template('ReadMeTEA.html',
+                            title=u'机械工程学院素质分管理系统',
+                            )
+@appME.route('/help/')
+#make this view function accepts GET and POST requests
+def help():
+    return render_template('ReadMe.html',
+                            title=u'机械工程学院素质分管理系统',
+                            )
+
+@appME.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
+
+@appME.route('/_management',methods=["POST", "GET"])
+def management_handle():
+    if request.method == 'POST':
+        return makepublic._makepublic()
+    elif request.method == 'GET':
+        if request.args.get('Delete',type=str)=='Delete':
+            itemID=request.args.get('itemID',type=int)
+            Score_items.delete(itemID)
+            return " "
+        elif request.args.get('Delete',type=str)=='DeleteStu':
+            campID=request.args.get('campID',type=str)
+            User.delete(campID)
+            return " "
+        elif request.args.get('Edit',type=str)=='Edit':
+            id=request.args.get('id',type=str)
+            name=request.args.get('edit_name',type=unicode)
+            campID=request.args.get('edit_campID',type=str)
+            grade=request.args.get('edit_grade',type=unicode)
+            # print "id:"+id
+            # print "name:"+name
+            # print "campID:"+campID
+            # print "grade:"+grade
+
+            return User.edit(id,campID,name,grade)
+
+
+        elif request.args.get('Add',type=str)=='Add':
+            name=request.args.get('add_name',type=unicode)
+            campID=request.args.get('add_campID',type=str)
+            grade=request.args.get('add_grade',type=unicode)
+            user=User.get_user(campID)
+            if user:
+                return u"学号重复"
+            else :
+                User.addstudent(campID,name,grade)
+                return u"添加成功"
+
+
+
+
+
+@appME.route('/_import_stu_from_xlsx',methods=["POST", "GET"])
+def import_stu_from_xlsx():
+    filename=request.args.get('excelname',type=unicode)
+    filepath = os.path.join(appME.config['UPLOAD_EXCEL'], filename)#path with filename
+    #检查扩展名
+    # result_dic={}
+    x=ImportFromXls(filepath)
+    if x.isValid():
+        campID_not_unique,num,successful,unknown=x.Read2DB()
+
+        result=u"读取"+str(num)+u"条记录\n------\n"\
+        +u"成功\t\t"+str(successful)+u" 条\n------\n"\
+        +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
+        +u"未知错误\t"+str(unknown)+u" 条\n------"
+
+
+        result_dic={
+        "result":result,
+        "failed_list":[u.campID for u in campID_not_unique]  if len(campID_not_unique) != 0 else None
+        }
+
+        os.remove(filepath)
+        return jsonify(result_dic)
+
+    else:
+        os.remove(filepath)
+        return "the sheet is invalid"
+
+
+
+def save_excel(filestorage,filename):
+    filepath = os.path.join(appME.config['UPLOAD_EXCEL'], filename)#path with filename
+    filestorage.save(filepath)
+
+
+def save_file(filestorage,uuid):
+    "Save a Werkzeug file storage object to the upload folder."
+    filename=str(uuid)+".jpg"
+    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
+    filestorage.save(filepath)
+
+
+def save_files(type,request=request):
+    for _, filestorage in request.files.iteritems():
+        # Workaround: larger uploads cause a dummy file named '<fdopen>'.
+        # See the Flask mailing list for more information.
+        if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
+            if type=="excel":
+                save_excel(filestorage,filestorage.filename)
+            elif type=="pic":
+                UUID=request.form.get("UUID")#FORM NOT ARGES
+                save_file(filestorage,UUID)
+
+
+
+# def checkunique(filename):
+#     if os.path.exists(filename):
+#         return False
+#     else:
+#         return True

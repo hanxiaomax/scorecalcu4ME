@@ -1,16 +1,13 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<title>Modal Login Window Demo</title>
+<link rel="shortcut icon" href="http://designshack.net/favicon.ico">
+<link rel="icon" href="http://designshack.net/favicon.ico">
 
-
-<script>
-var str = "张山&男&浙江宁波--李四&女&湖南长沙--王五&男&浙江杭州--李六&男&山东青岛";
-var infos = str.split("--");
-var html="";
-for(var i=0;i<infos.length;i++){
-    var info=infos[i].split("&");
-    var num = i+1;
-    html+="<tr><td>"+num+"</td><td>"+info[0]+"</td><td>"+info[1]+"</td><td>"+info[2]+"</td><td><input type='button' value='修改' name='"+info[0]+"'/></td></tr>";
-}
-$("#tab").find("tbody").append($(html).find("input").click(function(){
-    alert($(this).attr("name"));
-}));
-</script>
+    <script src="/static/js/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/js/jquery.leanModal.min.js"></script>
+<!-- jQuery plugin leanModal under MIT License http://leanmodal.finelysliced.com.au/ -->
+</head>
 

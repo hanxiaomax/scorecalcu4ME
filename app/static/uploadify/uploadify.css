@@ -1,7 +1,7 @@
 /*
 Uploadify
 Copyright (c) 2012 Reactive Apps, Ronnie Garcia
-Released under the MIT License <http://www.opensource.org/licenses/mit-license.php> 
+Released under the MIT License <http://www.opensource.org/licenses/mit-license.php>
 */
 
 .uploadify {
@@ -58,7 +58,7 @@ Released under the MIT License <http://www.opensource.org/licenses/mit-license.p
 	margin-bottom: 1em;
 }
 .uploadify-queue-item {
-	background-color: #F5F5F5;
+	background-color: #B5DBE8;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;

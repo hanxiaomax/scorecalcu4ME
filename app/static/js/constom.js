@@ -1,9 +1,9 @@
 
 //验证年级输入格式
 jQuery.validator.addMethod("right_format", function(value, element) {
-    var tel = /^20[0-9]{2}[本,硕,博]$/;
+    var tel = /^[本,硕,博]20[0-9]{2}$/;
     return this.optional(element) || (tel.test(value));
-}, "请使用正确的格式，如2013本");
+}, "请使用正确的格式，如本2013");
 
 
 
@@ -14,13 +14,15 @@ jQuery.validator.addMethod("isSixdigit", function(value, element) {
 }, "请输入6位数学号");
 
 
+
+
 //初始化两个datepick，保证后者可选日期不能早于前者
-function InitTimepicker(double) {
+function InitTimepicker(double,pickername) {
   if (double) {
-    $("#datepicker1").datepicker({
+    $("#"+pickername+"1").datepicker({
       onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
         var endDate = $endDate.datepicker('getDate');
 
         if (endDate < startDate) {
@@ -30,10 +32,11 @@ function InitTimepicker(double) {
       }
 
     });
-    $("#datepicker2").datepicker({
+
+    $("#"+pickername+"2").datepicker({
       onSelect: function(startDate) {
-        var $startDate = $("#datepicker1");
-        var $endDate = $('#datepicker2');
+        var $startDate = $("#"+pickername+"1");
+        var $endDate = $("#"+pickername+"2");
         var endDate = $endDate.datepicker('getDate');
         if (endDate < startDate) {
           $endDate.datepicker('setDate', startDate - 3600 * 1000 * 24);
@@ -45,23 +48,16 @@ function InitTimepicker(double) {
   else{
       $( "#datepicker" ).datepicker();
   }
-
 }
-//创建datepicker所需的div
-function makeDatepicker(radio_name,selectedvalue,divname){
-  $("input[name="+radio_name+"]").change(function(){
 
-          var selected = $("input[name="+radio_name+"]:checked").val();//把radiobtn的name命名为Radio，从中选出被checked的
-          if (selected==selectedvalue) {
-              $(divname).append("<input type='text' class='form-control' name='datepicker1' id='datepicker1' placeholder='起始日期'/>");
-              $(divname).append("<input type='text' class='form-control' name='datepicker2' id='datepicker2' placeholder='截止日期'/>");
-              InitTimepicker(true)
-          }
-          else{
-            $(divname).empty()
-          };
-        });
-}
+//在指定的div，创建两个datepicker
+function makeDatepicker(divname,pickername){
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"1"+" id="+pickername+"1"+" placeholder='起始日期'/>");
+    $(divname).append("<input type='text' class='form-control' name="+pickername+"2"+" id="+pickername+"2"+" placeholder='截止日期'/>");
+    InitTimepicker(true,pickername)
+};
+
+
 
 
 $(function() {
@@ -73,8 +69,8 @@ $(function() {
     }); //更新总分
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
       campID: $('input[name="inputcampID"]').val(),
-      starttime:$("#datepicker1").val(),
-      endtime:$("#datepicker2").val(),
+      starttime:$("#pickeB1").val(),
+      endtime:$("#pickeB2").val(),
       searchtype:searchtype
     }, function(data) {
         $("#score_items thead").empty()
@@ -84,7 +80,8 @@ $(function() {
 
       if (data == "无法找到") {
         alert(data)
-      } else {
+      }
+      else {
 
         var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
         $("#student").append(tbody_stu)
@@ -98,16 +95,16 @@ $(function() {
         $.each(data.items, function() {
           if(this.status=="未审核"){
 
-          tbBody += "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+          tbBody = "<tr class='default'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
           }
           else if (this.status=="通过") {
-            tbBody += "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+            tbBody = "<tr class='success'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
 
           }
           else{
-            tbBody += "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
+            tbBody = "<tr class='danger'><td>" + this.id + "</td>" + "<td>" + this.catagory + "</td>" + "<td>" + this.item_name + "</td>" + "<td>" + this.add + "</td>" + "<td>" + this.time + "</td>" + "<td>" + this.applytime + "</td>" + "<td>" + this.status + "</td></tr>";
           $("#score_items").append(tbBody)
           }
 
@@ -116,19 +113,56 @@ $(function() {
       }
     });
     }
+  });
+});
+
+$(function() {
+  $("#OnSearchgrade").bind("click", function() {
+    var searchtype="bygrade"
+    if ($("#searchgradeform").valid()){
+
+    $.get($SCRIPT_ROOT + "/_getStuInfo", {
+      grade:$('input[name="gradeinput"]').val(),
+      starttime:$("#pickeD1").val(),
+      endtime:$("#pickeD2").val(),
+      searchtype:searchtype
+    }, function(data) {
+        $("#students thead").empty()
+        $("#students tbody").empty()
+
+
+      if (data == "无法找到") {
+        alert(data)
+      }
+      else {
+        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
+
+        $("#students").append(thead)
+
+        $.each(data.GradeSumary, function() {
+          var tbBody = ""
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
+          $("#students").append(tbBody)
+        });
+      }
+    });
+    }
 
   });
 });
 
+
+
+//验证按学号搜索
 $().ready(function() {
  $("#searchform").validate(
   {
     rules:{
-          datepicker1: {
+          pickeB1: {
             required:true,
             dateISO:true
           },
-          datepicker2:{
+          pickeB2:{
             required:true,
             dateISO:true
           },
@@ -141,3 +175,76 @@ $().ready(function() {
 
   });
 });
+
+//验证按年级搜索
+$().ready(function() {
+ $("#searchgradeform").validate(
+  {
+    rules: {
+          pickeD1: {
+            required:true,
+            dateISO:true
+          },
+          pickeD2:{
+            required:true,
+            dateISO:true
+          },
+          gradeinput:{
+            required:true,
+            right_format:true,
+          },
+        },
+    wrapper: "p"
+  });
+});
+
+//生成公示列表
+function add_excel_list(role) {
+  $("#exceltable thead").empty()
+  $("#exceltable tbody").empty()
+  $.get($SCRIPT_ROOT + "/_makepublic", {
+      pic: "111"
+    },
+    function(data) {
+      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      $("#exceltable").append(thead)
+      var tbody = ""
+      if (role=="student") {
+        $.each(data.excellist, function() {
+        var tbBody = ""
+          if (this.status=="正在公示") {
+              tbBody += "<tr ><td style='display:none;'>" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.grade + "</td>"+"<td>" + this.time + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载' onclick='view(this)'/></td></tr>";
+          }
+        $("#exceltable").append(tbBody)
+      });
+      }else{
+        $.each(data.excellist, function() {
+        var tbBody = ""
+
+          var btnstyle
+          if (this.status=="正在公示") {
+             btnstyle="btn-success"
+          }
+          else
+          {
+             btnstyle="btn-warning"
+          }
+
+        tbBody = "<tr ><td style='display:none;'>" + this.id + "</td>" + "<td>" + this.Excelname + "</td>"+"<td>" + this.grade + "</td>"+"<td>" + this.time + "</td>" + "<td>" + this.creater_time + "</td>" + "<td>" + this.creater + "</td>" + "<td>" + "<input type='button' class='btn btn-info btn-xs' value='下载' onclick='view(this)'/><span> </span><input type='button' value='删除' class='btn btn-danger btn-xs' onclick='del(this)' /> <span>/</span> <input type='button' value='"+this.status+"' id='ing' class='btn "+btnstyle+" btn-xs' onclick='status(this)' />" + "</td></tr>";
+
+        $("#exceltable").append(tbBody)
+      });
+      }
+
+    });
+}
+//uuid生成器
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};

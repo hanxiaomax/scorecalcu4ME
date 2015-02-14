@@ -101,8 +101,13 @@
           <li><a href={{url_for('admins_search',admin_id=admin_id)}}><span class="glyphicon glyphicon glyphicon-search"></span> 素质分查询</a></li>
           <li><a href={{url_for('admins_publicity',admin_id=admin_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+          <li><a href={{url_for('management',admin_id=admin_id)}} ><span class="glyphicon glyphicon-cog"></span> 后台管理</a>
+
+
+
         </ul>
         <ul class="nav nav-sidebar">
+          <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
           <li><a href={{url_for('logout')}}>退出</a></li>
         </ul>
       </div>
@@ -115,18 +120,16 @@
 
             <div class="container-fluid">
                 <div class="row">
-                  <div class="col-md-8">
-                  <div class="panel panel-primary">
-                    <div class="panel-heading">
-                      <h3 class="panel-title">待审核申请</h3>
-                    </div>
-                    <div class="panel-body">
+                  <div class="col-md-10">
+
+
+
 
                       <table class="flexme3" style="display: none"></table>
 
 
-                    </div>
-                  </div>
+
+
 
                   </div>
                 </div>
@@ -171,7 +174,6 @@ $(".flexme3").flexigrid({
                     name : 'uuid',
                     width : 50,
                     sortable : false,
-                    hide: false,
                     align : 'center',
                     hide : true
                     },{
@@ -179,22 +181,21 @@ $(".flexme3").flexigrid({
                     name : 'id',
                     width : 50,
                     sortable : false,
-                    hide: false,
+                    hide: true,
                     align : 'center',
-                    hide : false
                     },
 
                     {
                     display : '申请人',
                     name : 'name',
-                    width : 80,
+                    width : 60,
                     sortable : false,
                     align : 'center'
                     },
                     {
                     display : '所属类别',
                     name : 'catagory',
-                    width : 80,
+                    width : 60,
                     sortable : false,
                     align : 'center'
                     }, {
@@ -212,21 +213,21 @@ $(".flexme3").flexigrid({
                     }, {
                         display : '获奖时间',
                         name : 'time',
-                        width : 130,
+                        width : 170,
                         sortable : true,
                         align : 'center',
                         hide : false
                     }, {
                         display : '申请时间',
                         name : 'applytime',
-                        width : 100,
+                        width : 160,
                         sortable : true,
                         align : 'center'
                 },
                 {
                         display : '相关证明',
                         name : 'certification',
-                        width : 80,
+                        width : 60,
                         sortable : false,
                         align : 'left'
                 },
@@ -265,7 +266,7 @@ $(".flexme3").flexigrid({
                 useRp : true,
                 rp : 15,
                 showTableToggleBtn : false,
-                width : 750,
+                width : 770,
                 height : 500
             });
               function Control(com, grid) {
@@ -308,15 +309,36 @@ $(".flexme3").flexigrid({
                             }
                       }
                       else if (com == "查看证明"){
-                          if ($('.trSelected', grid).length>1) {
+
+                        var grid_count=$('.trSelected', grid).length
+
+                          if (grid_count>1) {
                             alert("请选择单一条目")
                           }
+                          else if (grid_count==0)
+                          {
+                            alert("未选中任何条目")
+                          }
                           else{
-                            $.each($('.trSelected', grid),
-                              function(key, value){
+                            $.each($('.trSelected', grid),function(key, value){
+                              if(value.children[8].innerText=="无")
+                              {
+                                alert("没有上传图片");
+                              }
+                              else{
+                                $.each($('.trSelected', grid),
+                                function(key, value){
                                 var uuid=value.firstChild.innerText
                                 window.open("/uploads/"+uuid+".jpg")
-                            })
+                              });
+                            }
+                           });
+
+
+
+
+
+
                           }
                       }
                 }

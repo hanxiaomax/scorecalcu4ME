@@ -53,45 +53,7 @@ class User(db.Model):
             return None
         return user
 
-    # @classmethod
-    # def userInfo(cls,campID,is_jsonify=True,brief=False):
-    #     "get all the infomation about user return as a dict"
-    #     userInfoDict={}
-    #     user = cls.get_user(campID)
 
-    #     try:
-    #         if user:
-    #             _name = user.name
-    #             _campID = user.campID
-    #             _grade = user.grade
-    #             _score = user.score
-    #             if brief:
-    #                 userInfoDict={
-    #                  "name" : user.name,
-    #                 "campID" : user.campID,
-    #                 "grade" : user.grade,
-    #                 "sum" : user.score,
-    #                 }
-    #                 if is_jsonify:
-    #                     return  jsonify(userInfoDict)
-    #                 else:
-    #                     return userInfoDict
-    #             else:
-    #                 userInfoDict={
-    #                  "name" : user.name,
-    #                 "campID" : user.campID,
-    #                 "grade" : user.grade,
-    #                 "sum" : user.score,
-    #                 "items":cls.scoreInfo4SomeOne(campID,is_jsonify=False)["items"]
-    #                 }
-    #                 if is_jsonify:
-    #                     return  jsonify(userInfoDict)
-    #                 else:
-    #                     return userInfoDict
-    #         else:
-    #             return "无法找到"
-    #     except:
-    #         return "无法找到"
 
     @classmethod
     def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
@@ -128,13 +90,21 @@ class User(db.Model):
                 "name":item.student.name,
                 "item_name": item.item_name,
                 "add": item.add,
-                "time": item.time,
+                "time": cls._setTime(item.time_st,item.time_ed),
                 "applytime": item.applytime,
                 "status":cls._getStatus(item),
                 "certification": cls._isUploaded(item),
                 "uuid":item.uuid
         }
         return data
+
+    @classmethod
+    def _setTime(self,time_start,time_end):
+        if time_start == time_end:
+            return time_start
+        else:
+            return time_start+u"至"+time_end
+
 
     @classmethod
     def _isUploaded(cls,item):
@@ -152,14 +122,45 @@ class User(db.Model):
         else:
             return u"驳回"
 
+    @classmethod
+    def addstudent(cls,campID,name,grade):
 
+        u=User(campID=campID,
+                    name=name,
+                    grade=grade,
+                    password=campID,
+                    role=0,score=0.0)
+        db.session.add(u)
+        db.session.commit()
+
+    @classmethod
+    def delete(cls,campID):
+        u=cls.query.filter(campID==cls.campID).first()
+        db.session.delete(u)
+        db.session.commit()
+
+
+    @classmethod
+    def edit(cls,id,campID,name,grade):
+
+        u=cls.query.filter(id==cls.id).first()
+        if User.get_user(campID):
+            return u"该学号已经存在"
+        else:
+            # print u
+            u.name=name
+            u.campID=campID
+            u.grade=grade
+            db.session.commit()
+            return u"修改成功"
 
 
 class Score_items(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
-    time = db.Column(db.String(140))
+    time_st = db.Column(db.String(30))
+    time_ed = db.Column(db.String(30))
     add=db.Column(db.Float)
     applytime=db.Column(db.String(30))#need to save a formated string
     status= db.Column(db.SmallInteger, default = STATUS_UNKNOWN)
@@ -171,6 +172,11 @@ class Score_items(db.Model):
     def __repr__(self):
         return '<Score %r>' % (self.id)
 
+    @classmethod
+    def delete(cls,id):
+        s=cls.query.filter(id==cls.id).first()
+        db.session.delete(s)
+        db.session.commit()
 
 class Excelmap(db.Model):
     """docstring for excelmap"""
@@ -183,6 +189,7 @@ class Excelmap(db.Model):
     creater_time=db.Column(db.DateTime)
     filepath=db.Column(db.String(140))
     status=db.Column(db.SmallInteger)
+    grade= db.Column(db.String(64),index = True)
 
     def __repr__(self):
         return '<Excelmap %r>' % (self.id)
@@ -202,11 +209,11 @@ class Excelmap(db.Model):
                         "id":item.id,
                         "Excelname": item.Excelname,
                         "creater":item.creater,
-                        "start_time": item.start_time,
-                        "end_time": item.end_time,
+                        "time":item.start_time+u"至"+item.end_time,
                         "creater_time": item.creater_time,
                         "filepath": item.filepath,
-                        "status":_status
+                        "status":_status,
+                        "grade":item.grade
                 }
 
             excellist["excellist"].append(data)
@@ -219,3 +226,31 @@ class Excelmap(db.Model):
         os.remove(e.filepath)
         db.session.delete(e)
         db.session.commit()
+
+
+class Grade(db.Model):
+    """docstring for grade"""
+    id = db.Column(db.Integer, primary_key = True)
+    grade_name = db.Column(db.String(20))
+
+
+    @classmethod
+    def add(cls,new_grade):
+        _g=Grade(grade_name=new_grade)
+
+        db.session.add(_g)
+        db.session.commit()
+
+    @classmethod
+    def remove(cls,grade_name):
+        _g=cls.query.filter(grade_name==grade_name).first()
+        db.session.delete(_g)
+        db.session.commit()
+
+    @classmethod
+    def get_grades(cls):
+        grades_name=[]
+        for grade in cls.query.all():
+            grades_name.append(grade.grade_name)
+        return grades_name
+

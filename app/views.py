@@ -4,7 +4,7 @@ from flask import (render_template,flash,redirect,session,url_for,request,reques
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
 #模型
-from models import User,Score_items, ROLE_USER, ROLE_ADMIN,Excelmap
+from models import User,Score_items,Grade,Excelmap, ROLE_USER, ROLE_ADMIN
 #登陆模块
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic,__ExcelDir__
@@ -16,6 +16,7 @@ from makeExcel import ImportFromXls
 import os
 import json
 import uuid
+import sqlalchemy.exc
 basedir=os.path.abspath(os.path.dirname(__file__))
 
 
@@ -305,6 +306,7 @@ def import_stu_from_xlsx():
         "result":result,
         "failed_list":[u.campID for u in campID_not_unique]  if len(campID_not_unique) != 0 else None
         }
+
         #如果有错误的campID，则收集它们，否则设置为None
 
         os.remove(filepath)#使用完成后删除excel文件
@@ -370,6 +372,24 @@ def _getreview():
         return getreview._accpet()
     else:
         return getreview._getreview()
+
+#管理年级信息
+@appME.route('/_grade_management',methods=["POST", "GET"])
+def _grade_management():
+    action=request.args.get('action',type=str)
+    if action=="add_grade":
+        grade=request.args.get('grade',type=unicode)
+        g=Grade(grade_name=grade)
+        try:
+            db.session.add(g)
+            db.session.commit()
+            return u"添加成功"
+        except sqlalchemy.exc.IntegrityError, e:
+            db.session.rollback()#此处必须rollback()
+            return u"该年级已经存在"
+        except:
+            return u"发生未知错误"
+
 
 #获取图片
 @appME.route('/uploads/<filename>')

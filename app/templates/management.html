@@ -275,7 +275,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <input type="text" class="form-control" id="add_grade " name="add_grade">
                           </div>
                           <br/>
-                          <button type="submit" class="btn btn-primary btn-block" onclick='addnewuser()'>添加</button>
+                          <button type="submit" class="btn btn-primary btn-block" onclick='return addnewuser()'>添加</button>
                         </form>
 
 
@@ -302,7 +302,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                           </div>
 
-                          <button id="Massadd-btn" type="submit" class="btn btn-primary btn-block" disabled="true" onclick='onmassadd()'>添加</button>
+                          <button id="Massadd-btn" type="submit" class="btn btn-primary btn-block" disabled="true" onclick='return onmassadd()'>添加</button>
                         </div>
 
 
@@ -328,7 +328,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <input type="text" class="form-control" id="edit_grade " name="edit_grade">
                           </div>
                           <br/>
-                        <button type="submit" class="btn btn-warning btn-block " onclick='submitedit()'>修改</button>
+                        <button type="submit" class="btn btn-warning btn-block " onclick='return submitedit()'>修改</button>
 
 
                         </form>
@@ -512,24 +512,21 @@ $(function() {
 
 //添加年级按钮
 $(function() {
-
   $("#OnAddGrade").bind("click", function() {
-
-
     if ($("#grade_manage_form").valid()){
 
-    $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      grade:$('input[name="gradeinput"]').val(),
-      starttime:$("#pickeD1").val(),
-      endtime:$("#pickeD2").val(),
-      searchtype:searchtype
+    $.get($SCRIPT_ROOT + "/_grade_management", {
+      grade:$('input[name="addgradeinput"]').val(),
+      action:"add_grade",
     }, function(data) {
-        $("#students thead").empty()
-        $("#students tbody").empty()
+        alert(data)
+        $("#massadd").trigger('close');
+        return false
     });
     }
-
+    return false
   });
+  return false
 });
 
 
@@ -698,8 +695,11 @@ function addnewuser() {
 
     }, function(result){
       alert(result)
+      return false
     });
+     return false
   }
+  return false
 }
 //点击从excel导入数据
 function onmassadd() {
@@ -709,11 +709,15 @@ if ($("#add").valid()){
     }, function(data){
       $("#Massadd-btn").attr('disabled',false);
       alert(data.result)
-      if (len(data.failed_list)!=None) {
+
+      if (data.failed_list!=undefined) {
         alert("以下学号重复："+data.failed_list)
+        return false
       };
+      return false
     });
   }
+  return false
 }
 
 //验证按学号搜索

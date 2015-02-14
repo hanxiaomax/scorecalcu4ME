@@ -520,7 +520,7 @@ $(function() {
       action:"add_grade",
     }, function(data) {
         alert(data)
-        $("#massadd").trigger('close');
+
         return false
     });
     }
@@ -695,6 +695,7 @@ function addnewuser() {
 
     }, function(result){
       alert(result)
+      $('#add').trigger('close');
       return false
     });
      return false
@@ -703,7 +704,7 @@ function addnewuser() {
 }
 //点击从excel导入数据
 function onmassadd() {
-if ($("#add").valid()){
+
      $.get($SCRIPT_ROOT + "/_import_stu_from_xlsx", {
       excelname:upload_xls,
     }, function(data){
@@ -712,11 +713,11 @@ if ($("#add").valid()){
 
       if (data.failed_list!=undefined) {
         alert("以下学号重复："+data.failed_list)
+        $('#massadd').trigger('close');//对已经light_me()的元素调用.trigger('close')来关闭模态窗口
         return false
       };
       return false
     });
-  }
   return false
 }
 

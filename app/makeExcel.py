@@ -1,8 +1,11 @@
 #coding:utf-8
 from xlwt import Workbook, easyxf
-from app import db,appME,__StaticDir__
+from xlrd import open_workbook
+from app import db,appME,__StaticDir__,__Add_info__
 from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 from SearchEngine import Engine,TimeManager
+import re
+import sqlalchemy.exc
 #TODO:单元格长度
 class MakeExcel(object):
     def __init__(self,excelinfo=None):
@@ -94,14 +97,87 @@ class MakeExcel(object):
         else:
             return False #没有任何条目
 
+#后缀
+class ImportFromXls(object):
+    """处理用以导入学生信息的Excel"""
+    def __init__(self,filename):
+        self.wb=open_workbook(filename)
+        self.sheet=self.wb.sheet_by_index(0)
+        self.first_col=[u'姓名',u'学号',u'年级']
+
+
+    """"检查excel格式的合法性"""
+    def isValid(self):
+        for index,col in enumerate(self.sheet.row(0)):
+            # print col.value,self.first_col[index]
+            if col.value != self.first_col[index]:
+                # print "false"
+                return False
+        return True
+
+
+    def Read2DB(self):
+        campID_not_unique=[]
+        unknown=successful=num=0
+        for row in range(1,self.sheet.nrows):
+            stu=[col.value for col in self.sheet.row(row)]
+            u=User(name=stu[0],
+                campID=str(int(stu[1])),
+                grade=stu[2],
+                password=str(int(stu[1])),
+                role=0,score=0.0
+                )
+            num+=1
+            try:
+                db.session.add(u)
+                db.session.flush()
+                successful+=1
+            except sqlalchemy.exc.IntegrityError :#捕获异常：学号不唯一
+                db.session.rollback()#此处必须rollback()
+                campID_not_unique.append(u)
+
+            except :
+                unknown+=1
+                print "unknow error"
+
+
+
+        try:
+            db.session.commit()
+        except:
+            print "unknow error"
+        return campID_not_unique,num,successful,unknown
+
+
+
+
 
 
 
 
 if __name__ == '__main__':
-    maker=MakeExcel()
-    maker._writerow(10,maker._getinfobuf("130280"))
-    maker.saveAs(__StaticDir__+"/1.xls")
+    # maker=MakeExcel()
+    # maker._writerow(10,maker._getinfobuf("130280"))
+    # maker.saveAs(__StaticDir__+"/1.xls")
+    x=ImportFromXls(__Add_info__+"1.xlsx")
+    if x.isValid():
+        campID_not_unique,num,successful,unknown=x.Read2DB()
+
+        result=u"读取"+str(num)+u"条记录\n------\n"\
+        +u"成功\t\t"+str(successful)+u" 条\n------\n"\
+        +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
+        +u"未知错误\t"+str(unknown)+u" 条\n------"
+
+        print result
+        if len(campID_not_unique) != 0 :
+            print u"失败条目的学号为：" ,
+            print [u.campID for u in campID_not_unique]
+
+    else:
+        print "the sheet is invalid"
+
+
+
 
 
 

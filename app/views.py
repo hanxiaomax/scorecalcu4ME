@@ -11,6 +11,7 @@ import os
 import json
 import uuid
 from SearchEngine import Engine
+from makeExcel import ImportFromXls
 basedir=os.path.abspath(os.path.dirname(__file__))
 
 @lm.user_loader
@@ -195,6 +196,7 @@ def exceluploader():
 
 
 
+
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     engine=Engine()
@@ -352,9 +354,10 @@ def management_handle():
 @appME.route('/_import_stu_from_xlsx',methods=["POST", "GET"])
 def import_stu_from_xlsx():
     filename=request.args.get('excelname',type=unicode)
-
+    filepath = os.path.join(appME.config['UPLOAD_EXCEL'], filename)#path with filename
     #检查扩展名
-    x=ImportFromXls(__Add_info__+filename)
+    # result_dic={}
+    x=ImportFromXls(filepath)
     if x.isValid():
         campID_not_unique,num,successful,unknown=x.Read2DB()
 
@@ -363,12 +366,17 @@ def import_stu_from_xlsx():
         +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
         +u"未知错误\t"+str(unknown)+u" 条\n------"
 
-        print result
-        if len(campID_not_unique) != 0 :
-            return [u.campID for u in campID_not_unique]
+
+        result_dic={
+        "result":result,
+        "failed_list":[u.campID for u in campID_not_unique]  if len(campID_not_unique) != 0 else None
+        }
+
+        os.remove(filepath)
+        return jsonify(result_dic)
 
     else:
-
+        os.remove(filepath)
         return "the sheet is invalid"
 
 
@@ -377,9 +385,9 @@ def save_excel(filestorage,filename):
     filepath = os.path.join(appME.config['UPLOAD_EXCEL'], filename)#path with filename
     filestorage.save(filepath)
 
+
 def save_file(filestorage,uuid):
     "Save a Werkzeug file storage object to the upload folder."
-    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
     filename=str(uuid)+".jpg"
     filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
     filestorage.save(filepath)
@@ -395,3 +403,11 @@ def save_files(type,request=request):
             elif type=="pic":
                 UUID=request.form.get("UUID")#FORM NOT ARGES
                 save_file(filestorage,UUID)
+
+
+
+# def checkunique(filename):
+#     if os.path.exists(filename):
+#         return False
+#     else:
+#         return True

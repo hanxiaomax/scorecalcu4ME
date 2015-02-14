@@ -106,7 +106,17 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
   display: none;
   border-width: 1px;border-style: solid;-moz-border-radius: 11px;-khtml-border-radius: 11px;-webkit-border-radius: 11px;border-radius: 11px;padding:50px;
 }
+.row-model{
+  margin-top: 20px;
+  width: 350px;
+}
+.title{
+  margin-top: -21px;
 
+}
+.result{
+
+}
 </style>
 <div class="container-fluid">
   <div class="row">
@@ -264,26 +274,44 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <input type="text" class="form-control" id="add_grade " name="add_grade">
                           </div>
                           <br/>
-                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
+                          <button type="submit" class="btn btn-primary btn-block" onclick='addnewuser()'>添加</button>
                         </form>
 
-                        <form role="form" class="pop_panel" id="massadd">
-                        <p class="text-center">通过excel批量添加</p>
 
-                          <input id="file_upload" name="file_upload" type="file" />
-                          <p style="font-size:10px;">xlsx格式
-                          <hr/>
-                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
-                        </form>
                       </div>
 
+                    <div class="col-md-4">
+
+                      <form role="form" class="pop_panel" id="massadd">
+                        <div class="title">
+                          <p class="text-center">批量添加学生信息</p>
+                        </div>
+
+                        <div style="color: #000000;margin-top: 20px; margin-bottom: 20px; border: 0; border-top: 1px solid #0A0707;"></div>
+
+                        <div class="row-model">
+                          <label for="file_upload" class="col-md-5 control-label">上传excel文件</label>
+                          <div class="col-md-7" style="margin-top: -5px;" >
+                           <input id="file_upload" name="file_upload" type="file" />
+                          </div>
+
+                          <br/>
+                           <div style="color: #000000;margin-top: 60px; margin-bottom: 20px; border: 0; border-top: 1px solid #EEEEEE;"></div>
+                          <div class="result" id="showResult">
+
+                          </div>
+
+                          <button id="Massadd-btn" type="submit" class="btn btn-primary btn-block" disabled="true" onclick='onmassadd()'>添加</button>
+                        </div>
 
 
+                        </form>
 
+                    </div>
 
-                      <div class="col-md-4 " >
+                      <div class="col-md-4 "  >
 
-                        <form role="form" class="pop_panel" id="edit_panel">
+                        <form role="form" class="pop_panel row-model" id="edit_panel">
                         <p class="text-center" id='edit_title'></p>
 
                           <div class="form-group">
@@ -303,6 +331,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
 
                         </form>
+
                       </div>
                     </div>
 
@@ -455,7 +484,7 @@ $(function() {
 
 
 
-
+var upload_xls=""
 
 $(function() {
   var searchtype="bycampID"
@@ -562,7 +591,7 @@ $('#massaddtrigger').click(function(e) {
     e.preventDefault();
 });
 
-
+/////////////////////
 
 
 function edit(obj) {
@@ -621,10 +650,25 @@ function addnewuser() {
       alert(result)
     });
   }
-
 }
 
+function onmassadd() {
+if ($("#add").valid()){
+     $.get($SCRIPT_ROOT + "/_import_stu_from_xlsx", {
+      excelname:upload_xls,
+    }, function(data){
+      $("#Massadd-btn").attr('disabled',false);
+      alert(data.result)
+      if (len(data.failed_list)!=None) {
+        alert("以下学号重复："+data.failed_list)
+      };
 
+
+    });
+
+  }
+
+}
 
 //验证按学号搜索
 $().ready(function() {
@@ -710,6 +754,9 @@ $().ready(function() {
     wrapper: "p"
   });
 });
+
+
+//上传控件
  $(document).ready(function() {
 
       $('#file_upload').uploadify({
@@ -721,7 +768,7 @@ $().ready(function() {
         'fileTypeDesc' : 'Excel Files',
         'fileTypeExts' : '*.xlsx;',
         'multi': false,
-        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+        'removeCompleted': true, // Could set to true, then list completed uploads onComplete
         'onSelect' : function(file) {
             var filename=file.name;
         },
@@ -729,8 +776,13 @@ $().ready(function() {
             $('#upload_link').hide();
         },
       'onUploadStart': function (file) {
+
       },
       'onUploadSuccess' : function(file, data, response) {
+        alert("上传成功，请点击添加按钮")
+        upload_xls=file.name
+        $("#Massadd-btn").attr('disabled',false);
+
 
       }
       });

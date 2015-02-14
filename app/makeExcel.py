@@ -171,8 +171,8 @@ if __name__ == '__main__':
         print result
         if len(campID_not_unique) != 0 :
             print u"失败条目的学号为：" ,
-            print [u.campID for u in campID_not_unique]
-
+            l=[u.campID for u in campID_not_unique]
+            print l
     else:
         print "the sheet is invalid"
 

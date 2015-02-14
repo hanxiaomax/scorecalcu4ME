@@ -49,6 +49,8 @@ function InitTimepicker(double,pickername) {
       $( "#datepicker" ).datepicker();
   }
 }
+
+//在指定的div，创建两个datepicker
 function makeDatepicker(divname,pickername){
     $(divname).append("<input type='text' class='form-control' name="+pickername+"1"+" id="+pickername+"1"+" placeholder='起始日期'/>");
     $(divname).append("<input type='text' class='form-control' name="+pickername+"2"+" id="+pickername+"2"+" placeholder='截止日期'/>");
@@ -196,7 +198,7 @@ $().ready(function() {
   });
 });
 
-
+//生成公示列表
 function add_excel_list(role) {
   $("#exceltable thead").empty()
   $("#exceltable tbody").empty()
@@ -236,3 +238,13 @@ function add_excel_list(role) {
 
     });
 }
+//uuid生成器
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};

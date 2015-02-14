@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
 <script type="text/javascript" src="/static/js/jquery.lightbox_me.js"></script>
+<link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+
   <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
@@ -201,6 +203,8 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
             <div class="panel panel-primary" >
               <div class="panel-heading">搜索<span> </span>
                 <button type="submit" id="addtrigger" class="btn-xs btn-default">添加学生信息</button>
+                <button type="submit" id="massaddtrigger" class="btn-xs btn-default">批量添加学生信息</button>
+
               </div>
 
               <div class="panel-body">
@@ -212,7 +216,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <div class="form-group">
                               <label for="gradelist" class="col-md-2 control-label">年级</label>
                               <div class="col-md-6">
-                                <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="2013硕">
+                                <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="硕2013">
                                 <span class="help-block">格式：年份(本硕博)</span>
                               </div>
 
@@ -262,7 +266,20 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                           <br/>
                           <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
                         </form>
+
+                        <form role="form" class="pop_panel" id="massadd">
+                        <p class="text-center">批量添加</p>
+                          <label class="control-label">上传excel文件</label>
+                          <input id="file_upload" name="file_upload" type="file" />
+                          <p style="font-size:10px;">xlsx格式
+                          <br/>
+                          <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
+                        </form>
                       </div>
+
+
+
+
 
                       <div class="col-md-4 " >
 
@@ -524,7 +541,7 @@ function delstu(obj) {
     });
     };
 }
-
+//模态窗口
 $('#addtrigger').click(function(e) {
     $('#add').lightbox_me({
         overlayCSS:{background: 'gray', opacity: .6},
@@ -534,6 +551,18 @@ $('#addtrigger').click(function(e) {
         });
     e.preventDefault();
 });
+
+$('#massaddtrigger').click(function(e) {
+    $('#massadd').lightbox_me({
+        overlayCSS:{background: 'gray', opacity: .6},
+        centered: true,
+        onLoad: function() {
+            }
+        });
+    e.preventDefault();
+});
+
+
 
 
 function edit(obj) {
@@ -681,7 +710,38 @@ $().ready(function() {
     wrapper: "p"
   });
 });
+ $(document).ready(function() {
+
+      $('#file_upload').uploadify({
+        'swf': '/static/uploadify/uploadify.swf',
+        'uploader': $SCRIPT_ROOT+'/_uploader',
+        'auto': true,
+        'buttonText' : '浏览...',
+        'fileObjName' : 'the_files',
+        'fileTypeDesc' : 'Image Files',
+        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
+        'fileSizeLimit' : '2048KB',
+        'formData'      : {'UUID' : UUID},
+        'multi': true,
+        'queueSizeLimit': 5,
+        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+        'onSelect' : function(file) {
+            var filename=file.name;
+
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+
+        },
+      'onUploadStart': function (file) {
+      },
+      'onUploadSuccess' : function(file, data, response) {
+           pic="true"
+        }
+      });
+    });
 </script>
+
 {% endblock %}
 
 

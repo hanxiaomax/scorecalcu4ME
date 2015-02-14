@@ -350,6 +350,27 @@ def management_handle():
 
 
 
+@appME.route('/_import_stu_from_xlsx',methods=["POST", "GET"])
+def import_stu_from_xlsx():
+    filename=request.args.get('excelname',type=unicode)
+
+    #检查扩展名
+    x=ImportFromXls(__Add_info__+filename)
+    if x.isValid():
+        campID_not_unique,num,successful,unknown=x.Read2DB()
+
+        result=u"读取"+str(num)+u"条记录\n------\n"\
+        +u"成功\t\t"+str(successful)+u" 条\n------\n"\
+        +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
+        +u"未知错误\t"+str(unknown)+u" 条\n------"
+
+        print result
+        if len(campID_not_unique) != 0 :
+            return [u.campID for u in campID_not_unique]
+
+    else:
+
+        return "the sheet is invalid"
 
 
 

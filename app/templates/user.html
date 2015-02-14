@@ -2,6 +2,7 @@
 {% block content %}
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/constom.js"></script>
+
 <style type="text/css">
   /*
   * Base structure
@@ -230,189 +231,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
 
 <script type="text/javascript">
-
-
-
-
-
-InitTimepicker(true)
-
-
-function generateUUID(){
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-};
-
-var UUID=generateUUID()
-
-var pic="false"
- $(document).ready(function() {
-
-      $('#file_upload').uploadify({
-        'swf': '/static/uploadify/uploadify.swf',
-        'uploader': $SCRIPT_ROOT+'/_uploader',
-        'auto': true,
-        'buttonText' : '浏览...',
-        'fileObjName' : 'the_files',
-        'fileTypeDesc' : 'Image Files',
-        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
-        'fileSizeLimit' : '2048KB',
-        'formData'      : {'UUID' : UUID},
-        'multi': true,
-        'queueSizeLimit': 5,
-        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
-        'onSelect' : function(file) {
-            var filename=file.name;
-
-        },
-      'onAllComplete': function(event, data) {
-            $('#upload_link').hide();
-
-        },
-      'onUploadStart': function (file) {
-      },
-      'onUploadSuccess' : function(file, data, response) {
-           pic="true"
-        }
-      });
-    });
-
-
-$(function(){
-  $.get($SCRIPT_ROOT+"/_getMyScore",
-    {
-      campID:{{user.campID}},
-    },function(data){
-      $("#totalscore").html("总分："+data+"分");
-    })
-
-})
-
-var setTime=function(){
-  var start_time=$( "#datepicker1" ).val();
-  var end_time=$( "#datepicker2" ).val();
-  var point_time=$( "#datepicker" ).val();
-    if (point_time!=undefined)
-    {
-      return [point_time,point_time]
-    }
-    else{
-      var time_st = $( "#datepicker1" ).val()
-      var time_ed = $( "#datepicker2" ).val()
-      // alert(timeArray)
-      return [time_st,time_ed]
-    };
- };
-
-
-$().ready(function() {
- $("#mainform").validate(
-  {
-    rules: {
-          apply: "required",
-          datepicker1: {
-            required:true,
-            dateISO:true
-          },
-          datepicker2:{
-            required:true,
-            dateISO:true
-          },
-          datepicker: {
-            required:true,
-            dateISO:true
-          },
-
-        },
-    wrapper: "p"
-
-  });
-});
-
-$(function () {
-
-
-    $('#submitbtn').bind('click', function () {
-      if ($("#mainform").valid()) {//如果全部通过则返回true
-          timearray=setTime()
-          $.get($SCRIPT_ROOT+"/_sublimtApply",
-          {
-            catagory:$("input[name='group']:checked").val(),
-            name:$("#apply option:selected").text(),
-            campID:{{user.campID}},
-            time_st:timearray[0],
-            time_ed:timearray[1],
-            UUID:UUID,
-            pic:pic//是否上传了图片
-          },
-          function(){
-            //var success_confirm=confirm("提交成功")
-            alert("提交成功")
-            window.location.reload()
-            // $('.error').hide();
-            UUID=generateUUID()//提交成功后生成新的UUID
-          });
-        return false //Refresh whole page to make upload files disappear
-      }
-      else{
-          // $('.error').show();
-          return false//不跳转
-      }
-
-
-
-    });
-
-});
-
-
-
-$(function(){
-        $("input:radio").change(function(){
-          var selectedvalue = $("input[name='group']:checked").val();
-          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
-          $.ajax({
-                  type: "get",
-                  url:'/static/select.json',
-                  cache: false,//必须为false，否则同样会从缓存中加载
-                  dataType : "json",
-                  success: function(data){
-                    $("#apply").empty();
-                            $.each(data,function() {
-                              if (this.catagory==selectedvalue)
-                              {
-                                $("#timepickerdiv").empty();
-                                //根据素质分类别来生成时间栏
-                                if (this.catagory=="个人荣誉"||this.catagory=="集体荣誉"||this.catagory=="集体活动"||this.catagory=="其他")
-                                  {
-                                        $("#timepickerdiv").append("<label class='control-label'  id='timepicker'>获奖时间</label><hr>");
-                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' class='form-control' name='datepicker'  id='datepicker'/></p>");
-                                        InitTimepicker(false)
-
-                                  }
-                                  else{
-                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
-                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' class='form-control' name='datepicker1' id='datepicker1'/></p>");
-                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' class='form-control' name='datepicker2' id='datepicker2'/></p>");
-                                       InitTimepicker(true)
-
-                                  }
-                                  $.each(this.subcatagory, function() {
-                                  $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
-
-                                  });
-                              };
-                   });
-                 }
-    });
-  });
-});
-
+//表格控件
 $(".flexme3").flexigrid({
                 url :$SCRIPT_ROOT+"/_getMyScore",
                 method: 'GET',//should be GET
@@ -531,6 +350,174 @@ $(".flexme3").flexigrid({
                         });
                     }
                 };
+
+
+
+
+makeDatepicker("timepickerdiv","datepicker")
+var UUID=generateUUID()
+var pic="false"
+
+
+//上传控件
+ $(document).ready(function() {
+
+      $('#file_upload').uploadify({
+        'swf': '/static/uploadify/uploadify.swf',
+        'uploader': $SCRIPT_ROOT+'/_uploader',
+        'auto': true,
+        'buttonText' : '浏览...',
+        'fileObjName' : 'the_files',
+        'fileTypeDesc' : 'Image Files',
+        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
+        'fileSizeLimit' : '2048KB',
+        'formData'      : {'UUID' : UUID},
+        'multi': true,
+        'queueSizeLimit': 5,
+        'removeCompleted': false, // Could set to true, then list completed uploads onComplete
+        'onSelect' : function(file) {
+            var filename=file.name;
+
+        },
+      'onAllComplete': function(event, data) {
+            $('#upload_link').hide();
+
+        },
+      'onUploadStart': function (file) {
+      },
+      'onUploadSuccess' : function(file, data, response) {
+           pic="true"
+        }
+      });
+    });
+
+//更新总分
+$(function(){
+  $.get($SCRIPT_ROOT+"/_getMyScore",
+    {
+      campID:{{user.campID}},
+    },function(data){
+      $("#totalscore").html("总分："+data+"分");
+    })
+
+})
+
+var setTime=function(){
+  var start_time=$( "#datepicker1" ).val();
+  var end_time=$( "#datepicker2" ).val();
+  var point_time=$( "#datepicker" ).val();
+    if (point_time!=undefined)
+    {
+      return [point_time,point_time]
+    }
+    else{
+      var time_st = $( "#datepicker1" ).val()
+      var time_ed = $( "#datepicker2" ).val()
+      // alert(timeArray)
+      return [time_st,time_ed]
+    };
+ };
+
+
+$().ready(function() {
+ $("#mainform").validate(
+  {
+    rules: {
+          apply: "required",
+          datepicker1: {
+            required:true,
+            dateISO:true
+          },
+          datepicker2:{
+            required:true,
+            dateISO:true
+          },
+          datepicker: {
+            required:true,
+            dateISO:true
+          },
+
+        },
+    wrapper: "p"
+
+  });
+});
+
+
+//提交按钮
+$(function () {
+    $('#submitbtn').bind('click', function () {
+      if ($("#mainform").valid()) {//如果全部通过则返回true
+          timearray=setTime()
+          $.get($SCRIPT_ROOT+"/_sublimtApply",
+          {
+            catagory:$("input[name='group']:checked").val(),
+            name:$("#apply option:selected").text(),
+            campID:{{user.campID}},
+            time_st:timearray[0],
+            time_ed:timearray[1],
+            UUID:UUID,
+            pic:pic//是否上传了图片
+          },
+          function(){
+            //var success_confirm=confirm("提交成功")
+            alert("提交成功")
+            window.location.reload()
+            // $('.error').hide();
+            UUID=generateUUID()//提交成功后生成新的UUID
+          });
+        return false //Refresh whole page to make upload files disappear
+      }
+      else{
+          // $('.error').show();
+          return false//不跳转
+      }
+    });
+});
+
+
+//动态生成选项卡
+$(function(){
+        $("input:radio").change(function(){
+          var selectedvalue = $("input[name='group']:checked").val();
+          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
+          $.ajax({
+                  type: "get",
+                  url:'/static/select.json',
+                  cache: false,//必须为false，否则同样会从缓存中加载
+                  dataType : "json",
+                  success: function(data){
+                    $("#apply").empty();
+                            $.each(data,function() {
+                              if (this.catagory==selectedvalue)
+                              {
+                                $("#timepickerdiv").empty();
+                                //根据素质分类别来生成时间栏
+                                if (this.catagory=="个人荣誉"||this.catagory=="集体荣誉"||this.catagory=="集体活动"||this.catagory=="其他")
+                                  {
+                                        $("#timepickerdiv").append("<label class='control-label'  id='timepicker'>获奖时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>获奖日期：<input type='text' class='form-control' name='datepicker'  id='datepicker'/></p>");
+                                        InitTimepicker(false)
+
+                                  }
+                                  else{
+                                        $("#timepickerdiv").append("<label class='control-label' id='timepicker'>任职时间</label><hr>");
+                                        $("#timepickerdiv").append("<p>开始日期：<input type='text' class='form-control' name='datepicker1' id='datepicker1'/></p>");
+                                        $("#timepickerdiv").append("<p>结束日期：<input type='text' class='form-control' name='datepicker2' id='datepicker2'/></p>");
+                                        makeDatepicker("timepickerdiv","datepicker")
+
+                                  }
+                                  $.each(this.subcatagory, function() {
+                                  $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
+
+                                  });
+                              };
+                   });
+                 }
+    });
+  });
+});
+
 
 </script>
 

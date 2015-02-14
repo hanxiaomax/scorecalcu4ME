@@ -174,12 +174,26 @@ def uploaded_file(filename):
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 
-
+#处理图片上传操作
 @appME.route('/_uploader',methods=["POST", "GET"])
-def uploader():
+def picuploader():
     if request.method == 'POST':
-        save_files()
+        save_files("pic")
         return 'Uploaded'
+
+#处理excel上传操作
+@appME.route('/_uploadxlsx',methods=["POST", "GET"])
+def exceluploader():
+    if request.method == 'POST':
+        save_files("excel")
+        return 'Uploaded'
+
+
+
+
+
+
+
 
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
@@ -201,22 +215,7 @@ def getStuInfo():
         return u"无法找到"
 
 
-def save_file(filestorage,uuid):
-    "Save a Werkzeug file storage object to the upload folder."
-    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
-    filename=str(uuid)+".jpg"
-    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
-    filestorage.save(filepath)
 
-
-def save_files(request=request):
-    "Save all files in a request to the app's upload folder."
-    UUID=request.form.get("UUID")#FORM NOT ARGES
-    for _, filestorage in request.files.iteritems():
-        # Workaround: larger uploads cause a dummy file named '<fdopen>'.
-        # See the Flask mailing list for more information.
-        if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
-            save_file(filestorage,UUID)
 
 @appME.route('/_changePW',methods=["POST", "GET"])
 def changePW():
@@ -374,3 +373,25 @@ def import_stu_from_xlsx():
 
 
 
+def save_excel(filestorage,filename):
+    filepath = os.path.join(appME.config['UPLOAD_EXCEL'], filename)#path with filename
+    filestorage.save(filepath)
+
+def save_file(filestorage,uuid):
+    "Save a Werkzeug file storage object to the upload folder."
+    #filename = os.path.splitext(secure_filename(filestorage.filename))[0]+str(uuid.uuid1())+".jpg"
+    filename=str(uuid)+".jpg"
+    filepath = os.path.join(appME.config['UPLOAD_FOLDER'], filename)#path with filename
+    filestorage.save(filepath)
+
+
+def save_files(type,request=request):
+    for _, filestorage in request.files.iteritems():
+        # Workaround: larger uploads cause a dummy file named '<fdopen>'.
+        # See the Flask mailing list for more information.
+        if filestorage.filename not in (None, 'fdopen', '<fdopen>'):
+            if type=="excel":
+                save_excel(filestorage,filestorage.filename)
+            elif type=="pic":
+                UUID=request.form.get("UUID")#FORM NOT ARGES
+                save_file(filestorage,UUID)

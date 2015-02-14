@@ -268,11 +268,11 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                         </form>
 
                         <form role="form" class="pop_panel" id="massadd">
-                        <p class="text-center">批量添加</p>
-                          <label class="control-label">上传excel文件</label>
+                        <p class="text-center">通过excel批量添加</p>
+
                           <input id="file_upload" name="file_upload" type="file" />
                           <p style="font-size:10px;">xlsx格式
-                          <br/>
+                          <hr/>
                           <button type="submit" class="btn btn-default btn-block" onclick='addnewuser()'>添加</button>
                         </form>
                       </div>
@@ -714,34 +714,32 @@ $().ready(function() {
 
       $('#file_upload').uploadify({
         'swf': '/static/uploadify/uploadify.swf',
-        'uploader': $SCRIPT_ROOT+'/_uploader',
+        'uploader': $SCRIPT_ROOT+'/_uploadxlsx',
         'auto': true,
         'buttonText' : '浏览...',
         'fileObjName' : 'the_files',
-        'fileTypeDesc' : 'Image Files',
-        'fileTypeExts' : '*.jpeg; *.jpg; *.png',
-        'fileSizeLimit' : '2048KB',
-        'formData'      : {'UUID' : UUID},
-        'multi': true,
-        'queueSizeLimit': 5,
+        'fileTypeDesc' : 'Excel Files',
+        'fileTypeExts' : '*.xlsx;',
+        'multi': false,
         'removeCompleted': false, // Could set to true, then list completed uploads onComplete
         'onSelect' : function(file) {
             var filename=file.name;
-
         },
       'onAllComplete': function(event, data) {
             $('#upload_link').hide();
-
         },
       'onUploadStart': function (file) {
       },
       'onUploadSuccess' : function(file, data, response) {
-           pic="true"
-        }
+
+      }
       });
     });
 </script>
-
+<!-- ugly hack to keep chrome form crashing when using uploadify -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
 {% endblock %}
 
 

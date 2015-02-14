@@ -544,6 +544,7 @@ $(function() {
 });
 
 
+//删除加分项
 function delscore(obj) {
     con=confirm("是否删除该条申请（不可撤销）")
     if (con) {
@@ -557,7 +558,7 @@ function delscore(obj) {
     };
 }
 
-
+//删除学生按钮
 function delstu(obj) {
     con=confirm("是否删除该学生信息（不可撤销）")
     if (con) {
@@ -632,7 +633,7 @@ function submitedit(){
 }
 
 
-
+//点击添加新用户
 function addnewuser() {
   var _name=$('input[name="add_name"]').val()
   var _campID=$('input[name="add_campID"]').val()
@@ -651,7 +652,7 @@ function addnewuser() {
     });
   }
 }
-
+//点击从excel导入数据
 function onmassadd() {
 if ($("#add").valid()){
      $.get($SCRIPT_ROOT + "/_import_stu_from_xlsx", {
@@ -662,12 +663,8 @@ if ($("#add").valid()){
       if (len(data.failed_list)!=None) {
         alert("以下学号重复："+data.failed_list)
       };
-
-
     });
-
   }
-
 }
 
 //验证按学号搜索
@@ -776,14 +773,11 @@ $().ready(function() {
             $('#upload_link').hide();
         },
       'onUploadStart': function (file) {
-
       },
       'onUploadSuccess' : function(file, data, response) {
         alert("上传成功，请点击添加按钮")
         upload_xls=file.name
         $("#Massadd-btn").attr('disabled',false);
-
-
       }
       });
     });

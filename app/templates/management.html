@@ -617,7 +617,7 @@ function delstu(obj) {
     });
     };
 }
-//模态窗口
+/////////////模态窗口///////////////
 $('#addtrigger').click(function(e) {
     $('#add').lightbox_me({
         overlayCSS:{background: 'gray', opacity: .6},
@@ -638,7 +638,7 @@ $('#massaddtrigger').click(function(e) {
     e.preventDefault();
 });
 
-/////////////////////
+//////////////////////////////////////
 
 
 function edit(obj) {
@@ -720,7 +720,7 @@ function onmassadd() {
     });
   return false
 }
-
+///////验证/////////////
 //验证按学号搜索
 $().ready(function() {
  $("#searchform").validate(
@@ -820,6 +820,7 @@ $().ready(function() {
   });
 });
 
+/////////////////////////
 
 //上传控件
  $(document).ready(function() {
@@ -850,6 +851,7 @@ $().ready(function() {
       });
     });
 </script>
+
 <!-- ugly hack to keep chrome form crashing when using uploadify -->
 <script type="text/javascript">
         document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");

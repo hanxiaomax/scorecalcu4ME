@@ -379,7 +379,10 @@ def _grade_management():
     action=request.args.get('action',type=str)
     if action=="add_grade":
         grade=request.args.get('grade',type=unicode)
-        g=Grade(grade_name=grade)
+        if not Grade.query.filter(Grade.grade_name==grade).first():
+            g=Grade(grade_name=grade)
+        else:
+            return u"该年级已经存在"
         try:
             db.session.add(g)
             db.session.commit()
@@ -388,17 +391,15 @@ def _grade_management():
             grade_dict={
             "grade":[grade.encode('utf-8') for grade in grades ]
             }
-            print __StaticDir__+"grade.json"
 
             with open(__StaticDir__+"grade.json",'w') as f:
-                f.write(json.dumps(grade_dict))
+                f.write(json.dumps(grade_dict))#把json格式的内容写入文件
 
             return u"添加成功"
-        except sqlalchemy.exc.IntegrityError, e:
-            db.session.rollback()#此处必须rollback()
-            return u"该年级已经存在"
+        # except sqlalchemy.exc.IntegrityError, e:
+        #     db.session.rollback()#此处必须rollback()
+        #     return u"该年级已经存在"
         except :
-            print
             return u"发生未知错误"
 
 

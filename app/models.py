@@ -231,7 +231,7 @@ class Excelmap(db.Model):
 class Grade(db.Model):
     """docstring for grade"""
     id = db.Column(db.Integer, primary_key = True)
-    grade_name = db.Column(db.String(20),index = True,unique = True)
+    grade_name = db.Column(db.String(20))
 
 
     @classmethod

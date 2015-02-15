@@ -129,8 +129,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                       <div class="form-group">
                         <label for="gradelist">年级</label>
-                        <input type="text" class="form-control" name="gradeinput" id="gradeinput" placeholder="硕2013">
-                        <span class="help-block">格式：年份(本硕博)</span>
+                        <select id="select_grade" name="select_grade" class="form-control"> </select>
                       </div>
 
                       <div class="form-group" >
@@ -179,6 +178,30 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
 <script type="text/javascript">
+
+
+
+$(function(){
+          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
+          $.ajax({
+                  type: "get",
+                  url:'/static/grade.json',
+                  cache: false,//必须为false，否则同样会从缓存中加载
+                  dataType : "json",
+                  success: function(data){
+
+                      $("#select_grade").empty();
+                      $.each(data.grade,function() {
+                        $("#select_grade").append("<option value="+this+">" +  this + "</option>");
+                      });
+                   }
+                 })
+  });
+
+
+
+
+
 
   $(function () {
     $('#createbtn').bind('click', function () {

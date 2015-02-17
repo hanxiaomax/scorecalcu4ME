@@ -125,7 +125,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-heart"></span> 提交申请</h1>
 
 
-      <form id="mainform"class="form-horizontal" method="POST" enctype="multipart/form-data">
+      <form id="mainform" class="form-horizontal" method="POST" enctype="multipart/form-data">
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
@@ -214,7 +214,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                 <div class='col-md-2'>
                   <div class="form-group">
                     <label for="explanation">申请说明</label>
-                    <input type="text" class="form-control" id="explanation" placeholder="请简短描述所申请的内容">
+                    <textarea type="text" class="form-control" id="explanation" name="explanation" placeholder="请简短描述所申请的内容"></textarea>
                   </div>
                 </div>
 
@@ -446,6 +446,10 @@ $().ready(function() {
   {
     rules: {
           apply: "required",
+          explanation:{
+            required:true,
+            rangelength:[1,100]
+          },
           datepicker1: {
             required:true,
             dateISO:true

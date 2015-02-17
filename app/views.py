@@ -218,6 +218,11 @@ def _getMyScore():
 @appME.route('/_sublimtApply',methods=["POST", "GET"])
 def _sublimtApply():
         return saveapply._saveapply()
+
+
+
+
+
 #处理后台管理页面的操作
 @appME.route('/_management',methods=["POST", "GET"])
 def management_handle():

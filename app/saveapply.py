@@ -31,6 +31,8 @@ def _saveapply(filepath=False):
     _add=getvalue(_catagory,_name)
     _uuid=request.args.get('UUID', type=str)
     _pic=request.args.get('pic',type=str)#if pic uploaded
+    _explanation=request.args.get('explanation',type=unicode)
+
     user=User.get_user(_campID)
 
 
@@ -43,6 +45,7 @@ def _saveapply(filepath=False):
         applytime=_applytime,
         student=user,
         uuid=_uuid,
+        explanation=_explanation,
         )
 
     db.session.add(s)

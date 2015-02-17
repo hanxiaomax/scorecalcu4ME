@@ -210,6 +210,15 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                   </div>
                   </div>
                 </div>
+                <div class="row">
+                <div class='col-md-2'>
+                  <div class="form-group">
+                    <label for="explanation">申请说明</label>
+                    <input type="text" class="form-control" id="explanation" placeholder="请简短描述所申请的内容">
+                  </div>
+                </div>
+
+                </div>
               </div>
               </form>
 
@@ -459,6 +468,7 @@ $().ready(function() {
 
 //提交按钮
 $(function () {
+
     $('#submitbtn').bind('click', function () {
       if ($("#mainform").valid()) {//如果全部通过则返回true
           timearray=setTime()
@@ -470,9 +480,11 @@ $(function () {
             time_st:timearray[0],
             time_ed:timearray[1],
             UUID:UUID,
+            explanation:$("#explanation").val(),
             pic:pic//是否上传了图片
           },
           function(){
+            // alert($("#explanation").val())
             alert("提交成功")
             window.location.reload()
             UUID=generateUUID()//提交成功后生成新的UUID

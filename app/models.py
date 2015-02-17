@@ -23,6 +23,7 @@ class User(db.Model):
 
 
 
+
     def is_authenticated(self):
         return True
 
@@ -35,6 +36,17 @@ class User(db.Model):
 
     def get_id(self):
         return unicode(self.id)
+
+
+
+    @classmethod
+    def get_user_byID(cls,id):
+        user = cls.query.filter(db.or_(User.id==id)).first()
+        if not user:
+            return None
+        return user
+
+
 
     @classmethod
     def login_check(cls,user_name,password):

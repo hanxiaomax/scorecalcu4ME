@@ -392,20 +392,38 @@ def _grade_management():
             db.session.add(g)
             db.session.commit()
             #重新生成grade.json文件
-            grades=[grade.grade_name for grade in Grade.query.all()]
-            grade_dict={
-            "grade":[grade.encode('utf-8') for grade in grades ]
-            }
-
-            with open(__StaticDir__+"grade.json",'w') as f:
-                f.write(json.dumps(grade_dict))#把json格式的内容写入文件
-
+            generateGradeJson()
             return u"添加成功"
         # except sqlalchemy.exc.IntegrityError, e:
         #     db.session.rollback()#此处必须rollback()
         #     return u"该年级已经存在"
         except :
             return u"发生未知错误"
+    elif action=="del_grade":
+        grade=request.args.get('grade',type=unicode)
+        g=Grade.query.filter(Grade.grade_name==grade).first()
+        try:
+            db.session.delete(g)
+            generateGradeJson()
+            db.session.commit()
+            return u"删除成功"
+        except :
+            return u"发生未知错误"
+
+
+def generateGradeJson():
+    try:
+        grades=[grade.grade_name for grade in Grade.query.all()]
+        grade_dict={
+        "grade":[grade.encode('utf-8') for grade in grades ]
+        }
+
+        with open(__StaticDir__+"grade.json",'w') as f:
+            f.write(json.dumps(grade_dict))#把json格式的内容写入文件
+    except:
+        raise
+
+
 
 
 #获取图片

@@ -348,20 +348,42 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         </div>
 
         <div role="tabpanel" class="tab-pane " id="grade_management">
-           <div class="col-md-8 column ">
+           <div class="col-md-4 column ">
             <div class="panel panel-primary">
-              <div class="panel-heading">年级信息维护</div>
+              <div class="panel-heading">添加年级</div>
 
               <div class="panel-body">
                 <div class="container-fluid">
                     <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                      <form id="grade_manage_form">
                       <div class="form-group">
                         <label for="exampleInputEmail1">添加年级</label>
                         <input class="form-control" id="addgradeinput" name="addgradeinput" placeholder="本2013">
                       </div>
                       <button id="OnAddGrade" type="submit" class="btn btn-block btn-info ">提交</button>
+                    </form>
+                    </div>
+                    </div>
+                </div>
+              </div>
+
+            </div>
+           </div>
+           <div class="col-md-4 column ">
+            <div class="panel panel-primary">
+              <div class="panel-heading">删除年级</div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
+                    <div class="row">
+                    <div class="col-md-12">
+                     <form id="grade_manage_form">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">删除年级</label>
+                        <select id="select_grade4" name="select_grade" class="form-control"></select>
+                      </div>
+                      <button id="OndelGrade" type="submit" class="btn btn-block btn-danger " onclick='return delgrade()'>删除</button>
                     </form>
                     </div>
                     </div>
@@ -383,29 +405,43 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 </div>
 <script type="text/javascript">
 $(function(){
-          //使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
-          $.ajax({
-                  type: "get",
-                  url:'/static/grade.json',
-                  cache: false,//必须为false，否则同样会从缓存中加载
-                  dataType : "json",
-                  success: function(data){
+     get_grade_json()
+});
 
-                      $("#select_grade").empty();
-                      $.each(data.grade,function() {
-                        $("#select_grade").append("<option value="+this+">" +  this + "</option>");
-                      });
-                      $("#select_grade2").empty();
-                      $.each(data.grade,function() {
-                        $("#select_grade2").append("<option value="+this+">" +  this + "</option>");
-                      });
-                      $("#select_grade3").empty();
-                      $.each(data.grade,function() {
-                        $("#select_grade3").append("<option value="+this+">" +  this + "</option>");
-                      });
-                   }
-                 })
-  });
+
+
+function get_grade_json () {
+//使用getJSON会导致每次都从浏览器缓存里面加载json，ajax就可以实现动态的修改json并加载了
+  $.ajax({
+          type: "get",
+          url:'/static/grade.json',
+          cache: false,//必须为false，否则同样会从缓存中加载
+          dataType : "json",
+          success: function(data){
+
+              $("#select_grade").empty();
+              $.each(data.grade,function() {
+                $("#select_grade").append("<option value="+this+">" +  this + "</option>");
+              });
+              $("#select_grade2").empty();
+              $.each(data.grade,function() {
+                $("#select_grade2").append("<option value="+this+">" +  this + "</option>");
+              });
+              $("#select_grade3 ").empty();
+              $.each(data.grade,function() {
+                $("#select_grade3").append("<option value="+this+">" +  this + "</option>");
+              });
+              $("#select_grade4").empty();
+              $.each(data.grade,function() {
+                $("#select_grade4").append("<option value="+this+">" +  this + "</option>");
+              });
+           }
+         })
+
+}
+
+
+
 //tab
 jQuery.validator.addMethod("right_format", function(value, element) {
     var tel = /^[本,硕,博]20[0-9]{2}$/;
@@ -607,6 +643,22 @@ $(function() {
     }
   });
 });
+
+//删除年级
+
+function delgrade(obj) {
+    con=confirm("是否删除该年级（不可撤销）")
+    if (con) {
+    $.get($SCRIPT_ROOT + "/_grade_management", {
+      grade:$("#select_grade4 option:selected").text(),
+      action:"del_grade",
+    }, function(data) {
+        get_grade_json()//刷新选择菜单
+    });
+
+    };
+    return false
+}
 
 
 //删除加分项

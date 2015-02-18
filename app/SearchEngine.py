@@ -171,7 +171,3 @@ if __name__ == '__main__':
     Now=datetime.today()
 
 
-    Scoreitems1=engine.getUserScoreitems("130280",Score_items.time_st,Score_items.time_ed,"2014-01-09","2015-01-8")
-    Scoreitems2=engine.getUserScoreitems("130280",Score_items.time_st,Score_items.time_ed,None,None)
-    print Scoreitems1
-    print Scoreitems2

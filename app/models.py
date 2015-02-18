@@ -23,6 +23,7 @@ class User(db.Model):
 
 
 
+
     def is_authenticated(self):
         return True
 
@@ -35,6 +36,17 @@ class User(db.Model):
 
     def get_id(self):
         return unicode(self.id)
+
+
+
+    @classmethod
+    def get_user_byID(cls,id):
+        user = cls.query.filter(db.or_(User.id==id)).first()
+        if not user:
+            return None
+        return user
+
+
 
     @classmethod
     def login_check(cls,user_name,password):
@@ -167,7 +179,8 @@ class Score_items(db.Model):
     picpath=db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     uuid=db.Column(db.String(64))
-
+    explanation=db.Column(db.String(320))
+    #unicode 下汉字是3个字符
 
     def __repr__(self):
         return '<Score %r>' % (self.id)

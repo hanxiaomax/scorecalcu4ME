@@ -206,7 +206,7 @@ function add_excel_list(role) {
       pic: "111"
     },
     function(data) {
-      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>公示区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>统计区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
       $("#exceltable").append(thead)
       var tbody = ""
       if (role=="student") {
@@ -238,13 +238,3 @@ function add_excel_list(role) {
 
     });
 }
-//uuid生成器
-function generateUUID(){
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (d + Math.random()*16)%16 | 0;
-        d = Math.floor(d/16);
-        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-};

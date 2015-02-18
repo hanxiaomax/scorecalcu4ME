@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
+<!-- ugly hack to keep chrome form crashing when using uploadify -->
+<script type="text/javascript">
+        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
+</script>
+
 <link href="/static/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="/static/js/constom.js"></script>
 
@@ -120,7 +125,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     <h1 class="page-header"><span class="glyphicon glyphicon glyphicon-heart"></span> 提交申请</h1>
 
 
-      <form id="mainform"class="form-horizontal" method="POST" enctype="multipart/form-data">
+      <form id="mainform" class="form-horizontal" method="POST" enctype="multipart/form-data">
               <div class="container">
                 <div class="row">
                   <div class="col-md-4">
@@ -204,6 +209,15 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
                   </div>
                   </div>
+                </div>
+                <div class="row">
+                <div class='col-md-2'>
+                  <div class="form-group">
+                    <label for="explanation">申请说明</label>
+                    <textarea type="text" class="form-control" id="explanation" name="explanation" placeholder="请简短描述所申请的内容"></textarea>
+                  </div>
+                </div>
+
                 </div>
               </div>
               </form>
@@ -354,15 +368,20 @@ $(".flexme3").flexigrid({
 
 
 
-makeDatepicker("timepickerdiv","datepicker")
+
 var UUID=generateUUID()
 var pic="false"
 
 
-//上传控件
- $(document).ready(function() {
 
-      $('#file_upload').uploadify({
+makeDatepicker("timepickerdiv","datepicker")
+
+
+//上传控件
+$(function(){
+
+  setTimeout(function(){
+    $('#file_upload').uploadify({
         'swf': '/static/uploadify/uploadify.swf',
         'uploader': $SCRIPT_ROOT+'/_uploader',
         'auto': true,
@@ -389,6 +408,9 @@ var pic="false"
            pic="true"
         }
       });
+
+  });
+
     });
 
 //更新总分
@@ -424,6 +446,10 @@ $().ready(function() {
   {
     rules: {
           apply: "required",
+          explanation:{
+            required:true,
+            rangelength:[1,100]
+          },
           datepicker1: {
             required:true,
             dateISO:true
@@ -446,6 +472,7 @@ $().ready(function() {
 
 //提交按钮
 $(function () {
+
     $('#submitbtn').bind('click', function () {
       if ($("#mainform").valid()) {//如果全部通过则返回true
           timearray=setTime()
@@ -457,19 +484,18 @@ $(function () {
             time_st:timearray[0],
             time_ed:timearray[1],
             UUID:UUID,
+            explanation:$("#explanation").val(),
             pic:pic//是否上传了图片
           },
           function(){
-            //var success_confirm=confirm("提交成功")
+            // alert($("#explanation").val())
             alert("提交成功")
             window.location.reload()
-            // $('.error').hide();
             UUID=generateUUID()//提交成功后生成新的UUID
           });
         return false //Refresh whole page to make upload files disappear
       }
       else{
-          // $('.error').show();
           return false//不跳转
       }
     });
@@ -518,13 +544,21 @@ $(function(){
   });
 });
 
+//uuid生成器
+function generateUUID(){
+    var d = new Date().getTime();
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+
+
 
 </script>
 
-<!-- ugly hack to keep chrome form crashing when using uploadify -->
-<script type="text/javascript">
-        document.write("<script type='text/javascript' src='/static/uploadify/jquery.uploadify.min.js?" + new Date() + "'></s" + "cript>");
-</script>
 
 
 {% endblock %}

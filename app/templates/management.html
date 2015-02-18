@@ -361,7 +361,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                         <label for="exampleInputEmail1">添加年级</label>
                         <input class="form-control" id="addgradeinput" name="addgradeinput" placeholder="本2013">
                       </div>
-                      <button id="OnAddGrade" type="submit" class="btn btn-block btn-info ">提交</button>
+                      <button id="onAddGrade" type="submit" class="btn btn-block btn-info " onclick="return OnAddGrade()">提交</button>
                     </form>
                     </div>
                     </div>
@@ -569,20 +569,7 @@ $(function() {
   });
 });
 
-//添加年级按钮
-$(function() {
-  $("#OnAddGrade").bind("click", function() {
-    if ($("#grade_manage_form").valid()){
 
-    $.get($SCRIPT_ROOT + "/_grade_management", {
-      grade:$('input[name="addgradeinput"]').val(),
-      action:"add_grade",
-    }, function(data) {
-        alert(data)
-    });
-    }
-  });
-});
 
 
 var upload_xls=""
@@ -644,16 +631,34 @@ $(function() {
   });
 });
 
+//添加年级
+function OnAddGrade(){
+  if ($("#grade_manage_form").valid()){
+    $.get($SCRIPT_ROOT + "/_grade_management", {
+      grade:$('input[name="addgradeinput"]').val(),
+      action:"add_grade",
+    }, function(data) {
+        alert(data);
+        get_grade_json();
+        return false;
+    });
+    };
+    return false;
+}
+
+
+
+
 //删除年级
 
-function delgrade(obj) {
+function delgrade() {
     con=confirm("是否删除该年级（不可撤销）")
     if (con) {
     $.get($SCRIPT_ROOT + "/_grade_management", {
       grade:$("#select_grade4 option:selected").text(),
       action:"del_grade",
     }, function(data) {
-        get_grade_json()//刷新选择菜单
+        get_grade_json();//刷新选择菜单
     });
 
     };

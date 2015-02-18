@@ -263,7 +263,9 @@ class Grade(db.Model):
     @classmethod
     def get_grades(cls):
         grades_name=[]
-        for grade in cls.query.all():
+        for grade in db.session.query(Grade).order_by(Grade.grade_name):
             grades_name.append(grade.grade_name)
+        #print grades_name
         return grades_name
+
 

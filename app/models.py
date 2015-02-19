@@ -262,10 +262,15 @@ class Grade(db.Model):
 
     @classmethod
     def get_grades(cls):
-        grades_name=[]
-        for grade in db.session.query(Grade).order_by(Grade.grade_name):
-            grades_name.append(grade.grade_name)
-        #print grades_name
-        return grades_name
+        gradelist=[grade.grade_name for grade in Grade.query.all()]
+        return sorted(gradelist, cmp=Grade.my_cmp)
 
+    @classmethod
+    def my_cmp(cls,a, b):
+        if a[0]==b[0]:
+            return cmp(a, b)
+        elif a[0]==u'博' or (a[0]==u'硕' and b[0]!=u'博'):
+            return 1
+        else:
+            return -1
 

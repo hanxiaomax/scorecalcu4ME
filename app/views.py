@@ -411,14 +411,17 @@ def _grade_management():
 
 def generateGradeJson():
     try:
-        grades=[grade.grade_name for grade in db.session.query(Grade).order_by(Grade.grade_name)]
         grade_dict={
-        "grade":[grade.encode('utf-8') for grade in grades ]
+        "grade":[]
         }
+        grade_list=Grade.get_grades()
+        for i in grade_list:
+            grade_dict["grade"].append(i)
 
         with open(__StaticDir__+"grade.json",'w') as f:
             f.write(json.dumps(grade_dict))#把json格式的内容写入文件
-    except:
+    except StandardError,e:
+        #print e
         raise
 
 

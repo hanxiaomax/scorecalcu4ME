@@ -1,6 +1,6 @@
 #coding:utf-8
 from datetime import datetime,timedelta
-from models import User,Score_items,STATUS_YES
+from models import User,Score_items,Grade,STATUS_YES
 from app import db
 from flask import jsonify
 
@@ -167,7 +167,7 @@ class Engine(object):
 
 
 if __name__ == '__main__':
-    engine=Engine()
-    Now=datetime.today()
+    for i in Grade.get_grades():
+        print i.encode('gbk')
 
 

@@ -394,9 +394,7 @@ def _grade_management():
             #重新生成grade.json文件
             generateGradeJson()
             return u"添加成功"
-        # except sqlalchemy.exc.IntegrityError, e:
-        #     db.session.rollback()#此处必须rollback()
-        #     return u"该年级已经存在"
+
         except :
             return u"发生未知错误"
     elif action=="del_grade":
@@ -413,14 +411,17 @@ def _grade_management():
 
 def generateGradeJson():
     try:
-        grades=[grade.grade_name for grade in Grade.query.all()]
         grade_dict={
-        "grade":[grade.encode('utf-8') for grade in grades ]
+        "grade":[]
         }
+        grade_list=Grade.get_grades()
+        for i in grade_list:
+            grade_dict["grade"].append(i)
 
         with open(__StaticDir__+"grade.json",'w') as f:
             f.write(json.dumps(grade_dict))#把json格式的内容写入文件
-    except:
+    except StandardError,e:
+        #print e
         raise
 
 

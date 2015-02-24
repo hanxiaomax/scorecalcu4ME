@@ -18,15 +18,12 @@ def _makepublic():
     _adminName=request.form["adminNAME"]
     _maketime=datetime.datetime.today()
     _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
-
     _grade=request.form["grade"]
-    print _grade
+
     if _ischecked=="true":
         _status=OPEN
     else:
         _status=CLOSE
-
-    #print type(_grade)
 
     #需要写进excel的info栏的内容
     excelinfo={
@@ -46,6 +43,7 @@ def _makepublic():
         return u"不存在该年级"
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
     if maker.run(userlist,_timestart,_timeend):#开始创建excel文件，接收变量userlist
+
         filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
         maker.saveAs(filepath)
         #把生成的excel的相关信息存放到数据库的表中

@@ -85,10 +85,9 @@ class MakeExcel(object):
         _count=0
         for user in userlist:
             i+=1
-
             engine=Engine()
             result=engine.getUserSummary(user,starttime,endtime,is_jsonify=False)
-            print result
+
             if result is not None:
                 _count+=1#增加一条记录
             self._writerow(i,result)

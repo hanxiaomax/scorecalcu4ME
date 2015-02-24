@@ -87,7 +87,6 @@ class Engine(object):
     def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
         if user:
             userSummaryDict={}
-
             Scoreitems=self.getUserScoreitems(user.campID,Score_items.time_st,Score_items.time_ed,start_time,end_time)
 
             userSummaryDict={
@@ -132,9 +131,6 @@ class Engine(object):
                 return GradeSumaryDict
         else:
             return "无法找到"
-
-
-
 
 
 

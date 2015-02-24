@@ -8,7 +8,7 @@ from datetime import datetime
 def _getmyscore(user):
 
     jsondict={
-        "page": 1,
+        "page": 10,
         "total": 100,
         "rows": []
         }

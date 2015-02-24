@@ -7,7 +7,7 @@ from flask.ext.login import (
 from models import User,Score_items,Grade,Excelmap, ROLE_USER, ROLE_ADMIN
 #登陆模块
 from login import LoginForm
-from app import appME, db, lm,getmyscore,saveapply,getreview,__StaticDir__,makepublic,__ExcelDir__
+from app import appME, db, lm,getmyscore,saveapply,makepublic,getreview,__StaticDir__,__ExcelDir__
 from werkzeug import secure_filename,SharedDataMiddleware
 #搜索引擎模块，处理数据库查询
 from SearchEngine import Engine
@@ -227,7 +227,7 @@ def _sublimtApply():
 @appME.route('/_management',methods=["POST", "GET"])
 def management_handle():
     if request.method == 'POST':
-        return makepublic._makepublic()
+        return makepublic._makepublic()#?????????
     elif request.method == 'GET':
         if request.args.get('Delete',type=str)=='Delete':#删除某个加分项
             itemID=request.args.get('itemID',type=int)
@@ -242,10 +242,6 @@ def management_handle():
             name=request.args.get('edit_name',type=unicode)
             campID=request.args.get('edit_campID',type=str)
             grade=request.args.get('edit_grade',type=unicode)
-            # print "id:"+id
-            # print "name:"+name
-            # print "campID:"+campID
-            # print "grade:"+grade
 
             return User.edit(id,campID,name,grade)
 
@@ -265,7 +261,7 @@ def management_handle():
 @appME.route('/_makepublic',methods=["POST", "GET"])
 def makePublic():
     if request.method == 'POST':
-        return makepublic._makepublic()#生成公示信息
+        return makepublic._makepublic()
     elif request.method == 'GET':
         if request.args.get('Delete',type=str)=='Delete':#删除公示信息
             excelID=request.args.get('id',type=int)

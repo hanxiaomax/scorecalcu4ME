@@ -1,5 +1,5 @@
 *.pyc
 workshop/
-app.db
+/app.db
 .idea/
 uploads/

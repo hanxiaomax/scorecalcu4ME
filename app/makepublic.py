@@ -8,6 +8,7 @@ import datetime
 # from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 
 def _makepublic():
+
     _name = request.form["name"]
     _timestart=request.form["timestart"]
     _timeend=request.form["timeend"]
@@ -15,13 +16,17 @@ def _makepublic():
     _ischecked=request.form["ischecked"]
     _adminID=request.form["admin"]#as campID
     _adminName=request.form["adminNAME"]
-    _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
-    _grade=request.form["grade"]
     _maketime=datetime.datetime.today()
+    _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
+
+    _grade=request.form["grade"]
+    print _grade
     if _ischecked=="true":
         _status=OPEN
     else:
         _status=CLOSE
+
+    #print type(_grade)
 
     #需要写进excel的info栏的内容
     excelinfo={
@@ -50,7 +55,6 @@ def _makepublic():
             start_time=_timestart,
             end_time=_timeend,
             filepath=filepath,
-            teacher=admin,
             status=_status,
             grade=_grade
             )

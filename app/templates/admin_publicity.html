@@ -224,7 +224,7 @@ $(function(){
           ischecked:ischecked,
           adminNAME:$("#adminname").val(),
           admin:{{user.campID}},
-          grade:$('input[name="gradeinput"]').val(),
+          grade:$("#select_grade option:selected").text(),
       },
       function(data){
         if (data=="true") {

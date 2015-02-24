@@ -166,8 +166,8 @@ class Engine(object):
 
 
 
-if __name__ == '__main__':
-    for i in Grade.get_grades():
-        print i.encode('gbk')
+# if __name__ == '__main__':
+#     for i in Grade.get_grades():
+#         print i.encode('gbk')
 
 

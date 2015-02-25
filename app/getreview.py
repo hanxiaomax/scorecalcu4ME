@@ -4,22 +4,37 @@ from app import db
 from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 #TODO:should i make teacher search what have been approve and reject?
 def _getreview(grade="All"):
+    page=request.args.get("page",type=int)#接收当前页。并非从param返回，是控件自动传递的
+    rp=request.args.get("rp",type=int)
     jsondict={
-        "page": 1,
-        "total": 100,
+        "page": rp,
+        "total": 0,
         "rows": []
         }
     if grade=="All":
-        _score_items=Score_items.query.filter(Score_items.status==2)
+
+        _score_items=Score_items.query.filter(Score_items.status==2).all()
     else :
         #按照年级来返回需要审核的内容
-        _score_items=Score_items.query.filter(db.and_(Score_items.status==2,User.get_user_byID(Score_items.user_id).grade==grade))
-    for s in _score_items:
+        _score_items=Score_items.query.filter(db.and_(Score_items.status==2,User.get_user_byID(Score_items.user_id).grade==grade)).all()
+
+    total=len(_score_items)
+
+    jsondict={
+        "page": page,
+        "total": total,
+        "rows": []
+        }
+
+
+    for i in xrange((page-1)*rp,(page*rp if page*rp-1<total else total)):
+        s=_score_items[i]
         data={
                 "id": s.item_name,
                 "cell": User.getItemInfo(s)
             }
         jsondict["rows"].append(data)
+
 
     return jsonify(jsondict)
 

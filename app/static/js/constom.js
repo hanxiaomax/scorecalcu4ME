@@ -122,7 +122,7 @@ $(function() {
     if ($("#searchgradeform").valid()){
 
     $.get($SCRIPT_ROOT + "/_getStuInfo", {
-      grade:$('input[name="gradeinput"]').val(),
+      grade:$("#select_grade option:selected").text(),
       starttime:$("#pickeD1").val(),
       endtime:$("#pickeD2").val(),
       searchtype:searchtype

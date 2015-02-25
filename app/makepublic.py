@@ -8,6 +8,7 @@ import datetime
 # from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 
 def _makepublic():
+
     _name = request.form["name"]
     _timestart=request.form["timestart"]
     _timeend=request.form["timeend"]
@@ -15,9 +16,10 @@ def _makepublic():
     _ischecked=request.form["ischecked"]
     _adminID=request.form["admin"]#as campID
     _adminName=request.form["adminNAME"]
+    _maketime=datetime.datetime.today()
     _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
     _grade=request.form["grade"]
-    _maketime=datetime.datetime.today()
+
     if _ischecked=="true":
         _status=OPEN
     else:
@@ -41,6 +43,7 @@ def _makepublic():
         return u"不存在该年级"
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
     if maker.run(userlist,_timestart,_timeend):#开始创建excel文件，接收变量userlist
+
         filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
         maker.saveAs(filepath)
         #把生成的excel的相关信息存放到数据库的表中
@@ -50,7 +53,6 @@ def _makepublic():
             start_time=_timestart,
             end_time=_timeend,
             filepath=filepath,
-            teacher=admin,
             status=_status,
             grade=_grade
             )

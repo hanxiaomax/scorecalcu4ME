@@ -87,7 +87,6 @@ class Engine(object):
     def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
         if user:
             userSummaryDict={}
-
             Scoreitems=self.getUserScoreitems(user.campID,Score_items.time_st,Score_items.time_ed,start_time,end_time)
 
             userSummaryDict={
@@ -136,9 +135,6 @@ class Engine(object):
 
 
 
-
-
-
     #TODO:是否应该在获取getgradesumary函数内部调用而不是在view中？
     #在生成公示前进行全局更新，另有两处更新分别在搜索前和用户个人登陆前，只更新个人，使用_getTotal(user)函数
     def updateTotal(self):
@@ -166,8 +162,8 @@ class Engine(object):
 
 
 
-if __name__ == '__main__':
-    for i in Grade.get_grades():
-        print i.encode('gbk')
+# if __name__ == '__main__':
+#     for i in Grade.get_grades():
+#         print i.encode('gbk')
 
 

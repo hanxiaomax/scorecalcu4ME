@@ -5,22 +5,34 @@ from models import User, ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_U
 import os
 from datetime import datetime
 
+
 def _getmyscore(user):
+    _score_items=user.score_items.all()
+    page=request.args.get("page",type=int)#接收当前页。并非从param返回，是控件自动传递的
+    rp=request.args.get("rp",type=int)
+    total=len(_score_items)
 
     jsondict={
-        "page": 10,
-        "total": 100,
+        "page": page,#当前页
+        "total": total,#总数
         "rows": []
         }
-    _score_items=user.score_items.all()
-    for s in _score_items:
+
+    #page:1 rows=1-->10
+    #page:2 rows=10-->20
+
+    if page*rp-1<total :
+        end=page*rp
+    else:
+        end=total#防止越界
+
+    for i in xrange((page-1)*rp,end):
+        s=_score_items[i]
         data={
                 "id": s.item_name,
                 "cell": User.getItemInfo(s)
             }
         jsondict["rows"].append(data)
-
-
 
     return jsonify(jsondict)
 

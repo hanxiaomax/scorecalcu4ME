@@ -163,6 +163,17 @@ $(".flexme3").flexigrid({
                 url : $SCRIPT_ROOT+"/_getreview",
                 method: 'GET',
                 dataType : 'json',
+                usepager: true,
+                page: 1, //初始化时停留的页面
+                useRp: true, //use the results per page select box
+                rpOptions: [10,20,50,100],
+                rp: 20, //results per page,后端可以接收此数据用于计算
+                pagestat: '显示 {from} 到 {to} 共计 {total} 条',
+                pagetext: '页',
+                outof: 'of',
+                procmsg: '请等待数据正在加载中…',
+                nomsg: '没有数据',
+                onError: '查询出错请刷新',
                 params: [{
                     name: 'opt2',
                     value: 3,
@@ -261,10 +272,8 @@ $(".flexme3").flexigrid({
                 } ],
                 sortname : "iso",
                 sortorder : "asc",
-                usepager : false,
-                title : ' ',
-                useRp : true,
-                rp : 15,
+
+                title : false,
                 showTableToggleBtn : false,
                 width : 770,
                 height : 500

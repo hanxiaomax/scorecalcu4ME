@@ -183,8 +183,23 @@ class Score_items(db.Model):
     explanation=db.Column(db.String(320))
     #unicode 下汉字是3个字符
 
+    #实现Score_items对象下标访问
+    def __getitem__(self, key):
+        if key=="catagory":
+            return self.catagory
+        elif key=="applytime":
+            return self.applytime
+        elif key=="status":
+            return self.status
+        elif key=="add":
+            return self.add
+        elif key=="item_name":
+            return self.item_name
+
+
+
     def __repr__(self):
-        return '<Score %r>' % (self.id)
+        return '<Score id=%r status=%r >' % (self.id,self.status)
 
     @classmethod
     def delete(cls,id):
@@ -192,8 +207,10 @@ class Score_items(db.Model):
         db.session.delete(s)
         db.session.commit()
 
+
+
 class Excelmap(db.Model):
-    """docstring for excelmap"""
+    """Excelmap表的结构"""
     id = db.Column(db.Integer, primary_key = True)
     Excelname = db.Column(db.String(140))
     creater=db.Column(db.String(20))

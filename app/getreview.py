@@ -25,13 +25,9 @@ def _getreview(grade="All"):
         "total": total,
         "rows": []
         }
-    if page*rp-1<total :
-        end=page*rp
-    else:
-        end=total#防止越界
 
 
-    for i in xrange((page-1)*rp,end):
+    for i in xrange((page-1)*rp,(page*rp if page*rp-1<total else total)):
         s=_score_items[i]
         data={
                 "id": s.item_name,

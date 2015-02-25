@@ -80,6 +80,9 @@
 label.error {
 background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
 }
+.flexigrid div.fbutton .check {
+    background: url(/static/css/images/open.png) no-repeat center left;
+}
 </style>
 
 
@@ -327,7 +330,7 @@ $(".flexme3").flexigrid({
                 },
                 {
                         display : '备注',
-                        name : 'certification',
+                        name : 'note',
                         width : 55,
                         // hide: true,
                         align : 'center'
@@ -337,7 +340,12 @@ $(".flexme3").flexigrid({
                         name : '删除',
                         bclass : 'delete',
                         onpress : Control
-                    }, {
+                }, {
+                        name : '查看备注',
+                        bclass : 'check',
+                        onpress : Control
+                    },
+                {
                         separator : true
                 } ],
 
@@ -350,7 +358,7 @@ $(".flexme3").flexigrid({
             });
 
             function Control(com, grid) {
-
+              if (com == '删除'){
                 var con=confirm('删除选中的 ' + $('.trSelected', grid).length + ' 条申请?')
                 if (con) {
                   $.each($('.trSelected', grid),
@@ -374,7 +382,27 @@ $(".flexme3").flexigrid({
                                 });
                         });
                     }
-                };
+                }
+                else if (com == "查看备注"){
+
+                        var grid_count=$('.trSelected', grid).length
+
+                          if (grid_count>1) {
+                            alert("请选择单一条目")
+                          }
+                          else if (grid_count==0)
+                          {
+                            alert("未选中任何条目")
+                          }
+                          else{
+                            $.each($('.trSelected', grid),function(key, value){
+
+                              alert("备注\n--------------\n"+value.firstChild.innerText)
+
+                           });
+                          }
+                      }
+              }
 
 
 

@@ -21,12 +21,7 @@ def _getmyscore(user):
     #page:1 rows=1-->10
     #page:2 rows=10-->20
 
-    if page*rp-1<total :
-        end=page*rp
-    else:
-        end=total#防止越界
-
-    for i in xrange((page-1)*rp,end):
+    for i in xrange((page-1)*rp,(page*rp if page*rp-1<total else total)):
         s=_score_items[i]
         data={
                 "id": s.item_name,

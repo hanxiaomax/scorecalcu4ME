@@ -106,7 +106,8 @@ class User(db.Model):
                 "applytime": item.applytime,
                 "status":cls._getStatus(item),
                 "certification": cls._isUploaded(item),
-                "uuid":item.uuid
+                "uuid":item.uuid,
+                "note":item.explanation
         }
         return data
 

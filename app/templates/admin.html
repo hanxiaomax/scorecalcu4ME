@@ -199,7 +199,7 @@ $(".flexme3").flexigrid({
                     {
                     display : '申请人',
                     name : 'name',
-                    width : 60,
+                    width : 50,
                     sortable : false,
                     align : 'center'
                     },
@@ -236,11 +236,18 @@ $(".flexme3").flexigrid({
                         align : 'center'
                 },
                 {
-                        display : '相关证明',
+                        display : '证明',
                         name : 'certification',
-                        width : 60,
+                        width :50,
                         sortable : false,
-                        align : 'left'
+                        align : 'center'
+                },
+                {
+                        display : '备注',
+                        name : 'note',
+                        width : 200,
+                        // hide: true,
+                        align : 'center'
                 },
                 ],
                 buttons : [
@@ -260,6 +267,11 @@ $(".flexme3").flexigrid({
                         onpress : Control
                     },
                     {
+                        name : '查看备注',
+                        bclass : 'check',
+                        onpress : Control
+                    },
+                    {
                         separator : true
                 } ],
                 searchitems : [ {
@@ -275,7 +287,7 @@ $(".flexme3").flexigrid({
 
                 title : false,
                 showTableToggleBtn : false,
-                width : 770,
+                width : 950,
                 height : 500
             });
               function Control(com, grid) {
@@ -342,12 +354,25 @@ $(".flexme3").flexigrid({
                               });
                             }
                            });
+                          }
+                      }
+                      else if (com == "查看备注"){
 
+                        var grid_count=$('.trSelected', grid).length
 
+                          if (grid_count>1) {
+                            alert("请选择单一条目")
+                          }
+                          else if (grid_count==0)
+                          {
+                            alert("未选中任何条目")
+                          }
+                          else{
+                            $.each($('.trSelected', grid),function(key, value){
 
+                              alert("备注\n--------------\n"+value.firstChild.innerText)
 
-
-
+                           });
                           }
                       }
                 }

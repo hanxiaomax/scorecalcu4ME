@@ -96,6 +96,9 @@ class User(db.Model):
 
 
 class Score_items(db.Model):
+    """
+    数据库加分项表数据结构
+    """
     id = db.Column(db.Integer, primary_key = True)
     catagory = db.Column(db.String(140))
     item_name= db.Column(db.String(120))
@@ -107,10 +110,10 @@ class Score_items(db.Model):
     picpath=db.Column(db.String(140))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     uuid=db.Column(db.String(64))
-    explanation=db.Column(db.String(320))
-    #unicode 下汉字是3个字符
+    explanation=db.Column(db.String(320))#unicode 下汉字是3个字符
 
-    #实现Score_items对象下标访问
+
+    #实现Score_items对象下标访问，sorted函数的Key会用到
     def __getitem__(self, key):
         if key=="catagory":
             return self.catagory
@@ -194,6 +197,7 @@ class Excelmap(db.Model):
 
     @classmethod
     def getExcelLits(cls):
+        """返回全部的excel信息"""
         items=Excelmap.query.all()
         excellist={
         "excellist":[]
@@ -215,11 +219,11 @@ class Excelmap(db.Model):
                 }
 
             excellist["excellist"].append(data)
-
         return jsonify(excellist)
 
     @classmethod
     def deleteExcel(cls,excelID):
+        """根据id来删除相应的excel信息和文件"""
         e=cls.query.filter(cls.id==excelID).first()
         os.remove(e.filepath)
         db.session.delete(e)
@@ -227,13 +231,14 @@ class Excelmap(db.Model):
 
 
 class Grade(db.Model):
-    """docstring for grade"""
+    """Grade表的数据结构"""
     id = db.Column(db.Integer, primary_key = True)
     grade_name = db.Column(db.String(20))
 
 
     @classmethod
     def add(cls,new_grade):
+        "添加一个新的年级"
         _g=Grade(grade_name=new_grade)
 
         db.session.add(_g)
@@ -241,17 +246,20 @@ class Grade(db.Model):
 
     @classmethod
     def remove(cls,grade_name):
+        "删除年级"
         _g=cls.query.filter(grade_name==grade_name).first()
         db.session.delete(_g)
         db.session.commit()
 
     @classmethod
     def get_grades(cls):
+        "得到全部年级，按照本硕博-时间顺序排序"
         gradelist=[grade.grade_name for grade in Grade.query.all()]
         return sorted(gradelist, cmp=Grade.my_cmp)
 
     @classmethod
     def my_cmp(cls,a, b):
+        "自定义排序函数"
         if a[0]==b[0]:
             return cmp(a, b)
         elif a[0]==u'博' or (a[0]==u'硕' and b[0]!=u'博'):

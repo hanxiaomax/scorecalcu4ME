@@ -271,7 +271,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword1">年级</label>
-                            <select id="select_grade2" name="select_grade" class="form-control"></select>
+                            <select id="select_grade2" name="select_grade2" class="form-control"></select>
                           </div>
                           <br/>
                           <button type="submit" class="btn btn-primary btn-block" onclick='return addnewuser()'>添加</button>
@@ -324,7 +324,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                           </div>
                           <div class="form-group">
                             <label for="exampleInputPassword1">年级</label>
-                            <select id="select_grade3" name="select_grade" class="form-control"></select>
+                            <select id="select_grade3" name="select_grade3" class="form-control"></select>
                           </div>
                           <br/>
                         <button type="submit" class="btn btn-warning btn-block " onclick='return submitedit()'>修改</button>
@@ -736,7 +736,7 @@ function submitedit(){
   var ID=$('input[name="id"]').val()
   var _name=$('input[name="edit_name"]').val()
   var _campID=$('input[name="edit_campID"]').val()
-  var _grade=$('input[name="edit_grade"]').val()
+  var _grade=$("#select_grade3 option:selected").text()
   if ($("#edit_panel").valid()){
     $.get($SCRIPT_ROOT + "/_management", {
 
@@ -754,12 +754,11 @@ function submitedit(){
 
 }
 
-
 //点击添加新用户
 function addnewuser() {
   var _name=$('input[name="add_name"]').val()
   var _campID=$('input[name="add_campID"]').val()
-  var _grade=$('input[name="add_grade"]').val()
+  var _grade=$("#select_grade2 option:selected").text()
 
   if ($("#add").valid()){
      $.get($SCRIPT_ROOT + "/_management", {
@@ -767,7 +766,7 @@ function addnewuser() {
       add_name:_name,//"dd",
       add_campID:_campID,//"130280",
       add_grade:_grade,//"2013本"
-      // edit_role:,
+
 
     }, function(result){
       alert(result)

@@ -105,7 +105,7 @@ class Engine(object):
                     "grade" : user.grade,
                     "sum" : self.getSum(Scoreitems),
                 }
-            return jsonify(userDetailDict) if is_jsonify else userDetailDict
+            return jsonify(userSummaryDict) if is_jsonify else userSummaryDict
         else:
             return u"无法找到"
 

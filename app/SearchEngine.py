@@ -74,7 +74,7 @@ class Engine(object):
                         "campID" : user.campID,
                         "grade" : user.grade,
                         "sum" : self.getSum(items),
-                        "items":[User.getItemInfo(item) for item in items]#存放查询得到的全部加分项
+                        "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
             }
 
 

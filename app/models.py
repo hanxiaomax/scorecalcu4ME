@@ -10,7 +10,12 @@ STATUS_NO = 0
 STATUS_UNKNOWN= 2
 OPEN=1
 CLOSE=0
+
+
 class User(db.Model):
+    """
+    数据库用户表数据结构
+    """
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
     campID = db.Column(db.String(120), index = True, unique = True)
@@ -21,19 +26,10 @@ class User(db.Model):
     public_items= db.relationship('Excelmap', backref = 'teacher', lazy = 'dynamic')
     score=db.Column(db.Float,default=0.0)
 
-
-
-
     def is_authenticated(self):
         return True
 
-    def is_active(self):
-        #Returns True if this is an active user
-        return True
-
-    def is_anonymous(self):
-        return False
-
+    #返回用户id
     def get_id(self):
         return unicode(self.id)
 
@@ -41,6 +37,7 @@ class User(db.Model):
 
     @classmethod
     def get_user_byID(cls,id):
+        "通过id查询用户"
         user = cls.query.filter(db.or_(User.id==id)).first()
         if not user:
             return None
@@ -50,94 +47,24 @@ class User(db.Model):
 
     @classmethod
     def login_check(cls,user_name,password):
-        # print user_name
+        "登陆检查"
         user = cls.query.filter(db.and_(User.campID==user_name, User.password==password)).first()
-        # print user
         if not user:
             return None
         return user
 
     @classmethod
     def get_user(cls,campID):
-        "get user by campID"
+        "通过campID查询用户"
         user = cls.query.filter(db.or_(User.campID==campID)).first()
         if not user:
             return None
         return user
 
 
-
-    @classmethod
-    def scoreInfo4SomeOne(cls,campID,is_jsonify=True,get_all=True):
-        """get someone's score_items by campID,return as json or dict,
-            scoreInfo4SomeOne["items"] contains all the infor about the score_items
-            as a list
-        """
-        scoreInfoDict={
-        "campID":campID,
-        "items":[]
-        }
-        user=User.get_user(campID)
-        if user and user.role==ROLE_USER:
-            items=user.score_items.all()
-            for item in items:
-                scoreInfoDict["items"].append(cls.getItemInfo(item))
-            has_reslut=True
-        else:
-            has_reslut=False
-        if  has_reslut and is_jsonify :
-            return jsonify(scoreInfoDict)
-        elif has_reslut:
-            return scoreInfoDict
-        else:
-            return "No user found"
-
-    @classmethod
-    def getItemInfo(cls,item):
-        "get one score_items info return as a dict"
-
-        data={
-                "id":item.id,
-                "catagory": item.catagory,
-                "name":item.student.name,
-                "item_name": item.item_name,
-                "add": item.add,
-                "time": cls._setTime(item.time_st,item.time_ed),
-                "applytime": item.applytime,
-                "status":cls._getStatus(item),
-                "certification": cls._isUploaded(item),
-                "uuid":item.uuid,
-                "note":item.explanation
-        }
-        return data
-
-    @classmethod
-    def _setTime(self,time_start,time_end):
-        if time_start == time_end:
-            return time_start
-        else:
-            return time_start+u"至"+time_end
-
-
-    @classmethod
-    def _isUploaded(cls,item):
-        if item.picpath is not None:
-            return u"已上传"
-        else:
-            return u"无"
-    @classmethod
-    def _getStatus(cls,item):
-        _status=item.status
-        if _status==2:
-            return u"未审核"
-        elif _status==1:
-            return u"通过"
-        else:
-            return u"驳回"
-
     @classmethod
     def addstudent(cls,campID,name,grade):
-
+        "单独添加一个新学生"
         u=User(campID=campID,
                     name=name,
                     grade=grade,
@@ -148,6 +75,7 @@ class User(db.Model):
 
     @classmethod
     def delete(cls,campID):
+        "根据campID单独删除一个新学生"
         u=cls.query.filter(campID==cls.campID).first()
         db.session.delete(u)
         db.session.commit()
@@ -155,12 +83,11 @@ class User(db.Model):
 
     @classmethod
     def edit(cls,id,campID,name,grade):
-
-        u=cls.query.filter(id==cls.id).first()
+        "编辑一个学生的信息，以id作为依据"
         if User.get_user(campID):
             return u"该学号已经存在"
         else:
-            # print u
+            u=User.get_user_byID(id)
             u.name=name
             u.campID=campID
             u.grade=grade
@@ -206,6 +133,46 @@ class Score_items(db.Model):
         s=cls.query.filter(id==cls.id).first()
         db.session.delete(s)
         db.session.commit()
+
+    @classmethod
+    def _setTime(self,time_start,time_end):
+        if time_start == time_end:
+            return time_start
+        else:
+            return time_start+u"至"+time_end
+    @classmethod
+    def _getStatus(cls,item):
+        _status=item.status
+        if _status==2:
+            return u"未审核"
+        elif _status==1:
+            return u"通过"
+        else:
+            return u"驳回"
+    @classmethod
+    def _isUploaded(cls,item):
+        if item.picpath is not None:
+            return u"已上传"
+        else:
+            return u"无"
+
+    @classmethod
+    def getItemInfo(cls,item):
+        "返回某个加分项的全部信息"
+        data={
+                "id":item.id,
+                "catagory": item.catagory,
+                "name":item.student.name,
+                "item_name": item.item_name,
+                "add": item.add,
+                "time": cls._setTime(item.time_st,item.time_ed),
+                "applytime": item.applytime,
+                "status":cls._getStatus(item),
+                "certification": cls._isUploaded(item),
+                "uuid":item.uuid,
+                "note":item.explanation
+        }
+        return data
 
 
 

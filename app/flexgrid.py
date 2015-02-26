@@ -41,7 +41,7 @@ def pageslicer(page,rp,_score_items):
         #控件要求每行必须是如下结构的字典，cell中包含实际的数据
         data={
                 "id": s.item_name,
-                "cell": User.getItemInfo(s)
+                "cell": Score_items.getItemInfo(s)
             }
         jsondict["rows"].append(data)
 

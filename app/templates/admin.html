@@ -200,14 +200,21 @@ $(".flexme3").flexigrid({
                     display : '申请人',
                     name : 'name',
                     width : 50,
-                    sortable : false,
+                    sortable : true,
+                    align : 'center'
+                    },
+                    {
+                    display : '年级',
+                    name : 'catagory',
+                    width : 60,
+                    sortable : true,
                     align : 'center'
                     },
                     {
                     display : '所属类别',
                     name : 'catagory',
                     width : 60,
-                    sortable : false,
+                    sortable : true,
                     align : 'center'
                     }, {
                         display : '加分项目',
@@ -225,7 +232,7 @@ $(".flexme3").flexigrid({
                         display : '获奖时间',
                         name : 'time',
                         width : 170,
-                        sortable : true,
+                        sortable : false,
                         align : 'center',
                         hide : false
                     }, {
@@ -246,7 +253,7 @@ $(".flexme3").flexigrid({
                         display : '备注',
                         name : 'note',
                         width : 200,
-                        // hide: true,
+                        hide: true,
                         align : 'center'
                 },
                 ],

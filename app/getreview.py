@@ -1,44 +1,31 @@
 #coding:utf-8
-from flask import Flask,request,jsonify
+from flask import request,jsonify
 from app import db
-from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
-#TODO:should i make teacher search what have been approve and reject?
+from models import User, Score_items,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
+from flexgrid import sorter,pageslicer
+
+"""
+教师审核页面，flexgrid获取数据所需函数
+"""
+
 def _getreview(grade="All"):
+    """获取当前页内容"""
     page=request.args.get("page",type=int)#接收当前页。并非从param返回，是控件自动传递的
     rp=request.args.get("rp",type=int)
-    jsondict={
-        "page": rp,
-        "total": 0,
-        "rows": []
-        }
-    if grade=="All":
+    sortcol=request.args.get('sortname')#获取要排序的行
+    sorttype=request.args.get('sortorder')#获取排序方式
 
+    if grade=="All":
         _score_items=Score_items.query.filter(Score_items.status==2).all()
     else :
         #按照年级来返回需要审核的内容
         _score_items=Score_items.query.filter(db.and_(Score_items.status==2,User.get_user_byID(Score_items.user_id).grade==grade)).all()
 
-    total=len(_score_items)
-
-    jsondict={
-        "page": page,
-        "total": total,
-        "rows": []
-        }
-
-
-    for i in xrange((page-1)*rp,(page*rp if page*rp-1<total else total)):
-        s=_score_items[i]
-        data={
-                "id": s.item_name,
-                "cell": User.getItemInfo(s)
-            }
-        jsondict["rows"].append(data)
-
-
-    return jsonify(jsondict)
+    _score_items_af=sorter(_score_items,sortcol,sorttype)
+    return jsonify(pageslicer(page,rp,_score_items_af))
 
 def _accpet():
+    """通过按钮"""
     accept=request.args.get('accept',type=int)
     s=Score_items.query.filter(Score_items.id==accept).first()#should use first()
     s.status=STATUS_YES
@@ -47,11 +34,11 @@ def _accpet():
 
 
 def _reject():
+    """拒绝按钮"""
     reject=request.args.get('reject',type=int)
     s=Score_items.query.filter(Score_items.id==reject).first()
     s.status=STATUS_NO
     db.session.commit()
     return " "
 
-if __name__ == '__main__':
-    _getreview(grade=u"硕2012")
+

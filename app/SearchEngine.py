@@ -6,7 +6,7 @@ from flask import jsonify
 
 
 class TimeManager(object):
-    """docstring for TimeManager"""
+    """与申请时间相关的一些函数封装"""
 
     #把datetime对像转换为字符串形式
     def strTime(self,dbTime):
@@ -15,16 +15,9 @@ class TimeManager(object):
     def dbTime(self,humanTime):
         return datetime.strptime(humanTime,'%Y-%m-%d')
 
-    def compareTime(self,start,end):
-        delta=end-start
-        return delta.days#返回相差的日期
-
     def filterByTime(self,time_st,time_ed,start,end):
         result=Score_items.query.filter(time_st,time_ed.between(start,end)).all()
         return result
-
-    # def maketimeItem(self,time_st,time_ed):
-    #     return [time_st,time_ed]
 
 class Engine(object):
     """搜索引擎，从数据库中按需取得数据并进行包装"""
@@ -32,14 +25,19 @@ class Engine(object):
         self.tm=TimeManager()
 
     def getUserlist_byGrade(self,grade):
+        """取得某个年级全部用户列表"""
         users=User.query.filter(User.grade==grade).all()
-        userlist=[]
-        for user in users:
-            userlist.append(user)
+        userlist=[user for user in users]
         return userlist
 
     def getUserScoreitems(self,campID,time_st,time_ed,start,end):
-        "返回符合条件的全部加分条目 return as a list contains all Score_items objects"
+        """返回符合条件的全部加分条目
+        args:
+            campID:学号
+            time_st
+            time_ed
+
+        """
 
         user=User.query.filter(User.campID==campID).first()
 
@@ -52,11 +50,19 @@ class Engine(object):
                                                     time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)),
                                                     Score_items.user_id==user.id)).all()
         return result
-             # result=Score_items.query.filter(db.and_(time_st,time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
 
 
 
     def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
+        """
+        获取用户的具体信息
+        args：
+            user:用户（对象）
+            start_time:统计区间起始时间
+            end_time：统计区间截止时间
+            is_jsonify：是否json化
+
+        """
         if user:
             userDetailDict={}
             items=self.getUserScoreitems(user.campID,Score_items.time_st,
@@ -68,23 +74,26 @@ class Engine(object):
                         "campID" : user.campID,
                         "grade" : user.grade,
                         "sum" : self.getSum(items),
-                        "items":[]
+                        "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
             }
-            for item in items:
-                userDetailDict["items"].append(User.getItemInfo(item))
 
 
-            if is_jsonify:
-                return  jsonify(userDetailDict)
-            else:
-                return userDetailDict
+            return jsonify(userDetailDict) if is_jsonify else userDetailDict
         else:
             return u"无法找到"
 
 
 
 
-    def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):#getUserSummary
+    def getUserSummary(self,user,start_time=None,end_time=None,is_jsonify=True):
+        """
+        获取用户的统计概况（不包括具体加分项目）
+        args：
+            user:用户（对象）
+            start_time:统计区间起始时间
+            end_time：统计区间截止时间
+            is_jsonify：是否json化
+        """
         if user:
             userSummaryDict={}
             Scoreitems=self.getUserScoreitems(user.campID,Score_items.time_st,Score_items.time_ed,start_time,end_time)
@@ -96,10 +105,7 @@ class Engine(object):
                     "grade" : user.grade,
                     "sum" : self.getSum(Scoreitems),
                 }
-            if is_jsonify:
-                return  jsonify(userSummaryDict)
-            else:
-                return userSummaryDict
+            return jsonify(userSummaryDict) if is_jsonify else userSummaryDict
         else:
             return u"无法找到"
 
@@ -114,9 +120,17 @@ class Engine(object):
         return total
 
     def getGradeSumary(self,grade,start_time=None,end_time=None,is_jsonify=True):
+        """
+        获取某个年级的统计信息
+        args：
+            grade:年级
+            start_time:统计区间起始时间
+            end_time：统计区间截止时间
+            is_jsonify：是否json化
+
+        """
         userlist=self.getUserlist_byGrade(grade)
         if len(userlist)>0 :
-
             GradeSumaryDict={
             "grade":grade,
             "GradeSumary":[]
@@ -125,14 +139,9 @@ class Engine(object):
                 u=self.getUserSummary(user,start_time,end_time,False)
                 GradeSumaryDict["GradeSumary"].append(u)
 
-            if is_jsonify:
-                return  jsonify(GradeSumaryDict)
-            else:
-                return GradeSumaryDict
+            return jsonify(GradeSumaryDict) if is_jsonify else GradeSumaryDict
         else:
             return "无法找到"
-
-
 
 
     #TODO:是否应该在获取getgradesumary函数内部调用而不是在view中？
@@ -154,16 +163,5 @@ class Engine(object):
         u=User.get_user(campID)
         return u.password
 
-
-
-
-
-
-
-
-
-# if __name__ == '__main__':
-#     for i in Grade.get_grades():
-#         print i.encode('gbk')
 
 

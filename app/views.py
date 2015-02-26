@@ -8,7 +8,7 @@ from models import User,Score_items,Grade,Excelmap, ROLE_USER, ROLE_ADMIN
 #登陆模块
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,makepublic,getreview,__StaticDir__,__ExcelDir__
-from werkzeug import secure_filename,SharedDataMiddleware
+from werkzeug import secure_filename
 #搜索引擎模块，处理数据库查询
 from SearchEngine import Engine
 #excel导入模块
@@ -16,6 +16,7 @@ from makeExcel import ImportFromXls
 import os
 import json
 import uuid
+#sqlalchemy异常
 import sqlalchemy.exc
 basedir=os.path.abspath(os.path.dirname(__file__))
 
@@ -427,7 +428,6 @@ def generateGradeJson():
 @appME.route('/uploads/<filename>')
 def uploaded_file(filename):
     "send picture"
-
     return send_from_directory(appME.config['UPLOAD_FOLDER'],
                                filename)
 
@@ -451,9 +451,9 @@ def exceluploader():
 @appME.route('/_getStuInfo',methods=["POST", "GET"])
 def getStuInfo():
     engine=Engine()
-    searchtype=request.args.get('searchtype',type=str)
-    starttime=request.args.get('starttime',type=unicode)
-    endtime=request.args.get('endtime',type=unicode)
+    searchtype=request.args.get('searchtype',type=str)#按照全部或是区间
+    starttime=request.args.get('starttime',type=unicode)#区间起始时间
+    endtime=request.args.get('endtime',type=unicode)#区间截止时间
 
     if  searchtype=="bycampID":
         campID=request.args.get('campID',type=str)

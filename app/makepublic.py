@@ -1,10 +1,10 @@
 #coding:utf-8
-from flask import Flask,request,jsonify
+from flask import request,jsonify
 from app import db,__ExcelDir__
 from models import Excelmap,User,OPEN,CLOSE
 from makeExcel import MakeExcel
 from SearchEngine import Engine
-import datetime
+from datetime import datetime
 # from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
 
 def _makepublic():
@@ -16,7 +16,7 @@ def _makepublic():
     _ischecked=request.form["ischecked"]
     _adminID=request.form["admin"]#as campID
     _adminName=request.form["adminNAME"]
-    _maketime=datetime.datetime.today()
+    _maketime=datetime.today()
     _time=_maketime.strftime('%Y-%m-%d %H:%M:%S')#TODO change format?
     _grade=request.form["grade"]
 

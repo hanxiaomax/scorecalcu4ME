@@ -1,8 +1,8 @@
 #coding:utf-8
 from xlwt import Workbook, easyxf
 from xlrd import open_workbook
-from app import db,appME,__StaticDir__,__Add_info__
-from models import User, Score_items,ROLE_USER, ROLE_ADMIN,STATUS_YES , STATUS_NO , STATUS_UNKNOWN
+from app import db,__Add_info__
+from models import User
 from SearchEngine import Engine,TimeManager
 import re
 import sqlalchemy.exc
@@ -155,9 +155,6 @@ class ImportFromXls(object):
 
 
 if __name__ == '__main__':
-    # maker=MakeExcel()
-    # maker._writerow(10,maker._getinfobuf("130280"))
-    # maker.saveAs(__StaticDir__+"/1.xls")
     x=ImportFromXls(__Add_info__+"1.xlsx")
     if x.isValid():
         campID_not_unique,num,successful,unknown=x.Read2DB()

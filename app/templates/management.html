@@ -559,7 +559,7 @@ $(function() {
 
         $.each(data.GradeSumary, function() {
           var tbBody = ""
-            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/></td></tr>";
+            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/><span> </span><input type='button'  class='btn btn-default btn-xs' value='重置密码' onclick='resetpw(this)'/></td></tr>";
           $("#students").append(tbBody)
         });
       }
@@ -678,6 +678,22 @@ function delscore(obj) {
     }, function(){
     });
     };
+}
+
+
+//重置密码
+function resetpw(obj){
+    con=confirm("是否重置该生密码？")
+    if (con) {
+    var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
+    $.get($SCRIPT_ROOT + "/_management", {
+      campID:tr.children[1].innerText,
+      action:'resetpw'
+    }, function(result){
+      alert(result)
+    });
+    };
+
 }
 
 //删除学生按钮

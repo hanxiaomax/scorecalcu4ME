@@ -29,6 +29,13 @@ class User(db.Model):
     def is_authenticated(self):
         return True
 
+    def is_active(self):
+        #Returns True if this is an active user
+        return True
+
+    def is_anonymous(self):
+        return False
+
     #返回用户id
     def get_id(self):
         return unicode(self.id)

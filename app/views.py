@@ -46,7 +46,7 @@ def login():
             else:
                 return redirect("/login/")
         else:
-            flash(u"用户名或密码错误",'error')
+            flash(u"用户名或密码错误")
 
     return render_template('login.html',
                             title=u'机械工程学院素质分管理系统',

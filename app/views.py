@@ -257,6 +257,16 @@ def management_handle():
             else :
                 User.addstudent(campID,name,grade)
                 return u"添加成功"
+        elif request.args.get('action',type=str)=='resetpw':
+            campID=request.args.get('campID',type=str)
+            user=User.get_user(campID)
+            try:
+                user.password=user.campID
+                db.session.commit()
+                return u"重置成功"
+            except StandardError,e:
+                return u"未知错误"
+
 
 #处理公示页面的相关操作
 @appME.route('/_makepublic',methods=["POST", "GET"])

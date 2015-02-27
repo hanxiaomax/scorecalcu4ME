@@ -1,6 +1,3 @@
 *.pyc
 workshop/
-app.db
 .idea/
-uploads/
-app/static/excel/

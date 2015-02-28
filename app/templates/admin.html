@@ -205,7 +205,7 @@ $(".flexme3").flexigrid({
                     },
                     {
                     display : '年级',
-                    name : 'catagory',
+                    name : 'grade',
                     width : 60,
                     sortable : true,
                     align : 'center'
@@ -377,7 +377,7 @@ $(".flexme3").flexigrid({
                           else{
                             $.each($('.trSelected', grid),function(key, value){
 
-                              alert("备注\n--------------\n"+value.firstChild.innerText)
+                              alert("备注\n--------------\n"+value.children[10].innerText)
 
                            });
                           }

@@ -180,7 +180,8 @@ class Score_items(db.Model):
                 "status":cls._getStatus(item),
                 "certification": cls._isUploaded(item),
                 "uuid":item.uuid,
-                "note":item.explanation
+                "note":item.explanation,
+                "grade":User.get_user_byID(item.user_id).grade,
         }
         return data
 

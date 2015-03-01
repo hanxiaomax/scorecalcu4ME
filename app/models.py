@@ -275,3 +275,11 @@ class Grade(db.Model):
         else:
             return -1
 
+class Post(db.Model):
+    """Post表的数据结构"""
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String(40))
+    link = db.Column(db.String(40))
+    author= db.Column(db.String(10))
+    time= db.Column(db.String(30))
+

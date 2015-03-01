@@ -3,8 +3,8 @@
 from flask import (render_template,flash,redirect,session,url_for,request,request,jsonify,send_from_directory,g,escape)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
-#模型
-from models import User,Score_items,Grade,Excelmap, ROLE_USER, ROLE_ADMIN
+#数据库模型
+from models import User,Score_items,Grade,Excelmap,Post, ROLE_USER, ROLE_ADMIN
 #登陆模块
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,makepublic,getreview,__StaticDir__,__ExcelDir__
@@ -168,8 +168,10 @@ def helpteacher():
 #帮助文档路由
 @appME.route('/help/')
 def help():
+    posts=Post.query.all()
+
     return render_template('ReadMe.html',
-                            title=u'机械工程学院素质分管理系统',
+                            title=u'机械工程学院素质分管理系统',posts=posts
                             )
 #404页面路由
 @appME.errorhandler(404)

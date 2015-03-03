@@ -374,7 +374,7 @@ $(".flexme3").flexigrid({
                                         if (canDelete=="No"){
                                             alert("无法删除已经审核的加分项，可联系管理员删除")
                                             $(".flexme3").flexReload();
-                                             // location.reload();
+
                                           }
                                         else{
                                           $(".flexme3").flexReload();
@@ -382,6 +382,8 @@ $(".flexme3").flexigrid({
                                 });
                         });
                     }
+                    location.reload();
+
                 }
                 else if (com == "查看备注"){
 
@@ -402,6 +404,8 @@ $(".flexme3").flexigrid({
                            });
                           }
                       }
+
+
               }
 
 

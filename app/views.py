@@ -245,19 +245,20 @@ def management_handle():
             name=request.args.get('edit_name',type=unicode)
             campID=request.args.get('edit_campID',type=str)
             grade=request.args.get('edit_grade',type=unicode)
-
-            return User.edit(id,campID,name,grade)
+            studentID=request.args.get('edit_studentID',type=str)
+            return User.edit(id,campID,name,grade,studentID)
 
 
         elif request.args.get('Add',type=str)=='Add':#添加学生
             name=request.args.get('add_name',type=unicode)
             campID=request.args.get('add_campID',type=str)
             grade=request.args.get('add_grade',type=unicode)
+            studentID=request.args.get('add_studentID',type=str)
             user=User.get_user(campID)
             if user:
-                return u"学号重复"
+                return u"一卡通号重复"
             else :
-                User.addstudent(campID,name,grade)
+                User.addstudent(campID,name,grade,addstudent)
                 return u"添加成功"
         elif request.args.get('action',type=str)=='resetpw':
             campID=request.args.get('campID',type=str)
@@ -313,7 +314,7 @@ def import_stu_from_xlsx():
 
         result=u"读取"+str(num)+u"条记录\n------\n"\
         +u"成功\t\t"+str(successful)+u" 条\n------\n"\
-        +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
+        +u"失败(一卡通号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
         +u"未知错误\t"+str(unknown)+u" 条\n------"
 
         result_dic={

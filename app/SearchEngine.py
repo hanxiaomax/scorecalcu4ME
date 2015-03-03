@@ -33,7 +33,7 @@ class Engine(object):
     def getUserScoreitems(self,campID,time_st,time_ed,start,end):
         """返回符合条件的全部加分条目
         args:
-            campID:学号
+            campID:一卡通号
             time_st
             time_ed
 

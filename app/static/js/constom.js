@@ -1,17 +1,16 @@
 
 //验证年级输入格式
-jQuery.validator.addMethod("right_format", function(value, element) {
-    var tel = /^[本,硕,博]20[0-9]{2}$/;
+//验证学号必须是8位
+jQuery.validator.addMethod("is8digit", function(value, element) {
+    var tel = /^[0-9]{8}$/;
     return this.optional(element) || (tel.test(value));
-}, "请使用正确的格式，如本2013");
+}, "请输入8位学号");
 
-
-
-//验证学号必须是6位
-jQuery.validator.addMethod("isSixdigit", function(value, element) {
-    var tel = /^[0-9]{6}$/;
+//验证一卡通必须是9位
+jQuery.validator.addMethod("is9digit", function(value, element) {
+    var tel = /^[0-9]{9}$/;
     return this.optional(element) || (tel.test(value));
-}, "请输入6位数学号");
+}, "请输入9位一卡通号");
 
 
 
@@ -83,7 +82,7 @@ $(function() {
       }
       else {
 
-        var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
+        var tbody_stu="<tr class='active'> <td>一卡通号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>学号</td><td>" +data.studentID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
         $("#student").append(tbody_stu)
 
 
@@ -135,13 +134,13 @@ $(function() {
         alert(data)
       }
       else {
-        var thead = "<tr class='info'> <th> 学号 </th> <th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
+        var thead = "<tr class='info'> <th> 一卡通号 </th> <th> 学号 </th><th> 姓名 </th> <th> 年级 </th> <th> 分值 </th> </tr> " //不能包含<thead>
 
         $("#students").append(thead)
 
         $.each(data.GradeSumary, function() {
           var tbBody = ""
-            tbBody += "<tr class='default'><td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
+            tbBody += "<tr class='default'><td>" + this.campID + "</td>" +"<td>" + this.studentID + "</td>"+ "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>" + "</tr>";
           $("#students").append(tbBody)
         });
       }
@@ -153,7 +152,7 @@ $(function() {
 
 
 
-//验证按学号搜索
+//验证按一卡通号搜索
 $().ready(function() {
  $("#searchform").validate(
   {
@@ -168,7 +167,7 @@ $().ready(function() {
           },
           inputcampID: {
             required:true,
-            isSixdigit:true
+            is9digit:true
           },
         },
     wrapper: "p"

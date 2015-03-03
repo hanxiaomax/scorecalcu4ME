@@ -18,9 +18,8 @@ class User(db.Model):
     """
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(64), index = True)
-    campID = db.Column(db.String(120), index = True, unique = True)
-    studentID = db.Column(db.String(120), index = True, unique = True)
-
+    campID = db.Column(db.String(120), index = True, unique = True)#校园一卡通（不会变动）
+    studentID = db.Column(db.String(120), index = True, unique = True)#学号（可能变动）
     password= db.Column(db.String(120), index = True)
     grade= db.Column(db.String(64),index = True)
     role = db.Column(db.SmallInteger, default = ROLE_USER)
@@ -72,9 +71,10 @@ class User(db.Model):
 
 
     @classmethod
-    def addstudent(cls,campID,name,grade):
+    def addstudent(cls,campID,name,grade,studentID):
         "单独添加一个新学生"
         u=User(campID=campID,
+                    studentID=studentID,
                     name=name,
                     grade=grade,
                     password=campID,
@@ -91,15 +91,16 @@ class User(db.Model):
 
 
     @classmethod
-    def edit(cls,id,campID,name,grade):
+    def edit(cls,id,campID,name,grade,studentID):
         "编辑一个学生的信息，以id作为依据"
         if User.get_user(campID):
-            return u"该学号已经存在"
+            return u"该一卡通已经存在"
         else:
             u=User.get_user_byID(id)
             u.name=name
             u.campID=campID
             u.grade=grade
+            u.studentID=studentID
             db.session.commit()
             return u"修改成功"
 

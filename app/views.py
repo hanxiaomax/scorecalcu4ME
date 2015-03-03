@@ -479,3 +479,6 @@ def getStuInfo():
     else:
         return u"无法找到"
 
+@appME.route('/posts/<article_html_filename>')
+def show_article(article_html_filename):
+    return render_template(article_html_filename)

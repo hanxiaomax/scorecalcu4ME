@@ -12,7 +12,7 @@
     <script src="/static/js/jquery-1.11.1.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href={{url_for('static',filename="css/bootstrap.min.css")}}>
     <script src={{url_for('static',filename="js/bootstrap.min.js")}}></script>
-    <link href={{url_for('static',filename="css/jquery-ui.css")}} rel="stylesheet">
+     <link href={{url_for('static',filename="css/jquery-ui.css")}} rel="stylesheet">
     <title>帮助文档</title>
     <style type="text/css">
     html, body {
@@ -50,22 +50,38 @@
 
     <div class="container">
       <div class="blog-header">
-        <h1 class="blog-title">帮助文档/通知公告</h1>
+        <h1 class="blog-title">帮助文档</h1>
         <hr/>
+        <!-- <p class="lead blog-description">The official example template of creating a blog with Bootstrap.</p> -->
       </div>
       <div class="row">
         <div class="col-sm-12 blog-main">
           <div class="blog-post">
-          {% for post in posts %}
-          <p>
-            <h2 class="blog-post-title"><a href={{post.link}} >{{post.title}}</a></h2>
-            <p class="blog-post-meta">{{post.time}}<span> </span>{{post.author}}</p>
-          </p>
-          {% endfor %}
+            <h2 class="blog-post-title">1.关于本站点对于各主流浏览器兼容性的说明</h2>
+            <p class="blog-post-meta">2015-01-12 <a href="#">Admin</a></p>
+            <ul >
+                <li>
+                  <h4>Chrome(谷歌浏览器)</h4>
+                  <p><strong>完美支持，推荐使用，<a href="http://www.google.cn/intl/zh-CN/chrome/">点击下载</a></strong></p>
+                </li>
+
+                <li>
+                  <h4>IE浏览器</h4>
+                  <p><strong>不支持低版本IE浏览器(IE8/9)</strong>,对于IE10，显示操作完成后但无响应，刷新页面即可</p></li></p>
+                </li>
+                <li>
+                  <h4>360浏览器</h4>
+                  <p><strong>支持急速模式，兼容模式会自动切换webkit引擎渲染</strong>，如果访问不正常，请切换至急速模式 </p>
+                </li>
+                <li>
+                  <h4>火狐FireFox</h4>
+                  <p>如果您的火狐浏览器安装了Flash插件，可以正常浏览视频网站视频，那么是没有问题的。如果尚未安装Flash插件，请<a href="http://get.adobe.com/cn/flashplayer/">点击下载</a> ，对于某些中国版火狐浏览器安装Flash插件无效的解决方法是安装原版火狐浏览器</p>
+                </li>
+            </ul>
         </div><!-- /.blog-main -->
       </div><!-- /.row -->
     </div><!-- /.container -->
-<!-- <a href=/posts/ReadMeTEA.html > -->
+
   </body>
 <div class="push"></div>
 

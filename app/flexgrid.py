@@ -1,10 +1,10 @@
 #coding:utf-8
-from models import User, Score_items
+from models import User, Score_items,Grade
 """
 相应flexgrid排序和分页的函数
 """
 
-
+#用于常规比较
 def mycmp(a,b):
     "自定义比较函数"
     if a>b:
@@ -12,14 +12,26 @@ def mycmp(a,b):
     else:
         return -1
 
+
 def sorter(before_sort,col,method):
     """排序函数
     args:
-        before_sort:传入的待排序列表
+        before_sort:传入的待排序列表，包含一组Score_items对象（没有grade和name字段）
         col：待排序的列
         method：asc or desc
     """
-    after_sort=sorted(before_sort,cmp=mycmp,key=lambda s:s[col],reverse=True if method=="asc" else False)
+
+    #如果待排序行为grade
+    if col=="grade":
+        #首先通过s.user_id获取id，再获取grade，且自定义比较函数应该使用Grade中定义的my_cmp
+        after_sort=sorted(before_sort,cmp=Grade.my_cmp,key=lambda s:User.get_user_byID(s.user_id).grade,reverse=True if method=="asc" else False)
+    #如果待排序行为name
+    elif col=="name":
+        #同样需要间接取User的字段
+        after_sort=sorted(before_sort,cmp=mycmp,key=lambda s:User.get_user_byID(s.user_id).name,reverse=True if method=="asc" else False)
+    else:
+        after_sort=sorted(before_sort,cmp=mycmp,key=lambda s:s[col],reverse=True if method=="asc" else False)
+
     return after_sort
 
 

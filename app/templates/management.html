@@ -132,7 +132,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       </ul>
       <ul class="nav nav-sidebar">
 
-        <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+        <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助/通知</a>
         <li><a href={{url_for('logout')}}>退出</a></li>
       </ul>
     </div>
@@ -166,7 +166,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       <div class=" col-md-8">
                           <form id="searchform" class="form-horizontal" role="form">
                             <div class="form-group">
-                              <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                              <label for="inputcampID" class="col-md-2 control-label">一卡通号</label>
                               <div class="col-md-6">
                                 <input type="text" class="form-control" name="inputcampID" id="inputcampID" placeholder="130280">
                               </div>
@@ -265,10 +265,17 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <label for="exampleInputEmail1">姓名</label>
                             <input type="text" class="form-control" id="add_name" name="add_name" >
                           </div>
+
                           <div class="form-group">
-                            <label for="exampleInputPassword1">学号</label>
+                            <label for="add_campID">一卡通</label>
                             <input type="text" class="form-control" id="add_campID" name="add_campID">
                           </div>
+
+                          <div class="form-group">
+                            <label for="add_studentID">学号</label>
+                            <input type="text" class="form-control" id="add_studentID" name="add_studentID">
+                          </div>
+
                           <div class="form-group">
                             <label for="exampleInputPassword1">年级</label>
                             <select id="select_grade2" name="select_grade2" class="form-control"></select>
@@ -310,7 +317,6 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                     </div>
 
                       <div class="col-md-4 "  >
-
                         <form role="form" class="pop_panel row-model" id="edit_panel">
                         <p class="text-center" id='edit_title'></p>
 
@@ -319,19 +325,21 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                             <input type="text" class="form-control" id="edit_name" name="edit_name">
                           </div>
                           <div class="form-group">
-                            <label for="exampleInputPassword1">学号</label>
+                            <label for="edit_campID">一卡通</label>
                             <input type="text" class="form-control" id="edit_campID" name="edit_campID">
                           </div>
                           <div class="form-group">
-                            <label for="exampleInputPassword1">年级</label>
+                            <label for="edit_studentID">学号</label>
+                            <input type="text" class="form-control" id="edit_studentID" name="edit_studentID">
+                          </div>
+
+                          <div class="form-group">
+                            <label for="select_grade3">年级</label>
                             <select id="select_grade3" name="select_grade3" class="form-control"></select>
                           </div>
                           <br/>
                         <button type="submit" class="btn btn-warning btn-block " onclick='return submitedit()'>修改</button>
-
-
                         </form>
-
                       </div>
                     </div>
 
@@ -450,12 +458,17 @@ jQuery.validator.addMethod("right_format", function(value, element) {
 
 
 
-//验证学号必须是6位
-jQuery.validator.addMethod("isSixdigit", function(value, element) {
-    var tel = /^[0-9]{6}$/;
+//验证学号必须是8位
+jQuery.validator.addMethod("is8digit", function(value, element) {
+    var tel = /^[0-9]{8}$/;
     return this.optional(element) || (tel.test(value));
-}, "请输入6位数学号");
+}, "请输入8位学号");
 
+//验证一卡通必须是9位
+jQuery.validator.addMethod("is9digit", function(value, element) {
+    var tel = /^[0-9]{9}$/;
+    return this.optional(element) || (tel.test(value));
+}, "请输入9位一卡通号");
 
 $('#myTab a').click(function(e) {
   e.preventDefault()
@@ -553,13 +566,13 @@ $(function() {
         alert(data)
       }
       else {
-        var thead = "<tr class='info'><td style='display:none;'> id </td> <td> 学号 </td> <td> 姓名 </td> <td> 年级 </td> <td> 分值 </td><td>操作</th></tr> " //不能包含<thead>
+        var thead = "<tr class='info'><td style='display:none;'> id </td> <td> 一卡通号 </td> <td> 学号 </td> <td> 姓名 </td> <td> 年级 </td> <td> 分值 </td><td>操作</th></tr> " //不能包含<thead>
 
         $("#students").append(thead)
 
         $.each(data.GradeSumary, function() {
           var tbBody = ""
-            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/><span> </span><input type='button'  class='btn btn-default btn-xs' value='重置密码' onclick='resetpw(this)'/></td></tr>";
+            tbBody += "<tr class='default'><td style='display:none;'>" + this.id + "</td>"+"<td>" + this.campID + "</td>"+"<td>" + this.studentID + "</td>" + "<td>" + this.name + "</td>" + "<td>" + this.grade + "</td>" + "<td>" + this.sum + "</td>"+"<td><input type='button' class='btn btn-primary btn-xs' value='修改' onclick='edit(this)'/><span> </span><input type='button'  class='btn btn-danger btn-xs' value='删除' onclick='delstu(this)'/><span> </span><input type='button'  class='btn btn-default btn-xs' value='重置密码' onclick='resetpw(this)'/></td></tr>";
           $("#students").append(tbBody)
         });
       }
@@ -597,7 +610,7 @@ $(function() {
       }
       else {
 
-        var tbody_stu="<tr class='active'> <td>学号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
+        var tbody_stu="<tr class='active'> <td>一卡通号</td><td>" +data.campID+"</tr>"+"<tr class='active'> <td>姓名</td><td>" +data.name+"</tr>"+"<tr class='active'> <td>年级</td><td>" +data.grade+"</tr>"+"<tr class='active'> <td>总分</td><td>" +data.sum+"</tr>"
         $("#student").append(tbody_stu)
 
 
@@ -736,13 +749,13 @@ $('#massaddtrigger').click(function(e) {
 function edit(obj) {
   var tr = obj.parentNode.parentNode; //得到按钮[obj]的父元素[td]的父元素[tr]
   id=tr.children[0].innerText
-  name=tr.children[2].innerText
+  name=tr.children[1].innerText
   $('#edit_panel').lightbox_me({
         modalCSS:{},
         overlayCSS:{background: 'gray', opacity: .6},
         centered: true,
         onLoad: function() {
-          $("#edit_title").html("修改该生信息("+name+")<input  name='id' style='display:none' value="+id+">")
+          $("#edit_title").html("修改该生信息(一卡通："+name+")<input  name='id' style='display:none' value="+id+">")
             }
         });
 }
@@ -752,6 +765,7 @@ function submitedit(){
   var ID=$('input[name="id"]').val()
   var _name=$('input[name="edit_name"]').val()
   var _campID=$('input[name="edit_campID"]').val()
+  var _studentID=$('input[name="edit_studentID"]').val()
   var _grade=$("#select_grade3 option:selected").text()
   if ($("#edit_panel").valid()){
     $.get($SCRIPT_ROOT + "/_management", {
@@ -760,9 +774,8 @@ function submitedit(){
       edit_name:_name,
       edit_campID:_campID,
       edit_grade:_grade,
+      edit_studentID:_studentID,
       id:ID,
-
-
     }, function(result){
       alert(result)
     });
@@ -775,6 +788,7 @@ function addnewuser() {
   var _name=$('input[name="add_name"]').val()
   var _campID=$('input[name="add_campID"]').val()
   var _grade=$("#select_grade2 option:selected").text()
+  var _studentID=$('input[name="add_studentID"]').val()
 
   if ($("#add").valid()){
      $.get($SCRIPT_ROOT + "/_management", {
@@ -782,8 +796,7 @@ function addnewuser() {
       add_name:_name,//"dd",
       add_campID:_campID,//"130280",
       add_grade:_grade,//"2013本"
-
-
+      add_studentID:_studentID
     }, function(result){
       alert(result)
       $('#add').trigger('close');
@@ -803,7 +816,7 @@ function onmassadd() {
       alert(data.result)
 
       if (data.failed_list!=undefined) {
-        alert("以下学号重复："+data.failed_list)
+        alert("以下一卡通号重复："+data.failed_list)
         $('#massadd').trigger('close');//对已经light_me()的元素调用.trigger('close')来关闭模态窗口
         return false
       };
@@ -812,7 +825,7 @@ function onmassadd() {
   return false
 }
 ///////验证/////////////
-//验证按学号搜索
+//验证按一卡通搜索
 $().ready(function() {
  $("#searchform").validate(
   {
@@ -827,7 +840,7 @@ $().ready(function() {
           },
           inputcampID: {
             required:true,
-            isSixdigit:true
+            is9digit:true
           },
         },
     wrapper: "p"
@@ -880,7 +893,11 @@ $().ready(function() {
           },
           add_campID:{
             required:true,
-            isSixdigit:true
+            is9digit:true
+          },
+          add_studentID:{
+            required:true,
+            is8digit:true
           },
           add_grade:{
             required:true,
@@ -900,7 +917,11 @@ $().ready(function() {
           },
           edit_campID:{
             required:true,
-            // isSixdigit:true
+            is9digit:true
+          },
+          edit_studentID:{
+            required:true,
+            is8digit:true
           },
           edit_grade:{
             required:true,

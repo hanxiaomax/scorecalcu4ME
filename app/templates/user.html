@@ -96,7 +96,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
            <li ><a href={{url_for('user_publicity',user_id=user_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
           <li><a href={{url_for('changePassword',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon glyphicon-wrench"></span> 修改密码</a></li>
           <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
-          <li><a href={{url_for('help')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+          <li><a href={{url_for('help')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助/通知</a>
         </ul>
         <ul class="nav nav-sidebar">
           <li><a href={{url_for('logout')}}>退出</a></li>
@@ -123,22 +123,22 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                       <div class="panel-body">
                         <div class="control-group">
-                        <div class="controls" style="padding-left: 30px;">
+                        <div class="controls" style="padding-left: 50px;">
                           <!-- Multiple Radios -->
                           <label class="radio">
-                            <input type="radio" value="班级工作" name="group" checked="checked">班级工作（此类累加不得超过40分）</label>
+                            <input type="radio" value="班级工作" name="group" checked="checked">班级工作</label>
                           <label class="radio">
-                            <input type="radio" value="院级社团" name="group">院级社团（此类累加不得超过35分）</label>
+                            <input type="radio" value="院级社团" name="group">院级社团</label>
                           <label class="radio">
-                            <input type="radio" value="校级社团" name="group">校级社团（此类累加不得超过35分）</label>
+                            <input type="radio" value="校级社团" name="group">校级社团</label>
                           <label class="radio">
-                            <input type="radio" value="个人荣誉" name="group">个人荣誉（此类累加不得超过50分）</label>
+                            <input type="radio" value="个人荣誉" name="group">个人荣誉</label>
                           <label class="radio">
-                            <input type="radio" value="集体荣誉" name="group">集体荣誉（此类累加不得超过50分）</label>
+                            <input type="radio" value="集体荣誉" name="group">集体荣誉</label>
                           <label class="radio">
-                            <input type="radio" value="集体活动" name="group">集体活动（此类累加不得超过30分）</label>
+                            <input type="radio" value="集体活动" name="group">集体活动</label>
                           <label class="radio">
-                            <input type="radio" value="其他" name="group">其他（累计不得超过15分）</label>
+                            <input type="radio" value="其他" name="group">其他</label>
                           </div>
                         </div>
                       </div>
@@ -216,7 +216,7 @@ padding-right: 20px;">
                             <label class="control-label"> </label>
                                 <div class="controls">
                                     <button id="submitbtn" class="btn btn-primary  btn-block" style="height: 145px;
-margin-top: -20px;font-size: -webkit-xxx-large;">提交</button>
+margin-top: -20px;font-size: -webkit-xxx-large;font-size: 48px;">提交</button>
                                 </div>
                     </div>
                  </div>
@@ -374,7 +374,7 @@ $(".flexme3").flexigrid({
                                         if (canDelete=="No"){
                                             alert("无法删除已经审核的加分项，可联系管理员删除")
                                             $(".flexme3").flexReload();
-                                             // location.reload();
+
                                           }
                                         else{
                                           $(".flexme3").flexReload();
@@ -382,6 +382,8 @@ $(".flexme3").flexigrid({
                                 });
                         });
                     }
+                    location.reload();
+
                 }
                 else if (com == "查看备注"){
 
@@ -397,11 +399,13 @@ $(".flexme3").flexigrid({
                           else{
                             $.each($('.trSelected', grid),function(key, value){
 
-                              alert("备注\n--------------\n"+value.firstChild.innerText)
+                              alert("备注\n--------------\n"+value.children[8].innerText)
 
                            });
                           }
                       }
+
+
               }
 
 

@@ -21,7 +21,9 @@ def _getreview(grade="All"):
         #按照年级来返回需要审核的内容
         _score_items=Score_items.query.filter(db.and_(Score_items.status==2,User.get_user_byID(Score_items.user_id).grade==grade)).all()
 
+
     _score_items_af=sorter(_score_items,sortcol,sorttype)
+
     return jsonify(pageslicer(page,rp,_score_items_af))
 
 def _accpet():

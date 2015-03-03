@@ -99,7 +99,8 @@
   label.error {
 background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold; color: #EA5200;
 }
-
+.table-hover>tbody>tr:hover {
+background-color: #8FC4FF;}
 </style>
 <div class="container-fluid">
   <div class="row">
@@ -114,7 +115,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 
       </ul>
       <ul class="nav nav-sidebar">
-        <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+        <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助/通知</a>
         <li><a href={{url_for('logout')}}>退出</a></li>
       </ul>
     </div>
@@ -127,7 +128,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
     <div class="row clearfix" name="tab-nav">
       <div class="col-md-6 column">
         <ul class="nav nav-tabs" role="tablist" id="myTab">
-          <li role="presentation" class="active" name="tabA"><a href="#withcampid" role="tab" data-toggle="tab">按学号查询</a></li>
+          <li role="presentation" class="active" name="tabA"><a href="#withcampid" role="tab" data-toggle="tab">按一卡通号查询</a></li>
           <li role="presentation" ><a href="#withgrade" role="tab" data-toggle="tab">按年级班级查询</a></li>
         </ul>
       </div>
@@ -137,7 +138,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
       <br/>
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="withcampid">
-           <div class="col-md-7 column ">
+           <div class="col-md-8 column ">
             <div class="panel panel-primary">
               <div class="panel-heading">搜索</div>
 
@@ -147,7 +148,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       <div class=" col-md-8">
                           <form id="searchform" class="form-horizontal" role="form">
                             <div class="form-group">
-                              <label for="inputcampID" class="col-md-2 control-label">学号</label>
+                              <label for="inputcampID" class="col-md-2 control-label">一卡通号</label>
                               <div class="col-md-6">
                                 <input type="text" class="form-control" name="inputcampID" id="inputcampID" placeholder="130280">
                               </div>
@@ -191,7 +192,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
         </div>
 
         <div role="tabpanel" class="tab-pane " id="withgrade">
-           <div class="col-md-7 column ">
+           <div class="col-md-8 column ">
             <div class="panel panel-primary">
               <div class="panel-heading">搜索</div>
 

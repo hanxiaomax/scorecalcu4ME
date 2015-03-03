@@ -14,7 +14,7 @@ class MakeExcel(object):
         timemanager=TimeManager()
         self.workbook = Workbook()
         self.sheet = self.workbook.add_sheet(u'公示信息')
-        _tableTitle=[u"学号",u"姓名",u"年级",u"总分",u"备注"]
+        _tableTitle=[u"一卡通",u"学号",u"姓名",u"年级",u"加分项",u"得分",u"总分"]
         #设置info栏的字体
         # (<element>:(<attribute> <value>,)+;)+
 
@@ -37,18 +37,23 @@ class MakeExcel(object):
             )
 
         # _excelinfo=[excelinfo["filename"],excelinfo["start"],excelinfo["end"],excelinfo["admin"],excelinfo["note"],timemanager.strTime(excelinfo["maketime"]),excelinfo["grade"]]
+        self.details=easyxf(
+            'font: name Arial,height 250,colour black;'
+            'pattern: pattern solid, fore_colour yellow;'
+            'alignment: horizontal center,vertical center;'
+            'borders:top medium,bottom medium,left medium,right medium;'
+            )
 
-
-        self.sheet.write_merge(0,1,0,4,excelinfo["filename"], xls_title)
-        self.sheet.write_merge(2,3,2,4,excelinfo["admin"],xls_info)
+        self.sheet.write_merge(0,1,0,6,excelinfo["filename"], xls_title)
+        self.sheet.write_merge(2,3,2,6,excelinfo["admin"],xls_info)
         self.sheet.write_merge(2,3,0,1,u"创建者：",xls_info)
-        self.sheet.write_merge(4,5,2,4,excelinfo["grade"],xls_info)
+        self.sheet.write_merge(4,5,2,6,excelinfo["grade"],xls_info)
         self.sheet.write_merge(4,5,0,1,u"公示年级：",xls_info)
-        self.sheet.write_merge(6,7,2,4,timemanager.strTime(excelinfo["maketime"]),xls_info)
+        self.sheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
         self.sheet.write_merge(6,7,0,1,u"创建时间：",xls_info)
-        self.sheet.write_merge(8,9,2,4,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
-        self.sheet.write_merge(8,9,0,1,u"公示区间：",xls_info)
-        self.sheet.write_merge(10,11,2,4,excelinfo["note"],self.xls_detail)
+        self.sheet.write_merge(8,9,2,6,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
+        self.sheet.write_merge(8,9,0,1,u"统计区间：",xls_info)
+        self.sheet.write_merge(10,11,2,6,excelinfo["note"],self.xls_detail)
         self.sheet.write_merge(10,11,0,1,u"备注：",xls_info)
 
 
@@ -58,23 +63,21 @@ class MakeExcel(object):
             self.sheet.write(self.STARTLINE,i,_tableTitle[i],self.xls_detail)
 
 
-    def _writerow(self,rowNo,infobuf):
+    def _writeuser(self,rowNo,infobuf):
         """
-        @para:rowNo(write in row nomber x)
-        @para:infobuf(a dict contains someone's brief info)
+        写用户总体信息
         """
-        _info=[infobuf["campID"],infobuf["name"],infobuf["grade"],float(infobuf["sum"])]
+        _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],infobuf["grade"],"","",float(infobuf["sum"])]
+        for i in range(len(_info)):
+            self.sheet.write(rowNo,i,_info[i],self.details)
+
+    def _writedetail(self,rowNo,infobuf):
+        """
+        写具体得分细则
+        """
+        _info=["","","","",infobuf["item_name"],float(infobuf["add"]),""]
         for i in range(len(_info)):
             self.sheet.write(rowNo,i,_info[i])
-
-
-    def _getinfobuf(self,campID):
-        # userInfoDict=engine.getUserSummary(is_jsonify=False)
-
-        # return userInfoDict#return as unicode,so do not need decode in write() function
-        pass
-
-
 
 
     def saveAs(self,filename):
@@ -83,34 +86,35 @@ class MakeExcel(object):
     def run(self,userlist,starttime,endtime):
         i=self.STARTLINE
         _count=0
-        for user in userlist:
+        for user in userlist:#写用户总体信息
             i+=1
             engine=Engine()
-            result=engine.getUserSummary(user,starttime,endtime,is_jsonify=False)
-
+            result=engine.getUserDetail(user,start_time=starttime,end_time=endtime,is_jsonify=False)
             if result is not None:
                 _count+=1#增加一条记录
-            self._writerow(i,result)
+            self._writeuser(i,result)
+            for s in result["items"]:#写具体得分细则
+                i+=1
+                self._writedetail(i,s)
         if _count>0:
             return True #至少有一个条目
         else:
             return False #没有任何条目
 
-#后缀
+
 class ImportFromXls(object):
     """处理用以导入学生信息的Excel"""
     def __init__(self,filename):
         self.wb=open_workbook(filename)
         self.sheet=self.wb.sheet_by_index(0)
-        self.first_col=[u'姓名',u'学号',u'年级']
+        self.first_col=[u'一卡通号',u'学号',u'姓名',u'年级',u'基础分']
 
 
     """"检查excel格式的合法性"""
     def isValid(self):
         for index,col in enumerate(self.sheet.row(0)):
-            # print col.value,self.first_col[index]
+            print col.value,self.first_col[index]
             if col.value != self.first_col[index]:
-                # print "false"
                 return False
         return True
 
@@ -120,11 +124,12 @@ class ImportFromXls(object):
         unknown=successful=num=0
         for row in range(1,self.sheet.nrows):
             stu=[col.value for col in self.sheet.row(row)]
-            u=User(name=stu[0],
-                campID=str(int(stu[1])),
-                grade=stu[2],
-                password=str(int(stu[1])),
-                role=0,score=0.0
+            u=User(campID=str(stu[0]),#一卡通号
+                studentID=str(stu[1]),#学号
+                name=stu[2],#姓名
+                grade=stu[3],#年级
+                password=str(stu[0]),#密码
+                role=0,score=float(stu[4])#基础分
                 )
             num+=1
             try:

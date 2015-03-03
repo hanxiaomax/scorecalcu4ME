@@ -3,8 +3,8 @@
 from flask import (render_template,flash,redirect,session,url_for,request,request,jsonify,send_from_directory,g,escape)
 from flask.ext.login import (
     login_user, logout_user, current_user, login_required)
-#模型
-from models import User,Score_items,Grade,Excelmap, ROLE_USER, ROLE_ADMIN
+#数据库模型
+from models import User,Score_items,Grade,Excelmap,Post, ROLE_USER, ROLE_ADMIN
 #登陆模块
 from login import LoginForm
 from app import appME, db, lm,getmyscore,saveapply,makepublic,getreview,__StaticDir__,__ExcelDir__
@@ -168,8 +168,10 @@ def helpteacher():
 #帮助文档路由
 @appME.route('/help/')
 def help():
+    posts=Post.query.all()
+
     return render_template('ReadMe.html',
-                            title=u'机械工程学院素质分管理系统',
+                            title=u'机械工程学院素质分管理系统',posts=posts
                             )
 #404页面路由
 @appME.errorhandler(404)
@@ -243,19 +245,20 @@ def management_handle():
             name=request.args.get('edit_name',type=unicode)
             campID=request.args.get('edit_campID',type=str)
             grade=request.args.get('edit_grade',type=unicode)
-
-            return User.edit(id,campID,name,grade)
+            studentID=request.args.get('edit_studentID',type=str)
+            return User.edit(id,campID,name,grade,studentID)
 
 
         elif request.args.get('Add',type=str)=='Add':#添加学生
             name=request.args.get('add_name',type=unicode)
             campID=request.args.get('add_campID',type=str)
             grade=request.args.get('add_grade',type=unicode)
+            studentID=request.args.get('add_studentID',type=str)
             user=User.get_user(campID)
             if user:
-                return u"学号重复"
+                return u"一卡通号重复"
             else :
-                User.addstudent(campID,name,grade)
+                User.addstudent(campID,name,grade,addstudent)
                 return u"添加成功"
         elif request.args.get('action',type=str)=='resetpw':
             campID=request.args.get('campID',type=str)
@@ -311,7 +314,7 @@ def import_stu_from_xlsx():
 
         result=u"读取"+str(num)+u"条记录\n------\n"\
         +u"成功\t\t"+str(successful)+u" 条\n------\n"\
-        +u"失败(学号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
+        +u"失败(一卡通号重复)\t"+str(len(campID_not_unique))+u" 条\n------\n"\
         +u"未知错误\t"+str(unknown)+u" 条\n------"
 
         result_dic={
@@ -477,3 +480,6 @@ def getStuInfo():
     else:
         return u"无法找到"
 
+@appME.route('/posts/<article_html_filename>')
+def show_article(article_html_filename):
+    return render_template(article_html_filename)

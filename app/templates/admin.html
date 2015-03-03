@@ -107,7 +107,7 @@
 
         </ul>
         <ul class="nav nav-sidebar">
-          <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助</a>
+          <li><a href={{url_for('helpteacher')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助/通知</a>
           <li><a href={{url_for('logout')}}>退出</a></li>
         </ul>
       </div>
@@ -205,7 +205,7 @@ $(".flexme3").flexigrid({
                     },
                     {
                     display : '年级',
-                    name : 'catagory',
+                    name : 'grade',
                     width : 60,
                     sortable : true,
                     align : 'center'
@@ -289,7 +289,7 @@ $(".flexme3").flexigrid({
                         name : 'add',
                         isdefault : true
                 } ],
-                sortname : "name",
+                sortname : "applytime",
                 sortorder : "asc",
 
                 title : false,
@@ -377,7 +377,7 @@ $(".flexme3").flexigrid({
                           else{
                             $.each($('.trSelected', grid),function(key, value){
 
-                              alert("备注\n--------------\n"+value.firstChild.innerText)
+                              alert("备注\n--------------\n"+value.children[10].innerText)
 
                            });
                           }

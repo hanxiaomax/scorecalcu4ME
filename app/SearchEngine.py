@@ -33,7 +33,7 @@ class Engine(object):
     def getUserScoreitems(self,campID,time_st,time_ed,start,end):
         """返回符合条件的全部加分条目
         args:
-            campID:学号
+            campID:一卡通号
             time_st
             time_ed
 
@@ -72,6 +72,7 @@ class Engine(object):
             userDetailDict={
                          "name" : user.name,
                         "campID" : user.campID,
+                        "studentID":user.studentID,
                         "grade" : user.grade,
                         "sum" : self.getSum(items),
                         "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
@@ -100,6 +101,7 @@ class Engine(object):
 
             userSummaryDict={
                     "id":user.id,
+                    "studentID":user.studentID,
                     "name" : user.name,
                     "campID" : user.campID,
                     "grade" : user.grade,

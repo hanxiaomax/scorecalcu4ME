@@ -44,16 +44,16 @@ class MakeExcel(object):
             'borders:top medium,bottom medium,left medium,right medium;'
             )
 
-        self.sheet.write_merge(0,1,0,4,excelinfo["filename"], xls_title)
-        self.sheet.write_merge(2,3,2,4,excelinfo["admin"],xls_info)
+        self.sheet.write_merge(0,1,0,6,excelinfo["filename"], xls_title)
+        self.sheet.write_merge(2,3,2,6,excelinfo["admin"],xls_info)
         self.sheet.write_merge(2,3,0,1,u"创建者：",xls_info)
-        self.sheet.write_merge(4,5,2,4,excelinfo["grade"],xls_info)
+        self.sheet.write_merge(4,5,2,6,excelinfo["grade"],xls_info)
         self.sheet.write_merge(4,5,0,1,u"公示年级：",xls_info)
-        self.sheet.write_merge(6,7,2,4,timemanager.strTime(excelinfo["maketime"]),xls_info)
+        self.sheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
         self.sheet.write_merge(6,7,0,1,u"创建时间：",xls_info)
-        self.sheet.write_merge(8,9,2,4,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
+        self.sheet.write_merge(8,9,2,6,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
         self.sheet.write_merge(8,9,0,1,u"统计区间：",xls_info)
-        self.sheet.write_merge(10,11,2,4,excelinfo["note"],self.xls_detail)
+        self.sheet.write_merge(10,11,2,6,excelinfo["note"],self.xls_detail)
         self.sheet.write_merge(10,11,0,1,u"备注：",xls_info)
 
 
@@ -75,7 +75,6 @@ class MakeExcel(object):
         """
         写具体得分细则
         """
-        print infobuf
         _info=["","","","",infobuf["item_name"],float(infobuf["add"]),""]
         for i in range(len(_info)):
             self.sheet.write(rowNo,i,_info[i])

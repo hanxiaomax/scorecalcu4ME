@@ -72,6 +72,7 @@ class Engine(object):
             userDetailDict={
                          "name" : user.name,
                         "campID" : user.campID,
+                        "studentID":user.studentID,
                         "grade" : user.grade,
                         "sum" : self.getSum(items),
                         "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
@@ -100,6 +101,7 @@ class Engine(object):
 
             userSummaryDict={
                     "id":user.id,
+                    "studentID":user.studentID,
                     "name" : user.name,
                     "campID" : user.campID,
                     "grade" : user.grade,

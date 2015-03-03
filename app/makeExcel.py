@@ -102,15 +102,14 @@ class ImportFromXls(object):
     def __init__(self,filename):
         self.wb=open_workbook(filename)
         self.sheet=self.wb.sheet_by_index(0)
-        self.first_col=[u'姓名',u'学号',u'年级']
+        self.first_col=[u'一卡通号',u'学号',u'姓名',u'年级',u'基础分']
 
 
     """"检查excel格式的合法性"""
     def isValid(self):
         for index,col in enumerate(self.sheet.row(0)):
-            # print col.value,self.first_col[index]
+            print col.value,self.first_col[index]
             if col.value != self.first_col[index]:
-                # print "false"
                 return False
         return True
 
@@ -120,11 +119,12 @@ class ImportFromXls(object):
         unknown=successful=num=0
         for row in range(1,self.sheet.nrows):
             stu=[col.value for col in self.sheet.row(row)]
-            u=User(name=stu[0],
-                campID=str(int(stu[1])),
-                grade=stu[2],
-                password=str(int(stu[1])),
-                role=0,score=0.0
+            u=User(campID=str(stu[0]),#一卡通号
+                studentID=str(stu[1]),#学号
+                name=stu[2],#姓名
+                grade=stu[3],#年级
+                password=str(stu[0]),#密码
+                role=0,score=float(stu[4])#基础分
                 )
             num+=1
             try:

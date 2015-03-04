@@ -16,15 +16,16 @@ class MakeExcel(object):
         self.sheet = self.workbook.add_sheet(u'公示信息',cell_overwrite_ok=False)
         self.inforsheet=self.workbook.add_sheet(u'文档信息',cell_overwrite_ok=False)
 
-        _tableTitle=[u"一卡通",u"学号",u"姓名",u"明细",u"得分",u"总分"]
+        _tableTitle=[u"一卡通",u"学号",u"姓名",u"明细",u"说明",u"得分",u"总分"]
 
         #设置列宽（固定宽度）
         self.sheet.col(0).width=4000
         self.sheet.col(1).width=4000
         self.sheet.col(2).width=3000
-        self.sheet.col(3).width=30000
-        self.sheet.col(4).width=2000
+        self.sheet.col(3).width=20000
+        self.sheet.col(4).width=20000
         self.sheet.col(5).width=2000
+        self.sheet.col(6).width=2000
 
 
         #定义info栏的字体
@@ -68,7 +69,7 @@ class MakeExcel(object):
         self.inforsheet.write_merge(2,3,0,1,u"创建者：",xls_info)
         self.inforsheet.write_merge(4,5,2,6,excelinfo["grade"],xls_info)
         self.inforsheet.write_merge(4,5,0,1,u"公示年级：",xls_info)
-        self.inforsheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
+        #self.inforsheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
         self.inforsheet.write_merge(6,7,0,1,u"创建时间：",xls_info)
         self.inforsheet.write_merge(8,9,2,6,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
         self.inforsheet.write_merge(8,9,0,1,u"统计区间：",xls_info)
@@ -89,14 +90,14 @@ class MakeExcel(object):
         """
         写用户总体信息
         """
-        _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],u"无",u"0",float(infobuf["sum"])]
+        _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],u"无",u"无",u"0",float(infobuf["sum"])]
         if lines==0:#如果无加分
             for i in range(len(_info)):
                 self.sheet.write_merge(rowNo,rowNo+lines,i,i,_info[i],self.sumary)
             return lines+1
         else:
             for i in range(len(_info)):
-                if i!=3 and i!=4:#明细,分值留空
+                if i!=3 and i!=4 and i!=5:#明细,分值留空
                     self.sheet.write_merge(rowNo,rowNo+lines-1,i,i,_info[i],self.sumary)
             return lines
 
@@ -106,7 +107,7 @@ class MakeExcel(object):
         """
         i=0
         for item in items:
-            _info=[item["item_name"],item["add"]]
+            _info=[item["item_name"],item["note"],item["add"]]
             for s in range(len(_info)):
                 self.sheet.write(rowNo+i,3+s,_info[s],self.details)
             i+=1

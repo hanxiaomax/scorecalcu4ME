@@ -203,10 +203,11 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                     <div class="panel-heading">
                       <h3 class="panel-title"> <label for="explanation">申请说明</label></h3>
                     </div>
+
                     <div class="panel-body" style="padding-left: 20px;
 padding-right: 20px;">
                       <div class="form-group">
-                      <textarea type="text" class="form-control" id="explanation" name="explanation" placeholder="请简短描述所申请的内容" style="resize: none;"></textarea>
+                      <textarea type="text" class="form-control" id="explanation" name="explanation" placeholder="请简短描述所申请的内容(30字以内)，如申请学院指定活动（1分），可填写：风筝节，xxx讲座等" style="resize: none;"></textarea>
                     </div>
                     </div>
                   </div>
@@ -489,7 +490,7 @@ $().ready(function() {
           apply: "required",
           explanation:{
             required:true,
-            rangelength:[1,100]
+            rangelength:[1,30]
           },
           datepicker1: {
             required:true,

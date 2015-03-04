@@ -129,7 +129,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                         <div class="controls" style="padding-left: 50px;">
                           <!-- Multiple Radios -->
                           <label class="radio">
-                            <input type="radio" value="班级工作" name="group" checked="checked">班级工作</label>
+                            <input type="radio" value="班级年级工作" name="group" checked="checked">班级年级工作</label>
                           <label class="radio">
                             <input type="radio" value="院级社团" name="group">院级社团</label>
                           <label class="radio">
@@ -156,9 +156,15 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                         <div class="control-group">
                           <div class="controls ">
                             <select id="apply" name="apply" class="input-xlarge form-control" size="10">
+                              <option value="担任党支部委员、团支部委员、班级委员职务">担任党支部委员、团支部委员、班级委员职务</option>
+                              <option value="担任班主任助理">担任班主任助理</option>
+                              <option value="担任辅导员助理">担任辅导员助理</option>
+                              <option value="担任年级长职务">担任年级长职务</option>
                               <option value="担任班长">担任班长</option>
+                              <option value="担任副班长">担任副班长</option>
+                              <option value="担任团支部书记">担任团支部书记</option>
                               <option value="担任党支部书记">担任党支部书记</option>
-                              <option value="担任其他班委">担任其他班委</option>
+                              <option value="担任本科大三、大四年级助理辅导员">担任本科大三、大四年级助理辅导员</option>
                             </select>
                           </div>
                         </div>
@@ -579,6 +585,7 @@ $(function(){
 
                                   }
                                   $.each(this.subcatagory, function() {
+
                                   $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
 
                                   });

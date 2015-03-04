@@ -205,7 +205,7 @@ function add_excel_list(role) {
       pic: "111"
     },
     function(data) {
-      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>统计区间</th><th>创建时间</th><th>创建人</th><th>操作/状态</th></tr>" //不能包含<thead>
+      var thead = "<tr><th style='display:none;'>ID</th><th>标题</th><th>年级</th><th>统计区间</th><th>创建时间</th><th>创建人</th><th>操作</th></tr>" //不能包含<thead>
       $("#exceltable").append(thead)
       var tbody = ""
       if (role=="student") {

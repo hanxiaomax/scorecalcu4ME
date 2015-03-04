@@ -45,10 +45,11 @@ class Engine(object):
             result=Score_items.query.filter(Score_items.user_id==user.id).all()
         else:
             #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
-            # result=Score_items.query.filter(db.and_(time_st,time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)+timedelta(days=1)),Score_items.user_id==user.id)).all()
-            result=Score_items.query.filter(db.and_(time_st.between(self.tm.dbTime(start),self.tm.dbTime(end)),
-                                                    time_ed.between(self.tm.dbTime(start),self.tm.dbTime(end)),
+            result=Score_items.query.filter(db.and_(time_st.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
+                                                    time_ed.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
                                                     Score_items.user_id==user.id)).all()
+        # print "start",self.tm.dbTime(start)-timedelta(days = 1)
+        # print "end",self.tm.dbTime(end)-timedelta(days = 1)
         return result
 
 
@@ -83,6 +84,30 @@ class Engine(object):
         else:
             return u"无法找到"
 
+    def _getcatasum(self):
+        pass
+
+    def getUserDetail_with_cata(self,user,start_time=None,end_time=None,is_jsonify=True):
+        if user:
+            userDetailDict={}
+            items=self.getUserScoreitems(user.campID,Score_items.time_st,
+                                                    Score_items.time_ed,
+                                                    start_time,end_time)
+            print items
+            userDetailDict={
+                         "name" : user.name,
+                        "campID" : user.campID,
+                        "studentID":user.studentID,
+                        "grade" : user.grade,
+                        "sum" : self.getSum(items),
+                        "cata_sum":[],
+                        "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
+            }
+
+
+            return jsonify(userDetailDict) if is_jsonify else userDetailDict
+        else:
+            return u"无法找到"
 
 
 
@@ -167,3 +192,7 @@ class Engine(object):
 
 
 
+if __name__ == '__main__':
+    e=Engine()
+
+    print e.getUserDetail_with_cata(User.get_user("000130280"),is_jsonify=False)

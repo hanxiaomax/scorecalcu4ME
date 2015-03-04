@@ -69,7 +69,7 @@ class MakeExcel(object):
         self.inforsheet.write_merge(2,3,0,1,u"创建者：",xls_info)
         self.inforsheet.write_merge(4,5,2,6,excelinfo["grade"],xls_info)
         self.inforsheet.write_merge(4,5,0,1,u"公示年级：",xls_info)
-        #self.inforsheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
+        self.inforsheet.write_merge(6,7,2,6,timemanager.strTime(excelinfo["maketime"]),xls_info)
         self.inforsheet.write_merge(6,7,0,1,u"创建时间：",xls_info)
         self.inforsheet.write_merge(8,9,2,6,excelinfo["start"]+u"至"+excelinfo["end"],xls_info)
         self.inforsheet.write_merge(8,9,0,1,u"统计区间：",xls_info)
@@ -97,7 +97,7 @@ class MakeExcel(object):
             return lines+1
         else:
             for i in range(len(_info)):
-                if i!=3 and i!=4 and i!=5:#明细,分值留空
+                if i not in [3,4,5]:#明细,分值留空
                     self.sheet.write_merge(rowNo,rowNo+lines-1,i,i,_info[i],self.sumary)
             return lines
 

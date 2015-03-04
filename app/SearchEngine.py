@@ -84,8 +84,28 @@ class Engine(object):
         else:
             return u"无法找到"
 
-    def _getcatasum(self):
-        pass
+    def _getcatasum(self,items):
+        catA=catB=catC=catD=catE=catF=catG=0
+        for item in items:
+            if item.catagory==u"班级年级工作":
+                catA+=item.add
+            elif item.catagory==u"院级社团":
+                catB+=item.add
+            elif item.catagory==u"校级社团":
+                catC+=item.add
+            elif item.catagory==u"个人荣誉":
+                catD+=item.add
+            elif item.catagory==u"集体荣誉":
+                catE+=item.add
+            elif item.catagory==u"集体活动":
+                catF+=item.add
+            elif item.catagory==u"其他":
+                catG+=item.add
+        cata_sum=[(u"班级年级工作",catA),(u"院级社团",catB),(u"院级社团",catC),(u"个人荣誉",catD),(u"集体荣誉",catE),(u"集体活动",catF),(u"其他",catG)]
+        # for s in cata_sum:
+        #     print s[0],s[1]
+        return cata_sum
+
 
     def getUserDetail_with_cata(self,user,start_time=None,end_time=None,is_jsonify=True):
         if user:
@@ -93,14 +113,14 @@ class Engine(object):
             items=self.getUserScoreitems(user.campID,Score_items.time_st,
                                                     Score_items.time_ed,
                                                     start_time,end_time)
-            print items
+
             userDetailDict={
                          "name" : user.name,
                         "campID" : user.campID,
                         "studentID":user.studentID,
                         "grade" : user.grade,
                         "sum" : self.getSum(items),
-                        "cata_sum":[],
+                        "cata_sum":self._getcatasum(items),
                         "items":[Score_items.getItemInfo(item) for item in items]#存放查询得到的全部加分项
             }
 
@@ -195,4 +215,4 @@ class Engine(object):
 if __name__ == '__main__':
     e=Engine()
 
-    print e.getUserDetail_with_cata(User.get_user("000130280"),is_jsonify=False)
+    e.getUserDetail_with_cata(User.get_user("213132220"),is_jsonify=False)

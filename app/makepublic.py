@@ -42,25 +42,29 @@ def _makepublic():
     if len(userlist)==0:
         return u"不存在该年级"
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
-    if maker.run(userlist,_timestart,_timeend):#开始创建excel文件，接收变量userlist
+    try:
 
-        filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
-        maker.saveAs(filepath)
-        #把生成的excel的相关信息存放到数据库的表中
-        exceldb=Excelmap(Excelname=_name,
-            creater=_adminName,
-            creater_time=_maketime,
-            start_time=_timestart,
-            end_time=_timeend,
-            filepath=filepath,
-            status=_status,
-            grade=_grade
-            )
-        db.session.add(exceldb)
-        db.session.commit()
-        return "true"
+        if maker.run(userlist,_timestart,_timeend):#开始创建excel文件，接收变量userlist
 
-    else :
-        return u"0条结果，无法生成公示"
+            filepath=__ExcelDir__+_name+"_"+_time.split(" ")[0]+"_"+_time.split(" ")[1].replace(":","_")+".xls"
+            maker.saveAs(filepath)
+            #把生成的excel的相关信息存放到数据库的表中
+            exceldb=Excelmap(Excelname=_name,
+                creater=_adminName,
+                creater_time=_maketime,
+                start_time=_timestart,
+                end_time=_timeend,
+                filepath=filepath,
+                status=_status,
+                grade=_grade
+                )
+            db.session.add(exceldb)
+            db.session.commit()
+            return "true"
+        else :
+            return u"0条结果，无法生成公示"
+    except Exception, e:
+        return "未知错误"
+
 
 

@@ -16,16 +16,25 @@ class MakeExcel(object):
         self.sheet = self.workbook.add_sheet(u'公示信息',cell_overwrite_ok=False)
         self.inforsheet=self.workbook.add_sheet(u'文档信息',cell_overwrite_ok=False)
 
-        _tableTitle=[u"一卡通",u"学号",u"姓名",u"明细",u"说明",u"得分",u"总分"]
+        _tableTitle=[u"一卡通",u"学号",u"姓名",u"明细",u"说明",u"得分",u"班级年级工作",u"院级社团",u"校级社团",u"个人荣誉",u"集体荣誉",u"集体活动",u"其他",u"总分"]
 
         #设置列宽（固定宽度）
         self.sheet.col(0).width=4000
         self.sheet.col(1).width=4000
         self.sheet.col(2).width=3000
-        self.sheet.col(3).width=20000
-        self.sheet.col(4).width=20000
+        self.sheet.col(3).width=10000
+        self.sheet.col(4).width=10000
         self.sheet.col(5).width=2000
-        self.sheet.col(6).width=2000
+
+        self.sheet.col(6).width=4000
+        self.sheet.col(7).width=3000
+        self.sheet.col(8).width=3000
+        self.sheet.col(9).width=3000
+        self.sheet.col(10).width=3000
+        self.sheet.col(11).width=3000
+        self.sheet.col(12).width=3000
+
+        self.sheet.col(13).width=2000
 
 
         #定义info栏的字体
@@ -82,15 +91,12 @@ class MakeExcel(object):
 
 
 
-
-
-
-
     def _writeuser(self,rowNo,infobuf,lines):
         """
         写用户总体信息
         """
-        _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],u"无",u"无",u"0",float(infobuf["sum"])]
+        _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],u"无",u"无",u"0",infobuf["cata_sum"][0][1],infobuf["cata_sum"][1][1],infobuf["cata_sum"][2][1],infobuf["cata_sum"][3][1],infobuf["cata_sum"][4][1],infobuf["cata_sum"][5][1],infobuf["cata_sum"][6][1],float(infobuf["sum"])]
+        #infobuf["cata_sum"][2][1] 为(u"院级社团",catC)里面的catC
         if lines==0:#如果无加分
             for i in range(len(_info)):
                 self.sheet.write_merge(rowNo,rowNo+lines,i,i,_info[i],self.sumary)
@@ -112,30 +118,34 @@ class MakeExcel(object):
                 self.sheet.write(rowNo+i,3+s,_info[s],self.details)
             i+=1
 
+
     def saveAs(self,filename):
         self.workbook.save(filename)
 
     def run(self,userlist,starttime,endtime):
-        i=self.STARTLINE
-        _count=0
-        for user in userlist:#写用户总体信息
-            engine=Engine()
-            result=engine.getUserDetail(user,start_time=starttime,end_time=endtime,is_jsonify=False)
-            lines=len(result["items"])
-            if result is not None:
-                _count+=1#增加一条记录
+        try:
+            i=self.STARTLINE
+            _count=0
+            for user in userlist:#写用户总体信息
+                engine=Engine()
+                #result=engine.getUserDetail(user,start_time=starttime,end_time=endtime,is_jsonify=False)
+                result=engine.getUserDetail_with_cata(user,start_time=starttime,end_time=endtime,is_jsonify=False)
+                lines=len(result["items"])
+                if result is not None:
+                    _count+=1#增加一条记录
+                self._writedetail(i,result["items"],lines)
+                #self._writeCataSum(i,result["cata_sum"],lines)
+                i+=self._writeuser(i,result,lines)
+            if _count>0:
+                print "111"
+                return True #至少有一个条目
+            else:
+                return False #没有任何条目
 
-            self._writedetail(i,result["items"],lines)
-            i+=self._writeuser(i,result,lines)
+        except Exception, e:
+            print e
+            raise e
 
-
-
-
-        if _count>0:
-            return True #至少有一个条目
-        else:
-            return False #没有任何条目
-        return True
 
 
 class ImportFromXls(object):

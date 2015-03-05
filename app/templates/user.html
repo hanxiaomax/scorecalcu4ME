@@ -83,6 +83,9 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
 .flexigrid div.fbutton .check {
     background: url(/static/css/images/open.png) no-repeat center left;
 }
+.score{
+
+}
 </style>
 
 
@@ -95,7 +98,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
           <li class="active"><a href={{url_for('users',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon-user"></span> 素质分申请</a></li>
            <li ><a href={{url_for('user_publicity',user_id=user_id)}}><span class="glyphicon glyphicon-th-list"></span> 公示系统</a></li>
           <li><a href={{url_for('changePassword',user_id=user_id)}}><span class="glyphicon glyphicon glyphicon glyphicon-wrench"></span> 修改密码</a></li>
-          <li><a href={{url_for('static',filename="学生综合素质考评办法2013-9-4.doc")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 下载</a></li>
+          <li><a href={{url_for('static',filename="学生综合素质考评办法（试行）.pdf")}}><span class="glyphicon glyphicon glyphicon-download-alt"></span> 评分标准</a></li>
           <li><a href={{url_for('help')}} target="_blank"><span class="glyphicon glyphicon-question-sign"></span> 帮助/通知</a>
         </ul>
         <ul class="nav nav-sidebar">
@@ -126,7 +129,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                         <div class="controls" style="padding-left: 50px;">
                           <!-- Multiple Radios -->
                           <label class="radio">
-                            <input type="radio" value="班级工作" name="group" checked="checked">班级工作</label>
+                            <input type="radio" value="班级年级工作" name="group" checked="checked">班级年级工作</label>
                           <label class="radio">
                             <input type="radio" value="院级社团" name="group">院级社团</label>
                           <label class="radio">
@@ -144,18 +147,24 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-4 col-md-3 col-md-offset-1">
+                  <div class="col-sm-4 col-md-4">
                     <div class="panel panel-primary">
                       <div class="panel-heading">
-                        <h3 class="panel-title"><label class="control-label">加分项目</label></h3>
+                          <h3 class="panel-title"><label class="control-label">加分项目</label></h3>
                       </div>
                       <div class="panel-body">
                         <div class="control-group">
                           <div class="controls ">
                             <select id="apply" name="apply" class="input-xlarge form-control" size="10">
+                              <option value="担任党支部委员、团支部委员、班级委员职务">担任党支部委员、团支部委员、班级委员职务</option>
+                              <option value="担任班主任助理">担任班主任助理</option>
+                              <option value="担任辅导员助理">担任辅导员助理</option>
+                              <option value="担任年级长职务">担任年级长职务</option>
                               <option value="担任班长">担任班长</option>
+                              <option value="担任副班长">担任副班长</option>
+                              <option value="担任团支部书记">担任团支部书记</option>
                               <option value="担任党支部书记">担任党支部书记</option>
-                              <option value="担任其他班委">担任其他班委</option>
+                              <option value="担任本科大三、大四年级助理辅导员">担任本科大三、大四年级助理辅导员</option>
                             </select>
                           </div>
                         </div>
@@ -181,7 +190,7 @@ background:  0px 0px; padding-left: 16px; padding-bottom: 2px; font-weight: bold
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-4 col-md-3 col-md-offset-1">
+                  <div class="col-sm-4 col-md-4">
                     <div class="panel panel-primary" style="height: 240px;">
                       <div class="panel-heading">
                         <h3 class="panel-title"><label class="control-label" id='timepicker'>时间</label></h3>
@@ -212,7 +221,7 @@ padding-right: 20px;">
                     </div>
                   </div>
                   </div>
-                  <div class="col-sm-4 col-md-3 col-md-offset-1">
+                  <div class="col-sm-4 col-md-4">
                     <div class="control-group">
                             <label class="control-label"> </label>
                                 <div class="controls">
@@ -576,6 +585,7 @@ $(function(){
 
                                   }
                                   $.each(this.subcatagory, function() {
+
                                   $("#apply").append("<option value="+this.name+">" +  this.name + "</option>");
 
                                   });

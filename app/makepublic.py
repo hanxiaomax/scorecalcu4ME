@@ -41,6 +41,7 @@ def _makepublic():
 
     if len(userlist)==0:
         return u"不存在该年级"
+
     maker=MakeExcel(excelinfo)#创建MakeExcel对像并初始化
     try:
 

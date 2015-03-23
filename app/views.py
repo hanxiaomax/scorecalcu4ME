@@ -178,11 +178,6 @@ def help():
 def page_not_found(error):
     return render_template('404.html'), 404
 
-#401未授权登陆
-@appME.errorhandler(401)
-def Unauthorized_user(error):
-    return u'未登录用户，请重新登录'
-    #return redirect("/login/"), 401
 
 
 

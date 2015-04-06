@@ -2,7 +2,7 @@
 from xlwt import Workbook, easyxf
 from xlrd import open_workbook
 from app import db,__Add_info__,__ExcelDir__
-from models import User
+from models import User,STATUS_YES
 from SearchEngine import Engine,TimeManager
 import re
 import sqlalchemy.exc
@@ -98,8 +98,14 @@ class MakeExcel(object):
         _info=[infobuf["campID"],infobuf["studentID"],infobuf["name"],u"无",u"无",u"0",infobuf["cata_sum"][0][1],infobuf["cata_sum"][1][1],infobuf["cata_sum"][2][1],infobuf["cata_sum"][3][1],infobuf["cata_sum"][4][1],infobuf["cata_sum"][5][1],infobuf["cata_sum"][6][1],float(infobuf["sum"])]
         #infobuf["cata_sum"][2][1] 为(u"院级社团",catC)里面的catC
         if lines==0:#如果无加分
-            for i in range(len(_info)):
-                self.sheet.write_merge(rowNo,rowNo+lines,i,i,_info[i],self.sumary)
+
+            try:
+                for i in range(len(_info)):
+                    self.sheet.write_merge(rowNo,rowNo+lines,i,i,_info[i],self.sumary)
+            except Exception, e:
+                print "_writeuser",e
+                raise e
+
             return lines+1
         else:
             for i in range(len(_info)):
@@ -107,12 +113,16 @@ class MakeExcel(object):
                     self.sheet.write_merge(rowNo,rowNo+lines-1,i,i,_info[i],self.sumary)
             return lines
 
+
+
+
     def _writedetail(self,rowNo,items,lines):
         """
         写具体得分细则
         """
         i=0
         for item in items:
+
             _info=[item["item_name"],item["note"],item["add"]]
             for s in range(len(_info)):
                 self.sheet.write(rowNo+i,3+s,_info[s],self.details)
@@ -123,27 +133,29 @@ class MakeExcel(object):
         self.workbook.save(filename)
 
     def run(self,userlist,starttime,endtime):
+        #print len(userlist) 233
         try:
             i=self.STARTLINE
             _count=0
             for user in userlist:#写用户总体信息
                 engine=Engine()
-                #result=engine.getUserDetail(user,start_time=starttime,end_time=endtime,is_jsonify=False)
-                result=engine.getUserDetail_with_cata(user,start_time=starttime,end_time=endtime,is_jsonify=False)
+                result=engine.getUserDetail_with_cata(user,start_time=starttime,end_time=endtime,is_jsonify=False,status=STATUS_YES)
                 lines=len(result["items"])
                 if result is not None:
                     _count+=1#增加一条记录
+
                 self._writedetail(i,result["items"],lines)
                 #self._writeCataSum(i,result["cata_sum"],lines)
+
                 i+=self._writeuser(i,result,lines)
+
+            print _count
             if _count>0:
-                print "111"
                 return True #至少有一个条目
             else:
                 return False #没有任何条目
-
         except Exception, e:
-            print e
+            print "run:",e
             raise e
 
 

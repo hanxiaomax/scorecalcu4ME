@@ -1,4 +1,8 @@
-/*
+{% extends "base.html" %}
+{% block content %}
+
+    <style type="text/css">
+        /*
  * Base structure
  */
 
@@ -89,4 +93,36 @@ body {
  * Placeholder dashboard ideas
  */
 
+.placeholders {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.placeholders h4 {
+  margin-bottom: 0;
+}
+.placeholder {
+  margin-bottom: 20px;
+}
+.placeholder img {
+  display: inline-block;
+  border-radius: 50%;
+}
 
+    </style>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li ><a href={{url_for('users',user_id = user_id)}}>素质分申请</a></li>
+                    <li class="active"><a href="">素质分查询</a></li>
+                    <li><a href={{url_for('users_profile',user_id = user_id)}}>下载</a></li>
+                </ul>
+                <ul class="nav nav-sidebar">
+                    <li><a href={{url_for('logout')}}>退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

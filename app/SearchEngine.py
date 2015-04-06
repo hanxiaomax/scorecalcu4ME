@@ -30,7 +30,7 @@ class Engine(object):
         userlist=[user for user in users]
         return userlist
 
-    def getUserScoreitems(self,campID,time_st,time_ed,start,end):
+    def getUserScoreitems(self,campID,time_st,time_ed,start,end,status="ALL"):
         """返回符合条件的全部加分条目
         args:
             campID:一卡通号
@@ -41,20 +41,28 @@ class Engine(object):
 
         user=User.query.filter(User.campID==campID).first()
 
-        if start==None or end==None:
-            result=Score_items.query.filter(Score_items.user_id==user.id).all()
-        else:
-            #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
-            result=Score_items.query.filter(db.and_(time_st.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
-                                                    time_ed.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
-                                                    Score_items.user_id==user.id)).all()
-        # print "start",self.tm.dbTime(start)-timedelta(days = 1)
-        # print "end",self.tm.dbTime(end)-timedelta(days = 1)
-        return result
+        if status=="ALL":
+            if start==None or end==None:
+                result=Score_items.query.filter(Score_items.user_id==user.id).all()
+            else:
+                #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
+                result=Score_items.query.filter(db.and_(time_st.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
+                                                        time_ed.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
+                                                        Score_items.user_id==user.id)).all()
+            return result
+        elif status==STATUS_YES:
+            if start==None or end==None:
+                result=Score_items.query.filter(db.and_(Score_items.user_id==user.id,Score_items.status==STATUS_YES)).all()
+            else:
+                #单纯求时间差，是可以用字符串的，但是如果要使用timedelta则必须要转换成datetime类型
+                result=Score_items.query.filter(db.and_(Score_items.status==STATUS_YES,time_st.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
+                                                        time_ed.between(self.tm.dbTime(start)-timedelta(days = 1),self.tm.dbTime(end)),
+                                                        Score_items.user_id==user.id)).all()
+            return result
 
 
 
-    def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True):
+    def getUserDetail(self,user,start_time=None,end_time=None,is_jsonify=True,status="ALL"):
         """
         获取用户的具体信息
         args：
@@ -66,7 +74,12 @@ class Engine(object):
         """
         if user:
             userDetailDict={}
-            items=self.getUserScoreitems(user.campID,Score_items.time_st,
+            if status==STATUS_YES:
+                items=self.getUserScoreitems(user.campID,Score_items.time_st,
+                                                    Score_items.time_ed,
+                                                    start_time,end_time,status=STATUS_YES)
+            else:
+                items=self.getUserScoreitems(user.campID,Score_items.time_st,
                                                     Score_items.time_ed,
                                                     start_time,end_time)
 
@@ -107,13 +120,17 @@ class Engine(object):
         return cata_sum
 
 
-    def getUserDetail_with_cata(self,user,start_time=None,end_time=None,is_jsonify=True):
+    def getUserDetail_with_cata(self,user,start_time=None,end_time=None,is_jsonify=True,status="ALL"):
         if user:
             userDetailDict={}
-            items=self.getUserScoreitems(user.campID,Score_items.time_st,
+            if status==STATUS_YES:
+                items=self.getUserScoreitems(user.campID,Score_items.time_st,
+                                                    Score_items.time_ed,
+                                                    start_time,end_time,status==STATUS_YES)
+            else:
+                items=self.getUserScoreitems(user.campID,Score_items.time_st,
                                                     Score_items.time_ed,
                                                     start_time,end_time)
-
             userDetailDict={
                          "name" : user.name,
                         "campID" : user.campID,

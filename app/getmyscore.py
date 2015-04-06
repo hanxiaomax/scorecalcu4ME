@@ -1,6 +1,6 @@
 #coding:utf-8
 from flask import request,jsonify
-from app import db
+from app import appME,db
 from models import User,STATUS_YES , STATUS_NO , STATUS_UNKNOWN,Score_items
 import os
 from flexgrid import sorter,pageslicer
